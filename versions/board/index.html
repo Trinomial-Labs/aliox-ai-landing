@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aliox AI · The shop assistant for WooCommerce</title>
+<meta name="description" content="Aliox AI is a chat for WooCommerce stores. Shoppers ask in their own words; it finds the right size and colour in your catalogue and adds it to their cart. Coming soon.">
+<link rel="icon" href="../../assets/aliox-icon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+<link rel="preload" as="image" href="../../assets/screens/chat-desktop.webp" fetchpriority="high">
+<script>document.documentElement.classList.add('js');</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
+<script>
+  if (window.gsap && window.ScrollTrigger && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    document.documentElement.classList.add('motion');
+  }
+</script>
+<style>
+:root {
+  --ground: #1e3f2d;
+  --ink: #16261d;
+  --forest: #2a573f;
+  --mist: #e8f0eb;
+  --sage: #b9dca0;
+  --sage-2: #aed393;
+  --spark: #8dc63f;
+  --paper: #f6f9f6;
+  --paper-2: #edf3ee;
+  --soft: #3d5446;
+  --on-dark: #eef4f0;
+  --on-dark-soft: #c9dccf;
+
+  --m: 16px;
+  --g: 8px;
+  --r: 16px;
+  --pad: clamp(20px, 1.8vw, 28px);
+
+  --t-display: clamp(2.5rem, 4.7vw, 4.6rem);
+  --t-head: clamp(1.875rem, 2.9vw, 2.75rem);
+  --t-state: clamp(1.25rem, 1.6vw, 1.625rem);
+  --t-body: 1.125rem;
+  --t-small: 1rem;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-press: 140ms;
+  --t-hover: 180ms;
+  --t-ui: 280ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--ground); color: var(--ink); scrollbar-color: var(--sage) var(--ground); -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body { margin: 0; position: relative; overflow-x: clip; font-family: 'Inter', system-ui, sans-serif; font-size: var(--t-body); line-height: 1.5; font-feature-settings: 'cv11', 'ss01'; background: var(--ground); padding-bottom: var(--m); }
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, p, figure, ul, ol { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; }
+button, input, select { font: inherit; color: inherit; }
+::selection { background: var(--sage); color: var(--ink); }
+:focus-visible { outline: 3px solid var(--spark); outline-offset: 3px; border-radius: 6px; }
+[id] { scroll-margin-top: var(--m); }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: var(--m); top: var(--m); clip-path: inset(50%); z-index: 20; background: var(--sage); color: var(--ink); padding: 10px 16px; border-radius: 999px; text-decoration: none; font-weight: 600; }
+.skip:focus { clip-path: none; }
+
+/* ---------- the board ---------- */
+.board { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--g); padding: 0 var(--m); margin-top: var(--g); }
+.board:first-of-type { margin-top: 0; padding-top: var(--m); }
+.tile { position: relative; border-radius: var(--r); padding: var(--pad); overflow: clip; min-width: 0; }
+.t-paper { background: var(--paper); }
+.t-mist { background: var(--mist); }
+.t-sage { background: var(--sage); }
+.t-forest { background: var(--forest); color: var(--on-dark); }
+.t-ink { background: var(--ink); color: var(--on-dark); }
+
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance; }
+.display { font-size: var(--t-display); letter-spacing: -0.045em; line-height: 0.98; }
+.head { font-size: var(--t-head); }
+.state { font-size: var(--t-state); letter-spacing: -0.02em; line-height: 1.2; }
+p { text-wrap: pretty; max-width: 62ch; }
+.small { font-size: var(--t-small); }
+
+/* buttons: one shape, full round, like the product's launcher */
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 26px; border-radius: 999px; background: var(--forest); color: #fff; font-weight: 600; font-size: var(--t-small); text-decoration: none; border: 0; cursor: pointer; transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease; }
+.btn:active { transform: scale(0.97); }
+.btn svg { width: 18px; height: 18px; transition: transform var(--t-ui) var(--ease-out); }
+.btn--sage { background: var(--sage); color: var(--ink); }
+.link { font-weight: 600; text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.22em; text-decoration-color: currentColor; transition: text-decoration-color var(--t-hover) ease, color var(--t-hover) ease; }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { background: var(--ink); }
+  .btn--sage:hover { background: var(--mist); }
+  .btn:hover svg { transform: translateX(4px); }
+  .link:hover { text-decoration-color: transparent; }
+}
+
+/* ---------- hero board ---------- */
+.hero { grid-template-rows: 64px minmax(0, 1.32fr) minmax(0, 1fr); height: calc(100svh - var(--m)); min-height: 700px; max-height: 1040px; }
+.logo-tile { grid-column: 1 / 3; grid-row: 1; display: flex; align-items: center; padding: 0 20px; text-decoration: none; transition: background-color var(--t-hover) ease; }
+.logo-tile img { height: 30px; width: auto; }
+.nav-tile { grid-column: 3 / 11; grid-row: 1; padding: 0 20px; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: var(--g); align-items: center; background: var(--forest); }
+.nav-tile ul { grid-column: 5 / -1; display: flex; gap: clamp(16px, 2vw, 32px); }
+.nav-tile a { text-decoration: none; font-size: var(--t-small); font-weight: 600; color: var(--on-dark); padding: 8px 0; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; text-decoration-color: transparent; transition: text-decoration-color var(--t-hover) ease; }
+.menu-tile { display: none; }
+.action-tile { grid-column: 11 / 13; grid-row: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 20px; text-decoration: none; font-weight: 600; font-size: var(--t-small); color: var(--ink); transition: background-color var(--t-hover) ease; }
+.action-tile svg { width: 18px; height: 18px; flex: none; transition: transform var(--t-ui) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .nav-tile a:hover { text-decoration-color: currentColor; }
+  .action-tile:hover { background: var(--mist); }
+  .action-tile:hover svg { transform: translateX(4px); }
+  .logo-tile:hover { background: #0f1c15; }
+}
+.action-tile:active, .logo-tile:active { transform: scale(0.985); }
+
+.title-tile { grid-column: 1 / 7; grid-row: 2; display: flex; flex-direction: column; gap: 20px; padding: clamp(24px, 2.4vw, 40px); }
+.title-tile > :first-child { margin-top: auto; }   /* bottom-aligned, but never pushed out past the top padding */
+.title-tile h1 { white-space: nowrap; padding-bottom: 0.14em; }
+.lines .line { display: block; overflow: clip; padding: 0.12em 0 0.1em; margin: -0.12em 0 -0.1em; }
+.lines [data-line] { display: block; }
+.title-tile .lead { font-size: var(--t-state); line-height: 1.32; letter-spacing: -0.015em; max-width: 30ch; }
+.title-tile .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; }
+.title-tile .note { font-size: var(--t-small); color: var(--soft); }
+
+.pic-tile { grid-column: 7 / 13; grid-row: 2 / 4; padding: 0; background: #e9ebe8; }
+.pic-tile .drift { position: absolute; inset: -5% 0; }
+.pic-tile img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+@media (min-width: 1024px) {
+  .pic-tile { background: #fff; }
+  .pic-tile .drift { inset: 0; }
+  .pic-tile img { position: absolute; right: -1%; top: 0; width: 170%; height: auto; max-width: none; object-fit: fill; translate: 0 -66px; }
+}
+.pic-tile figcaption { position: absolute; left: 16px; bottom: 16px; background: var(--ink); color: var(--on-dark); font-size: var(--t-small); padding: 8px 14px; border-radius: 999px; }
+
+.mascot-tile { grid-column: 1 / 4; grid-row: 3; display: flex; flex-direction: column; justify-content: space-between; }
+.mascot-tile .dock { align-self: flex-end; width: clamp(130px, 12vw, 176px); }
+.cart-tile { grid-column: 4 / 7; grid-row: 3; display: flex; flex-direction: column; gap: 14px; }
+.cart-tile .shot { width: 100%; max-width: 360px; aspect-ratio: 990 / 660; object-fit: cover; border-radius: var(--r); background: #fff; }
+.cart-tile figcaption { font-size: var(--t-small); line-height: 1.4; max-width: 34ch; }
+
+/* the mascot: docks + traveller */
+.dock { position: relative; aspect-ratio: 420 / 492; flex: none; }
+.dock img { width: 100%; height: 100%; object-fit: contain; }
+.travel .dock img { visibility: hidden; }
+.traveller { position: absolute; left: 0; top: 0; width: 200px; aspect-ratio: 420 / 492; transform-origin: 0 0; pointer-events: none; z-index: 6; display: none; }
+.travel .traveller { display: block; }
+.traveller .tb { width: 100%; height: 100%; transform-origin: 50% 100%; }
+.traveller img { width: 100%; height: 100%; }
+
+/* the product's own speech bubble */
+[data-ui].say { background: #eef2f5; color: #16261d; border-radius: 16px 16px 16px 4px; padding: 12px 16px; font-size: 16px; line-height: 1.4; max-width: 24ch; transform-origin: 0 100%; }
+[data-ui].say--r { border-radius: 16px 16px 4px 16px; transform-origin: 100% 100%; }
+[data-ui].say b { font-weight: 600; }
+
+/* ---------- showcase: the live widget ---------- */
+.demo { grid-template-rows: auto; }
+.demo-head { grid-column: 1 / 5; display: flex; flex-direction: column; gap: 22px; min-height: 720px; }
+.demo-head p { font-size: var(--t-body); }
+.demo-head .try { color: var(--soft); font-size: var(--t-small); }
+.demo-head .meet { margin-top: auto; display: flex; align-items: flex-end; gap: 10px; }
+.demo-head .meet .dock { width: clamp(110px, 9vw, 140px); }
+.demo-tile { grid-column: 5 / 13; padding: 0; display: grid; grid-template-columns: 62fr 38fr; background: #fff; }
+
+[data-ui] .stage { position: relative; background: #dfe9e2; padding: 24px; min-height: 720px; display: flex; flex-direction: column; justify-content: flex-start; }
+[data-ui] .stage-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #2c3e33; font-size: 15px; margin-bottom: 14px; }
+[data-ui] .stage-bar b { font-weight: 600; color: #16261d; }
+[data-ui] .stage-reset { background: none; border: 0; padding: 6px 2px; font-size: 15px; font-weight: 600; text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; color: #16261d; }
+[data-ui] .stage-reset:hover { color: #2a573f; }
+[data-ui] .w { --wa: #2a573f; --wbg: #fff; --wtx: #16261d; --wbot: #eef2f5; --wme: #e8f0eb; --wline: #e3e8ec; --wmut: #5b6b78; --wcard: #fff; position: relative; flex: 1; display: flex; flex-direction: column; }
+[data-ui] .w[data-theme="dark"] { --wbg: #141c18; --wtx: #eef2f5; --wbot: #22302a; --wme: #2f4237; --wline: #2c3a33; --wmut: #a6b8ad; --wcard: #1b2621; }
+[data-ui] .w-panel { width: 372px; max-width: 100%; height: 600px; margin-left: auto; background: var(--wbg); color: var(--wtx); border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 18px 40px -18px rgba(22, 38, 29, 0.35), 0 0 0 1px rgba(22, 38, 29, 0.06); transition: margin var(--t-ui) var(--ease-out), background-color 200ms ease, color 200ms ease; font-size: 15px; line-height: 1.45; }
+[data-ui] .w[data-side="left"] .w-panel { margin-left: 0; margin-right: auto; }
+[data-ui] .w[data-open="false"] .w-panel { display: none; }
+[data-ui] .w-head { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--wline); }
+[data-ui] .w-av { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex: none; background: #e8f0eb; display: grid; place-items: center; font-weight: 600; font-size: 13px; color: #fff; }
+[data-ui] .w-av img { width: 100%; height: 100%; object-fit: cover; }
+[data-ui] .w-av--logo, [data-ui] .m-av--logo { background: var(--wa); }
+[data-ui] .w-who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+[data-ui] .w-name { font-weight: 600; font-size: 16px; }
+[data-ui] .w-status { font-size: 13px; color: var(--wmut); display: flex; align-items: center; gap: 6px; }
+[data-ui] .w-status i { width: 8px; height: 8px; border-radius: 50%; background: #6bbf3a; }
+[data-ui] .w-icon { width: 36px; height: 36px; display: grid; place-items: center; border: 0; background: none; border-radius: 8px; cursor: pointer; color: var(--wmut); transition: background-color 160ms ease, color 160ms ease; }
+[data-ui] .w-icon:hover { background: var(--wbot); color: var(--wtx); }
+[data-ui] .w-icon svg { width: 18px; height: 18px; }
+[data-ui] .w-thread { flex: 1; overflow-y: auto; padding: 14px 14px 6px; display: flex; flex-direction: column; gap: 10px; scrollbar-width: thin; overscroll-behavior: contain; }
+[data-ui] .m { display: flex; gap: 8px; align-items: flex-end; max-width: 100%; }
+[data-ui] .m-av { width: 28px; height: 28px; border-radius: 50%; flex: none; overflow: hidden; background: #e8f0eb; display: grid; place-items: center; font-size: 10px; font-weight: 600; color: #fff; }
+[data-ui] .m-av img { width: 100%; height: 100%; object-fit: cover; }
+[data-ui] .m-b { background: var(--wbot); padding: 10px 13px; border-radius: 14px 14px 14px 4px; max-width: 85%; }
+[data-ui] .m-me { justify-content: flex-end; }
+[data-ui] .m-me .m-b { background: var(--wme); border-radius: 14px 14px 4px 14px; }
+[data-ui] .m-in { animation: m-in 320ms var(--ease-out); }
+@keyframes m-in { from { opacity: 0; transform: translateY(8px); } }
+[data-ui] .m-src { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 13px; font-weight: 600; color: var(--wa); text-decoration: underline; text-underline-offset: 0.2em; }
+[data-ui] .w[data-theme="dark"] .m-src { color: #b9dca0; }
+[data-ui] .dots { display: inline-flex; gap: 4px; padding: 4px 0; }
+[data-ui] .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--wmut); animation: dot 1s infinite ease-in-out; }
+[data-ui] .dots i:nth-child(2) { animation-delay: 0.15s; }
+[data-ui] .dots i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes dot { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+[data-ui] .cards { display: flex; gap: 8px; padding-left: 36px; }
+[data-ui] .pc { width: 190px; background: var(--wcard); border: 1px solid var(--wline); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+[data-ui] .cards--2 .pc { width: calc(50% - 4px); }
+[data-ui] .pc-img { aspect-ratio: 580 / 520; width: 100%; object-fit: cover; background: #e6e3de; }
+[data-ui] .pc-body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; }
+[data-ui] .pc-name { font-size: 14px; }
+[data-ui] .pc-price { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+[data-ui] .pc-stock { font-size: 12px; color: var(--wmut); display: flex; align-items: center; gap: 6px; }
+[data-ui] .pc-stock i { width: 7px; height: 7px; border-radius: 50%; background: #93a4b4; }
+[data-ui] .pc-stock.ok i { background: #6bbf3a; }
+[data-ui] .wbtn { display: inline-flex; justify-content: center; align-items: center; gap: 6px; min-height: 38px; padding: 0 14px; background: var(--wa); color: #fff; border: 0; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 140ms var(--ease-out), filter 160ms ease; }
+[data-ui] .wbtn:hover { filter: brightness(1.12); }
+[data-ui] .wbtn:active { transform: scale(0.97); }
+[data-ui] .wbtn[disabled] { background: #b8c2c9; cursor: not-allowed; filter: none; }
+[data-ui] .wbtn--ghost { background: transparent; color: var(--wtx); border: 1px solid var(--wline); }
+[data-ui] .pc .wbtn { margin-top: 6px; width: 100%; }
+[data-ui] .pc-link { font-size: 12px; text-align: center; color: var(--wmut); text-decoration: underline; text-underline-offset: 0.2em; padding-top: 2px; }
+[data-ui] .ac { margin-left: 36px; border: 1px solid #cfe6b5; border-radius: 14px; overflow: hidden; background: var(--wcard); }
+[data-ui] .ac-h { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #f3f9ea; color: #16261d; font-weight: 600; }
+[data-ui] .w[data-theme="dark"] .ac-h { background: #2a3a20; color: #eef2f5; }
+[data-ui] .ac-tick { width: 24px; height: 24px; border-radius: 50%; background: #8dc63f; display: grid; place-items: center; color: #fff; flex: none; }
+[data-ui] .ac-tick svg { width: 14px; height: 14px; }
+[data-ui] .ac-row { display: flex; gap: 10px; padding: 12px; }
+[data-ui] .ac-row img { width: 54px; height: 54px; border-radius: 8px; object-fit: cover; }
+[data-ui] .ac-row p { font-size: 14px; }
+[data-ui] .ac-sum { padding: 0 12px; font-size: 13px; color: var(--wmut); font-variant-numeric: tabular-nums; }
+[data-ui] .ac-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 12px 12px; }
+[data-ui] .w-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 14px 8px; }
+[data-ui] .chip { border: 1px solid var(--wa); color: var(--wa); background: transparent; border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; transition: background-color 160ms ease, color 160ms ease, transform 140ms var(--ease-out); }
+[data-ui] .w[data-theme="dark"] .chip { color: #cfe6b5; border-color: #4f6d58; }
+[data-ui] .chip:hover { background: var(--wa); color: #fff; }
+[data-ui] .chip:active { transform: scale(0.96); }
+[data-ui] .w-form { display: flex; align-items: center; gap: 8px; margin: 4px 12px 0; padding: 6px 6px 6px 14px; border: 2px solid var(--wa); border-radius: 999px; background: var(--wbg); }
+[data-ui] .w-form input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 15px; padding: 6px 0; color: var(--wtx); }
+[data-ui] .w-form input::placeholder { color: var(--wmut); }
+[data-ui] .w-send { width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--wa); color: #fff; display: grid; place-items: center; cursor: pointer; transition: transform 140ms var(--ease-out); }
+[data-ui] .w-send:active { transform: scale(0.92); }
+[data-ui] .w-send svg { width: 16px; height: 16px; }
+[data-ui] .w-foot { font-size: 12px; text-align: center; color: var(--wmut); padding: 6px 0 10px; max-width: none; }
+[data-ui] .w-sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--wbg); border-radius: 16px 16px 0 0; padding: 16px; box-shadow: 0 -12px 30px -12px rgba(22, 38, 29, 0.3); display: flex; flex-direction: column; gap: 12px; transform: translateY(105%); transition: transform 320ms var(--ease-out); z-index: 2; }
+[data-ui] .w-sheet.open { transform: none; }
+[data-ui] .sh-top { display: flex; gap: 12px; align-items: flex-start; }
+[data-ui] .sh-top img { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; }
+[data-ui] .sh-top div { flex: 1; }
+[data-ui] .sh-price { font-weight: 600; font-variant-numeric: tabular-nums; }
+[data-ui] .sh-label { font-size: 13px; color: var(--wmut); }
+[data-ui] .sh-label b { color: var(--wtx); font-weight: 600; }
+[data-ui] .opts { display: flex; gap: 8px; flex-wrap: wrap; }
+[data-ui] .opt { min-height: 38px; padding: 0 14px; border: 1px solid var(--wline); background: var(--wcard); color: var(--wtx); border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; transition: border-color 160ms ease, background-color 160ms ease; }
+[data-ui] .opt--size { border-radius: 8px; min-width: 52px; justify-content: center; }
+[data-ui] .opt[aria-pressed="true"] { border: 2px solid var(--wa); background: color-mix(in srgb, var(--wa) 10%, var(--wcard)); }
+[data-ui] .opt:hover { border-color: var(--wa); }
+[data-ui] .opt i { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #c9cdb0; }
+[data-ui] .sh-avail { font-size: 14px; display: flex; align-items: center; gap: 8px; }
+[data-ui] .sh-avail svg { width: 16px; height: 16px; color: #2a8a3e; }
+[data-ui] .sh-avail.no svg { color: #b4232a; }
+[data-ui] .sh-btns { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+[data-ui] .w-launch { position: absolute; right: 24px; bottom: 24px; display: none; flex-direction: column; align-items: flex-end; gap: 12px; }
+[data-ui] .w[data-side="left"] .w-launch { right: auto; left: 0; align-items: flex-start; }
+[data-ui] .w[data-open="false"] .w-launch { display: flex; position: static; margin-top: auto; }
+[data-ui] .w-nudge { background: #fff; color: #16261d; border-radius: 14px; padding: 12px 16px; font-size: 15px; box-shadow: 0 12px 28px -14px rgba(22, 38, 29, 0.35), 0 0 0 1px rgba(22, 38, 29, 0.06); max-width: 300px; }
+[data-ui] .w-launcher { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px; border-radius: 999px; border: 0; background: var(--wa); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 12px 28px -14px rgba(22, 38, 29, 0.5); transition: transform 140ms var(--ease-out); }
+[data-ui] .w-launcher:active { transform: scale(0.96); }
+[data-ui] .w-launcher svg { width: 20px; height: 20px; }
+
+[data-ui] .set { padding: 24px; display: flex; flex-direction: column; background: #f6f8f7; color: #16261d; }
+[data-ui] .set-title { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+[data-ui] .set-sub { font-size: 14px; color: #4b5d52; margin-bottom: 14px; }
+[data-ui] .row { min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #e3e8e5; }
+[data-ui] .row > label, [data-ui] .row > .rl { font-size: 14px; color: #33463a; flex: none; }
+[data-ui] .row input[type="text"], [data-ui] .row select { width: 150px; min-height: 36px; border: 1px solid #cfd8d3; border-radius: 8px; padding: 0 10px; background: #fff; font-size: 14px; }
+[data-ui] .row select { appearance: auto; }
+[data-ui] .row input:focus, [data-ui] .row select:focus { outline: 2px solid #2a573f; outline-offset: 1px; }
+[data-ui] .row--stack { flex-direction: column; align-items: stretch; justify-content: center; gap: 6px; padding: 10px 0; }
+[data-ui] .row--stack input[type="text"] { width: 100%; }
+[data-ui] .row--stack .count { font-size: 12px; color: #4b5d52; align-self: flex-end; font-variant-numeric: tabular-nums; }
+[data-ui] .seg { display: inline-flex; background: #e6ece8; border-radius: 8px; padding: 3px; }
+[data-ui] .seg label { position: relative; }
+[data-ui] .seg input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+[data-ui] .seg span { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: background-color 160ms ease; }
+[data-ui] .seg input:checked + span { background: #fff; font-weight: 600; box-shadow: 0 1px 2px rgba(22, 38, 29, 0.15); }
+[data-ui] .seg input:focus-visible + span { outline: 2px solid #2a573f; }
+[data-ui] .swatches { display: flex; gap: 8px; }
+[data-ui] .swatches label { position: relative; width: 28px; height: 28px; }
+[data-ui] .swatches input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+[data-ui] .swatches span { display: block; width: 28px; height: 28px; border-radius: 50%; background: var(--c); transition: transform 140ms var(--ease-out); }
+[data-ui] .swatches input:checked + span { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--c); }
+[data-ui] .swatches input:focus-visible + span { outline: 2px solid #16261d; outline-offset: 4px; }
+[data-ui] .swatches label:hover span { transform: scale(1.1); }
+[data-ui] .set-more { display: none; }
+[data-ui] .set-note { margin-top: auto; padding-top: 16px; font-size: 13px; color: #4b5d52; }
+
+/* ---------- features: staggered fragment cells ---------- */
+.feat-head { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px 48px; flex-wrap: wrap; padding-block: clamp(28px, 3vw, 44px); }
+.feat-head p { font-size: var(--t-body); color: var(--on-dark-soft); max-width: 44ch; }
+.feat-head p b { color: var(--on-dark); font-weight: 600; }
+.cell { grid-column: span 4; height: 480px; padding: 0; display: flex; flex-direction: column; transition: background-color var(--t-hover) ease; }
+.cell-text { padding: var(--pad); display: flex; flex-direction: column; gap: 10px; }
+.cell-text h3 { font-size: var(--t-state); letter-spacing: -0.02em; line-height: 1.15; }
+.cell-text p { font-size: var(--t-small); line-height: 1.5; max-width: 40ch; }
+.cell--top .frag { margin: calc(var(--pad) * -1 + 8px) -40px 0 var(--pad); }
+.cell--bot .frag { margin: auto -40px -24px var(--pad); }
+.cell--top .cell-text { margin-top: auto; }
+.frag { position: relative; height: 270px; flex: none; border-radius: var(--r); overflow: clip; background: #fff; transition: transform 420ms var(--ease-out); }
+.frag img.crop { position: absolute; max-width: none; height: auto; }
+.crop[data-crop="sheet"] { width: 597px; left: 0; top: -150px; }
+.crop[data-crop="added"] { width: 600px; left: -64px; top: -440px; }
+.crop[data-crop="nudge"] { width: 470px; left: -24px; top: 4px; }
+@media (hover: hover) and (pointer: fine) {
+  .cell:hover .frag { transform: translate(-6px, 0); }
+}
+.cell .dock { position: absolute; right: 20px; bottom: 18px; width: 92px; }
+.cell--mascot .cell-text { padding-right: 130px; }
+
+[data-ui].frag { font-size: 14px; line-height: 1.45; color: #16261d; }
+[data-ui] .pol { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+[data-ui] .pol .m-b { font-size: 14px; }
+[data-ui] .pol .foot { font-size: 12px; color: #5b6b78; text-align: center; }
+[data-ui] .adm-h { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid #e3e8ec; }
+[data-ui] .adm-av { width: 34px; height: 34px; border-radius: 50%; background: #1e4fbf; color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 600; flex: none; }
+[data-ui] .adm-id { font-weight: 600; font-size: 14px; }
+[data-ui] .adm-id span { display: block; font-weight: 400; font-size: 12px; color: #5b6b78; }
+[data-ui] .adm-with { margin-left: auto; font-size: 12px; font-weight: 600; color: #1d6b2a; background: #eef8e4; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+[data-ui] .adm-back { font-size: 13px; font-weight: 600; border: 1px solid #d5dde3; border-radius: 8px; padding: 7px 12px; white-space: nowrap; background: #fff; }
+[data-ui] .adm-body { background: #f7f9fb; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; height: 100%; }
+[data-ui] .adm-sys { align-self: center; font-size: 12px; border: 1px solid #dfe5ea; border-radius: 999px; padding: 4px 12px; background: #fff; }
+[data-ui] .adm-me { align-self: flex-end; background: #2a573f; color: #fff; border-radius: 12px; padding: 8px 12px; font-size: 13px; max-width: 80%; }
+[data-ui] .adm-sara { align-self: flex-start; background: #e9efe9; border: 1px solid #b9dca0; border-radius: 12px; padding: 8px 12px; font-size: 13px; max-width: 86%; }
+[data-ui] .adm-sara b { display: block; color: #2a573f; font-size: 12px; }
+[data-ui] .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 14px; background: #f1f3f2; height: 100%; align-content: start; }
+[data-ui] .kpi { background: #fff; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+[data-ui] .kpi-l { font-size: 12px; font-weight: 600; line-height: 1.3; min-height: 2.6em; }
+[data-ui] .kpi-n { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+[data-ui] .kpi-s { font-size: 12px; color: #5b6b78; line-height: 1.35; }
+[data-ui] .kpi-cap { grid-column: 1 / -1; font-size: 12px; color: #5b6b78; padding: 2px 2px 0; }
+
+/* ---------- setup: one card, four fields ---------- */
+.field { grid-column: span 3; min-height: clamp(580px, 74svh, 700px); display: grid; grid-template-rows: 110px auto 1fr auto; gap: 0; }
+.field h2 { font-size: var(--t-state); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; max-width: 12ch; }
+.field .sc { grid-row: 2; justify-self: center; transition: transform 150ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .field:hover .sc { transform: translateY(-6px); } }
+.field .fill { grid-row: 3; display: flex; align-items: center; justify-content: center; min-height: 40px; }
+.field .clause { grid-row: 4; display: flex; flex-direction: column; gap: 10px; }
+.field .clause h3 { font-size: var(--t-state); letter-spacing: -0.02em; line-height: 1.15; }
+.field .clause p { font-size: var(--t-small); }
+.t-forest .clause p, .t-ink .clause p { color: var(--on-dark-soft); }
+.field .dock { width: 96px; align-self: flex-end; }
+.field .fill--mascot { justify-content: flex-start; align-items: flex-end; gap: 10px; }
+
+[data-ui].sc { width: 264px; background: #fff; color: #16261d; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; font-size: 14px; line-height: 1.4; }
+[data-ui] .sc-top { display: flex; align-items: center; gap: 10px; }
+
+[data-ui] .sc-top b { display: block; font-size: 15px; }
+[data-ui] .sc-top span { font-size: 12px; color: #5b6b78; }
+[data-ui] .sc-pill { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; background: #eef8e4; color: #1d6b2a; border-radius: 999px; padding: 4px 10px; }
+[data-ui] .sc-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #6bbf3a; }
+[data-ui] .sc-list { display: flex; flex-direction: column; gap: 0; }
+[data-ui] .sc-list li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid #edf0f2; }
+[data-ui] .sc-list li:last-child { border-bottom: 0; }
+[data-ui] .sc-list b { font-weight: 600; font-variant-numeric: tabular-nums; display: inline-flex; align-items: center; gap: 6px; }
+[data-ui] .okc { width: 18px; height: 18px; border-radius: 50%; background: #8dc63f; color: #fff; display: inline-grid; place-items: center; }
+[data-ui] .okc::after { content: ""; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+[data-ui] .sw { width: 16px; height: 16px; border-radius: 50%; background: #2a573f; display: inline-block; }
+[data-ui] .mini-av { width: 22px; height: 22px; border-radius: 50%; background: #e8f0eb url(../../aliox-mascot-head.webp) center / cover; }
+[data-ui] .sc-btn { background: #2a573f; color: #fff; border-radius: 8px; text-align: center; padding: 9px; font-weight: 600; font-size: 13px; }
+[data-ui] .tog { width: 38px; height: 22px; border-radius: 999px; background: #2a573f; position: relative; display: inline-block; }
+[data-ui] .tog::after { content: ''; position: absolute; right: 3px; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+[data-ui] .sc-nudge { align-self: flex-end; background: #fff; border: 1px solid #e3e8ec; border-radius: 12px; padding: 8px 12px; font-size: 13px; }
+[data-ui] .sc-launch { align-self: flex-end; background: #2a573f; color: #fff; border-radius: 999px; padding: 9px 16px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; }
+[data-ui] .sc-launch::before { content: ""; width: 15px; height: 15px; background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M12 4a8 8 0 0 0-6.9 12L4 20l4.1-1.1A8 8 0 1 0 12 4z%27/%3E%3C/svg%3E") center / contain no-repeat; }
+
+/* ---------- pricing: plans as a large table ---------- */
+.price-tile { grid-column: 1 / -1; padding: clamp(20px, 2vw, 32px); }
+.pt { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: var(--t-state); letter-spacing: -0.015em; }
+.pt col.c0 { width: 33.333%; }
+.pt th, .pt td { text-align: left; vertical-align: top; padding: 18px 20px; font-weight: 400; }
+.pt thead th { padding-top: 24px; padding-bottom: 28px; vertical-align: bottom; }
+.pt thead th.pt-h { vertical-align: top; }
+.pt-h h2 { margin-bottom: 14px; }
+.pt-h p { font-size: var(--t-small); letter-spacing: 0; color: var(--soft); max-width: 30ch; }
+.pt-name { display: block; font-size: var(--t-head); font-weight: 600; letter-spacing: -0.035em; line-height: 1.05; }
+.pt-price { display: block; font-size: var(--t-head); letter-spacing: -0.035em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.pt-price small { font-size: var(--t-small); letter-spacing: 0; color: var(--soft); margin-left: 4px; }
+.pt tbody th { font-weight: 400; color: var(--soft); }
+.pt tbody tr:nth-child(odd) > * { background: var(--paper-2); }
+.pt .rec, .pt tbody tr > .rec { background: var(--sage); }
+.pt tbody tr:nth-child(odd) > .rec { background: var(--sage-2); }
+.pt thead .rec { border-radius: 14px 14px 0 0; position: relative; padding-right: 104px; }
+.pt tbody tr:last-child .rec { border-radius: 0 0 14px 14px; }
+.pt tbody tr > :first-child { border-radius: 12px 0 0 12px; }
+.pt tbody tr > :last-child { border-radius: 0 12px 12px 0; }
+.pt tbody tr:last-child > * { background: transparent; }
+.pt tbody tr:last-child > .rec { background: var(--sage); }
+.pt tbody tr:last-child th { font-size: var(--t-small); letter-spacing: 0; line-height: 1.5; color: var(--ink); }
+.pt td { font-variant-numeric: tabular-nums; }
+.pt tbody tr { transition: transform var(--t-hover) var(--ease-out); }
+.pt-dock { position: absolute; right: 16px; bottom: 22px; display: flex; align-items: flex-end; gap: 6px; }
+.pt-dock .dock { width: 74px; }
+.pp { display: none; }
+@media (max-width: 1023px) {
+  .pt { display: none; }
+  .pp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--g); }
+  .pp-head, .pp-note { grid-column: 1 / -1; }
+  .pp-head { margin-bottom: 16px; }
+  .pp-head h2 { margin-bottom: 10px; }
+  .pp-head p { font-size: var(--t-small); color: var(--soft); }
+  .pp-plan { border-radius: 14px; background: var(--paper-2); padding: 20px; display: flex; flex-direction: column; gap: 14px; position: relative; }
+  .pp-plan.rec { background: var(--sage); }
+  .pp-plan .pt-name, .pp-plan .pt-price { font-size: 2rem; }
+  .pp-plan dl { margin: 0; display: grid; gap: 10px; }
+  .pp-plan dt { font-size: 1rem; color: var(--soft); }
+  .pp-plan dd { margin: 0; font-size: 1.0625rem; }
+  .pp-plan .btn { justify-content: center; margin-top: auto; padding: 0 14px; white-space: nowrap; }
+  .pp-plan .pt-dock { right: 14px; top: 14px; bottom: auto; }
+  .pp-plan .pt-dock .dock { width: 64px; }
+  .pp-note { font-size: var(--t-small); padding: 8px 4px 0; }
+  .price-tile .pt-dock.desk { display: none; }
+}
+
+/* ---------- faq: a band per question ---------- */
+.faq-head { grid-column: 1 / -1; min-height: 40svh; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: clamp(24px, 2.6vw, 40px); }
+.faq-head p { font-size: var(--t-body); max-width: 40ch; }
+.band { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--g); padding: clamp(32px, 3.6vw, 56px) clamp(24px, 2.6vw, 40px); }
+.band h3 { grid-column: 1 / 6; font-size: var(--t-state); letter-spacing: -0.02em; line-height: 1.2; }
+.band p { grid-column: 7 / 13; font-size: var(--t-body); line-height: 1.55; }
+
+/* ---------- cta: the action tile ---------- */
+.cta { grid-template-rows: 380px; }
+.flank { padding: 0; }
+.flank--pic { grid-column: 1 / 3; background: #e6e3de; }
+.flank--pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.cta-tile { grid-column: 3 / 11; display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: clamp(28px, 3vw, 48px); }
+.cta-tile p { font-size: var(--t-body); max-width: 52ch; }
+.flank--mascot { grid-column: 11 / 13; display: flex; align-items: flex-end; justify-content: center; }
+.flank--mascot { padding: 24px; }
+.flank--mascot .dock { width: min(140px, 90%); }
+
+/* ---------- footer: the mark, built large ---------- */
+.foot-tile { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 56px; padding: clamp(24px, 2.6vw, 40px); }
+.mark svg { display: block; width: 100%; height: auto; }
+.mark--narrow { display: none; }
+.foot-cols { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px var(--g); }
+.foot-cols div { grid-column: span 2; display: flex; flex-direction: column; gap: 8px; font-size: var(--t-small); }
+.foot-cols div.contact { grid-column: 9 / 13; }
+.foot-cols h2 { font-size: var(--t-small); letter-spacing: 0; font-weight: 600; color: var(--sage); margin-bottom: 4px; }
+.foot-cols a { color: var(--on-dark); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; text-decoration-color: transparent; transition: text-decoration-color var(--t-hover) ease; align-self: flex-start; }
+@media (hover: hover) and (pointer: fine) { .foot-cols a:hover, .foot-last a.co:hover { text-decoration-color: currentColor; } }
+.foot-cols p { color: var(--on-dark-soft); }
+.foot-last { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-size: var(--t-small); }
+.foot-last a.co { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; text-decoration-color: transparent; transition: text-decoration-color var(--t-hover) ease; }
+.btn--small { min-height: 44px; padding: 0 20px; }
+
+/* ---------- tablet ---------- */
+@media (max-width: 1023px) {
+  .hero { height: auto; min-height: 0; max-height: none; grid-template-rows: 64px auto auto auto; }
+  .logo-tile { grid-column: 1 / 4; }
+  .nav-tile { grid-column: 4 / 13; display: flex; justify-content: flex-end; }
+  .action-tile { display: none; }
+  .title-tile { grid-column: 1 / -1; grid-row: 2; padding-top: 72px; }
+  .pic-tile { grid-column: 1 / -1; grid-row: 3; aspect-ratio: 16 / 10; }
+  .mascot-tile { grid-column: 1 / 7; grid-row: 4; min-height: 300px; }
+  .cart-tile { grid-column: 7 / 13; grid-row: 4; }
+  .demo-head { grid-column: 1 / -1; min-height: 0; flex-direction: row; flex-wrap: wrap; align-items: flex-end; }
+  .demo-head > div.txt { flex: 1 1 360px; display: flex; flex-direction: column; gap: 18px; }
+  .demo-head .meet { margin-top: 0; }
+  .demo-tile { grid-column: 1 / -1; }
+  .cell { grid-column: span 6; }
+  .field { grid-column: span 6; min-height: 600px; }
+  .band h3 { grid-column: 1 / 6; }
+  .band p { grid-column: 6 / 13; }
+  .cta { grid-template-rows: auto 160px; }
+  .cta-tile { grid-column: 1 / -1; grid-row: 1; min-height: 320px; }
+  .flank--pic { grid-column: 1 / 7; grid-row: 2; }
+  .flank--mascot { grid-column: 7 / 13; grid-row: 2; }
+  .flank--mascot { padding: 16px; }
+  .flank--mascot .dock { width: 104px; }
+  .foot-cols div { grid-column: span 3; }
+  .foot-cols div.contact { grid-column: 1 / -1; }
+}
+
+/* ---------- phone ---------- */
+@media (max-width: 639px) {
+  :root { --g: 6px; --pad: 20px; --t-display: clamp(2rem, 9vw, 2.6rem); --t-head: clamp(1.75rem, 8vw, 2rem); --t-state: 1.25rem; --t-body: 1.0625rem; }
+  .hero { grid-template-rows: 56px auto auto auto auto auto; }
+  .logo-tile { grid-column: 1 / 9; }
+  .logo-tile img { height: 26px; }
+  .menu-tile { display: flex; grid-column: 9 / 13; grid-row: 1; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: var(--r); background: var(--forest); color: var(--on-dark); font-weight: 600; font-size: var(--t-small); cursor: pointer; transition: transform var(--t-press) var(--ease-out); }
+  .menu-tile:active { transform: scale(0.96); }
+  .menu-tile svg { width: 18px; height: 18px; transition: transform var(--t-ui) var(--ease-out); }
+  .menu-tile[aria-expanded="true"] svg { transform: rotate(45deg); }
+  .nav-tile { display: none; grid-column: 1 / -1; grid-row: 2; padding: 12px 20px; }
+  .nav-tile.open { display: block; }
+  .nav-tile ul { flex-direction: column; gap: 0; }
+  .nav-tile a { display: block; padding: 12px 0; font-size: var(--t-body); }
+  .title-tile { grid-row: 3; padding: 28px 20px 24px; gap: 22px; }
+  .title-tile .lead { font-size: 1.125rem; }
+  .pic-tile { grid-row: 4; aspect-ratio: 4 / 5; }
+  .pic-tile img { object-position: 50% 0%; }
+  .mascot-tile { grid-column: 1 / -1; grid-row: 5; min-height: 0; flex-direction: row; align-items: flex-start; gap: 12px; }
+  .mascot-tile .dock { width: 110px; margin-left: auto; }
+  .cart-tile { grid-column: 1 / -1; grid-row: 6; }
+  .demo-head { flex-direction: column; align-items: stretch; }
+  .demo-head > div.txt { flex: none; }
+  .demo-head .meet .dock { width: 104px; }
+  .demo-tile { grid-template-columns: 1fr; }
+  [data-ui] .stage { min-height: 0; padding: 14px; }
+  [data-ui] .w-panel { width: 100%; height: 540px; }
+  [data-ui] .stage-bar { flex-wrap: wrap; }
+  [data-ui] .set { padding: 18px 20px 22px; }
+  [data-ui] .row { min-height: 56px; }
+  [data-ui] .set .more { display: none; }
+  [data-ui] .set.all .more { display: flex; }
+  [data-ui] .set-more { display: inline-flex; align-self: flex-start; margin-top: 12px; background: none; border: 0; padding: 8px 0; font-weight: 600; font-size: 15px; text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; color: #16261d; }
+  .feat-head { flex-direction: column; align-items: flex-start; }
+  .cell { grid-column: 1 / -1; height: auto; }
+  .cell--top .frag, .cell--bot .frag { margin: 0 0 0 var(--pad); order: 2; height: 250px; border-radius: var(--r) 0 0 var(--r); }
+  .cell--bot .frag { margin: 0 var(--pad) 0 0; border-radius: 0 var(--r) var(--r) 0; }
+  .cell--top .cell-text, .cell--bot .cell-text { order: 1; margin-top: 0; }
+  .cell { padding-bottom: var(--pad); }
+  .cell--mascot .cell-text { padding-right: var(--pad); }
+  .cell .dock { display: none; }
+  .field { grid-column: 1 / -1; min-height: 0; grid-template-rows: auto auto auto; gap: 24px; }
+  .field h2 { order: 0; }
+  .field .clause { grid-row: auto; order: 1; }
+  .field .sc { grid-row: auto; order: 2; justify-self: start; }
+  .field .fill { grid-row: auto; order: 3; min-height: 0; }
+  .field .fill:empty { display: none; }
+  .pp { grid-template-columns: 1fr; gap: 40px; }
+  .pp-head { margin-bottom: 0; }
+  .crop[data-crop="nudge"] { width: 360px; left: -16px; top: 6px; }
+  .faq-head { min-height: 30svh; }
+  .band { padding: 32px 20px; }
+  .band h3, .band p { grid-column: 1 / -1; }
+  .band p { font-size: 1.0625rem; margin-top: 6px; }
+  .cta { grid-template-rows: auto 140px; }
+  .cta-tile { min-height: 0; padding: 32px 20px; }
+  .cta-tile .btn { justify-content: center; }
+  .flank--mascot .dock { width: 88px; }
+  .mark--wide { display: none; }
+  .mark--narrow { display: block; }
+  .foot-tile { gap: 40px; padding: 20px; }
+  .foot-cols div { grid-column: span 6; }
+}
+
+/* ---------- motion: hidden starting states live only here ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .motion [data-tile] { clip-path: inset(0% 0% 99.5% 0% round 16px); }
+  .motion [data-tile][data-from="b"] { clip-path: inset(99.5% 0% 0% 0% round 16px); }
+  .motion [data-tile][data-from="l"] { clip-path: inset(0% 99.5% 0% 0% round 16px); }
+  .motion [data-tile][data-from="r"] { clip-path: inset(0% 0% 0% 99.5% round 16px); }
+  .motion [data-tile] [data-rise] { transform: translateY(28px); }
+  .motion .lines [data-line] { transform: translateY(105%); }
+  .motion .shutter { clip-path: inset(0% 0% 100% 0% round 16px); }
+  .motion .shutter img { transform: scale(1.12); }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="board hero" id="top">
+  <a class="tile t-ink logo-tile" href="#top" data-tile data-from="l" aria-label="Aliox AI, back to top">
+    <img src="../../assets/aliox-logo-dark.svg" width="512" height="128" alt="Aliox AI">
+  </a>
+  <button class="menu-tile" type="button" aria-expanded="false" aria-controls="nav" id="menuBtn">
+    Menu
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg>
+  </button>
+  <nav class="tile nav-tile" id="nav" aria-label="Main" data-tile>
+    <ul>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#setup">Setup</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">Questions</a></li>
+    </ul>
+  </nav>
+  <a class="tile t-sage action-tile" data-tile data-from="r" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">
+    Join the launch list
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg>
+  </a>
+
+  <div class="tile t-paper title-tile" data-tile>
+    <h1 class="display lines"><span class="line"><span data-line>A shop assistant</span></span><span class="line"><span data-line>for WooCommerce</span></span></h1>
+    <p class="lead" data-rise>Shoppers ask in their own words. Aliox finds the right size and colour in your catalogue and adds it to their cart.</p>
+    <div class="actions" data-rise>
+      <a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">Join the launch list
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
+      <a class="link" href="#demo">Try the demo</a>
+    </div>
+    <p class="note" data-rise>Coming soon. A pilot is running with a few stores; plans start at $29 a month.</p>
+  </div>
+
+  <figure class="tile pic-tile shutter">
+    <div class="drift">
+      <picture>
+        <source media="(max-width: 639px)" srcset="../../assets/screens/chat-phone.webp" width="780" height="1688">
+        <img src="../../assets/screens/chat-desktop.webp" width="2000" height="1250" fetchpriority="high" decoding="async" alt="The Loom &amp; Line product page for the Everyday Linen Shirt, ৳1,890 to ৳1,990, with the Aliox chat open beside it showing the same shirt as a product card with a Select options button">
+      </picture>
+    </div>
+    <figcaption>Aliox on Loom &amp; Line, a linen shop</figcaption>
+  </figure>
+
+  <div class="tile t-forest mascot-tile" data-tile data-from="b">
+    <p class="say" data-ui data-say="hero" data-rise>Hi, I’m Aliox. Ask me for a linen shirt in black, size&nbsp;M.</p>
+    <div class="dock" data-dock="hero"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt="Aliox, the mascot: a green robot whose head is a speech bubble, waving"></div>
+  </div>
+
+  <figure class="tile t-sage cart-tile" data-tile data-from="b">
+    <img class="shot" data-rise src="../../assets/screens/added.webp" width="990" height="660" decoding="async" alt="The chat’s confirmation card: Added to your cart! Everyday Linen Shirt, Black / M, quantity 1, ৳1,890, with Continue shopping and Checkout buttons">
+    <figcaption data-rise>It goes into the shopper’s own cart, and says “added” only once WooCommerce confirms.</figcaption>
+  </figure>
+</header>
+
+<main id="main">
+
+<!-- ======================= showcase ======================= -->
+<section class="board demo" id="demo" aria-labelledby="demo-h">
+  <div class="tile t-mist demo-head" data-tile>
+    <div class="txt">
+      <h2 class="head" id="demo-h" data-rise>Try it on Loom&nbsp;&amp;&nbsp;Line</h2>
+      <p data-rise>This is the assistant on Loom &amp; Line, a demo linen shop with a real catalogue. Ask what a shopper would ask. The settings beside it are the ones you set in wp-admin.</p>
+      <p class="try" data-rise>Try “linen shirt in black, size M”, “anything under ৳2,000?”, “do you take returns?”, or write in Bangla.</p>
+    </div>
+    <div class="meet">
+      <p class="say" data-ui data-say="demo">Go on, type something. Then change my settings and watch.</p>
+      <div class="dock" data-dock="demo"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt=""></div>
+    </div>
+  </div>
+
+  <div class="tile demo-tile" data-ui data-tile>
+    <div class="stage">
+      <div class="stage-bar"><span><b>Loom &amp; Line</b> · Everyday Linen Shirt page</span><button class="stage-reset" type="button" id="wReset">Start over</button></div>
+      <div class="w" id="w" data-theme="light" data-side="right" data-open="true">
+        <div class="w-panel" role="region" aria-label="Chat with the Loom &amp; Line assistant (demo)">
+          <div class="w-head">
+            <span class="w-av" id="wAv"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt=""></span>
+            <span class="w-who"><span class="w-name" id="wName">Aliox</span><span class="w-status"><i></i>AI Shopping Assistant</span></span>
+            <button class="w-icon" type="button" id="wClose" aria-label="Close the chat">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>
+            </button>
+          </div>
+          <div class="w-thread" id="wThread" aria-live="polite">
+            <div class="m m-bot"><span class="m-av"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt=""></span><div class="m-b">Hi! I’m Aliox, Loom &amp; Line’s shopping assistant. Looking for something? I can help.</div></div>
+            <div class="m m-me"><div class="m-b">Linen shirt in black, size M</div></div>
+            <div class="m m-bot"><span class="m-av"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt=""></span><div class="m-b">Black / M is in stock. Here’s the Everyday Linen Shirt; I’ve picked Black / M for you.</div></div>
+            <div class="cards"><div class="pc"><img class="pc-img" src="../../assets/screens/shirt.webp" width="580" height="518" alt="Everyday Linen Shirt on a hanger"><div class="pc-body"><p class="pc-name">Everyday Linen Shirt</p><p class="pc-price">৳1,890 – ৳1,990</p><p class="pc-stock ok"><i></i>Black / M picked</p><button class="wbtn" type="button" data-act="sheet" data-p="shirt">Select options</button><a class="pc-link" href="#demo">View details</a></div></div></div>
+          </div>
+          <div class="w-chips" id="wChips">
+            <button class="chip" type="button">Anything under ৳2,000?</button>
+            <button class="chip" type="button">Do you take returns?</button>
+            <button class="chip" type="button">লিনেন কুর্তা আছে?</button>
+            <button class="chip" type="button">Talk to a person</button>
+          </div>
+          <form class="w-form" id="wForm" autocomplete="off">
+            <label class="vh" for="wq">Ask the assistant</label>
+            <input id="wq" name="q" type="text" placeholder="Ask about products, sizes, or store policy…" maxlength="120">
+            <button class="w-send" type="submit" aria-label="Send">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16V4M5 9l5-5 5 5"/></svg>
+            </button>
+          </form>
+          <p class="w-foot">AI assistant · Responses may be imperfect</p>
+          <div class="w-sheet" id="wSheet" aria-hidden="true" role="dialog" aria-label="Choose options">
+            <div class="sh-top"><img src="../../assets/screens/shirt.webp" width="580" height="518" alt=""><div><p>Everyday Linen Shirt</p><p class="sh-price" id="shPrice">৳1,890</p></div>
+              <button class="w-icon" type="button" data-act="sheet-close" aria-label="Close options"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg></button></div>
+            <p class="sh-label">Color · <b id="shColor">Black</b></p>
+            <div class="opts" id="shColors"><button class="opt" type="button" data-color="Beige" aria-pressed="false"><i style="background:#f1f0d8"></i>Beige</button><button class="opt" type="button" data-color="Black" aria-pressed="true"><i style="background:#111"></i>Black</button></div>
+            <p class="sh-label">Size · <b id="shSize">M</b></p>
+            <div class="opts" id="shSizes"><button class="opt opt--size" type="button" data-size="L" aria-pressed="false">L</button><button class="opt opt--size" type="button" data-size="M" aria-pressed="true">M</button><button class="opt opt--size" type="button" data-size="XL" aria-pressed="false">XL</button></div>
+            <p class="sh-avail" id="shAvail"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Black / M is available</span></p>
+            <div class="sh-btns"><button class="wbtn wbtn--ghost" type="button" data-act="sheet-close">Cancel</button><button class="wbtn" type="button" id="shAdd">Add to cart</button></div>
+          </div>
+        </div>
+        <div class="w-launch">
+          <p class="w-nudge" id="wNudge">Looking for something? I can help.</p>
+          <button class="w-launcher" type="button" id="wLaunch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 4a8 8 0 0 0-6.9 12L4 20l4.1-1.1A8 8 0 1 0 12 4z"/></svg>Ask our assistant</button>
+        </div>
+      </div>
+    </div>
+
+    <form class="set" id="set" aria-label="Widget settings (demo)">
+      <p class="set-title">Widget settings</p>
+      <p class="set-sub">Aliox AI → Widget Settings</p>
+      <div class="row"><label for="sName">Name</label><input type="text" id="sName" value="Aliox" maxlength="20"></div>
+      <div class="row"><label for="sTone">Tone</label><select id="sTone"><option>Friendly</option><option>Professional</option><option>Casual</option></select></div>
+      <div class="row"><span class="rl" id="lCol">Colour</span>
+        <div class="swatches" role="radiogroup" aria-labelledby="lCol">
+          <label><input type="radio" name="col" value="#2a573f" checked aria-label="Forest"><span style="--c:#2a573f"></span></label>
+          <label><input type="radio" name="col" value="#1f5f74" aria-label="Ocean"><span style="--c:#1f5f74"></span></label>
+          <label><input type="radio" name="col" value="#2b2f33" aria-label="Charcoal"><span style="--c:#2b2f33"></span></label>
+          <label><input type="radio" name="col" value="#7a2335" aria-label="Maroon"><span style="--c:#7a2335"></span></label>
+        </div></div>
+      <div class="row"><span class="rl" id="lAv">Avatar</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lAv"><label><input type="radio" name="av" value="mascot" checked><span>Mascot</span></label><label><input type="radio" name="av" value="logo"><span>Your logo</span></label></div></div>
+      <div class="row more"><span class="rl" id="lSide">Position</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lSide"><label><input type="radio" name="side" value="left"><span>Left</span></label><label><input type="radio" name="side" value="right" checked><span>Right</span></label></div></div>
+      <div class="row more"><span class="rl" id="lTheme">Theme</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lTheme"><label><input type="radio" name="theme" value="light" checked><span>Light</span></label><label><input type="radio" name="theme" value="dark"><span>Dark</span></label></div></div>
+      <div class="row row--stack more"><label for="sNudge">Nudge in the corner</label><input type="text" id="sNudge" value="Looking for something? I can help." maxlength="60" aria-describedby="sNudgeCount"><span class="count" id="sNudgeCount">34 / 60</span></div>
+      <button class="set-more" type="button" id="setMore" aria-expanded="false">More settings</button>
+      <p class="set-note">Changes show in the chat at once. Editing the nudge closes the chat so you can see it.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ======================= features ======================= -->
+<section class="board features" id="features" aria-labelledby="feat-h">
+  <div class="tile t-ink feat-head" data-tile>
+    <h2 class="head" id="feat-h" data-rise>From question to cart</h2>
+    <p data-rise>Every part of the sale is the store’s real data, and every reply is footed <b>AI assistant · Responses may be imperfect</b>.</p>
+  </div>
+
+  <article class="tile t-mist cell cell--bot" data-tile>
+    <div class="cell-text"><h3 data-rise>The right size and colour</h3><p data-rise>It searches your real catalogue by colour, size, fit, material, price and occasion, checks stock, and says plainly when nothing matches.</p></div>
+    <div class="frag" data-rise><img class="crop" src="../../assets/screens/sheet.webp" width="597" height="597" data-crop="sheet" loading="lazy" decoding="async" alt="The variation sheet: Color Black and Size M selected for the Everyday Linen Shirt"></div>
+  </article>
+
+  <article class="tile t-sage cell cell--top cell--mascot" data-tile>
+    <div class="frag" data-rise><img class="crop" src="../../assets/screens/panel-added.webp" width="600" height="930" data-crop="added" loading="lazy" decoding="async" alt="The chat panel after adding: Added to your cart! Everyday Linen Shirt, Black / M, Qty 1, ৳1,890, subtotal ৳1,890, with Checkout"></div>
+    <div class="cell-text"><h3 data-rise>Into their own cart</h3><p data-rise>The exact variation goes into the shopper’s WooCommerce cart. Stock is re-checked; checkout and payment stay in WooCommerce.</p></div>
+    <div class="dock" data-dock="cart"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt=""></div>
+  </article>
+
+  <article class="tile t-paper cell cell--bot" data-tile>
+    <div class="cell-text"><h3 data-rise>Policy, with the page</h3><p data-rise>Shipping, returns, exchanges, payments, size guide and care, answered from the pages you approve. No page, no guess: it sends the shopper to you.</p></div>
+    <div class="frag" data-ui data-rise>
+      <div class="pol">
+        <div class="m m-me"><div class="m-b">Can I return it if it doesn’t fit?</div></div>
+        <div class="m m-bot"><span class="m-av"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt=""></span><div class="m-b">Yes. You can return or exchange unworn items within 7 days of delivery.<br><a class="m-src" href="#faq">From: Returns &amp; Exchanges</a></div></div>
+        <p class="foot">AI assistant · Responses may be imperfect</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="tile t-paper cell cell--top cell--mascot" data-tile>
+    <div class="frag" data-ui data-rise>
+      <div class="adm-h"><span class="adm-av">CE</span><span class="adm-id">C-ED1D0699<span>Started Oct 27, 5:56 PM</span></span><span class="adm-with">● With you</span><span class="adm-back">Hand back to assistant</span></div>
+      <div class="adm-body">
+        <span class="adm-sys">Sara took over</span>
+        <p class="adm-me">Does it run true to size? I usually wear M.</p>
+        <p class="adm-sara"><b>Sara</b>Hi, I’m Sara from the store team! It runs true to size, so M will fit you well.</p>
+      </div>
+    </div>
+    <div class="cell-text"><h3 data-rise>Your team can step in</h3><p data-rise>Live chats show in wp-admin. Sara takes one over under her own name, then hands it back. Nobody free in 3 minutes? The assistant carries on.</p></div>
+    <div class="dock" data-dock="admin"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt=""></div>
+  </article>
+
+  <article class="tile t-mist cell cell--bot" data-tile>
+    <div class="cell-text"><h3 data-rise>A nudge in the corner</h3><p data-rise>A launcher with a nudge of up to 60 characters and up to four suggested questions. On a phone it opens full screen.</p></div>
+    <div class="frag" data-rise><img class="crop" src="../../assets/screens/nudge.webp" width="470" height="246" data-crop="nudge" loading="lazy" decoding="async" alt="The launcher button, Ask our assistant, with its nudge: Looking for something? I can help."></div>
+  </article>
+
+  <article class="tile t-sage cell cell--top" data-tile>
+    <div class="frag" data-ui data-rise>
+      <div class="kpis">
+        <div class="kpi"><span class="kpi-l">Conversations started</span><span class="kpi-n" data-count="122">122</span><span class="kpi-s">Chats with at least one message</span></div>
+        <div class="kpi"><span class="kpi-l">Added to cart</span><span class="kpi-n" data-count="59">59</span><span class="kpi-s">Confirmed by the store</span></div>
+        <div class="kpi"><span class="kpi-l">Checkout clicks</span><span class="kpi-n" data-count="8">8</span><span class="kpi-s">Not completed orders</span></div>
+        <p class="kpi-cap">Loom &amp; Line demo store · last 30 days</p>
+      </div>
+    </div>
+    <div class="cell-text"><h3 data-rise>See what it sold</h3><p data-rise>Conversations, product pages opened, adds to cart and checkout clicks (never counted as orders), with full transcripts and the searches that found nothing.</p></div>
+  </article>
+</section>
+
+<!-- ======================= how it works ======================= -->
+<section class="board setup" id="setup" aria-labelledby="setup-h">
+  <div class="tile t-mist field" data-tile>
+    <h2 id="setup-h" data-rise>Set up in four steps</h2>
+    <div class="sc" data-ui data-rise>
+      <div class="sc-top"><div><b>Aliox AI</b><span>WordPress plugin</span></div></div>
+      <ul class="sc-list">
+        <li>WordPress <b><span class="okc" aria-hidden="true"></span>Ready</b></li>
+        <li>WooCommerce <b><span class="okc" aria-hidden="true"></span>Active</b></li>
+      </ul>
+      <span class="sc-btn">Connect your store</span>
+    </div>
+    <div class="fill"></div>
+    <div class="clause"><h3 data-rise>First, install the plugin.</h3><p data-rise>It checks that WordPress and WooCommerce are ready.</p></div>
+  </div>
+
+  <div class="tile t-sage field" data-tile>
+    <span aria-hidden="true"></span>
+    <div class="sc" data-ui data-rise>
+      <div class="sc-top"><div><b>Aliox AI</b><span>WordPress plugin</span></div></div>
+      <span class="sc-pill"><span class="dot"></span>Connected · Loom &amp; Line</span>
+      <ul class="sc-list">
+        <li>Products <b>2</b></li>
+        <li>Variations <b>6</b></li>
+        <li>Policy pages <b>3</b></li>
+        <li>Sync <b>Kept up to date</b></li>
+      </ul>
+    </div>
+    <div class="fill"></div>
+    <div class="clause"><h3 data-rise>Then connect your store.</h3><p data-rise>Products, variations and policy pages sync, and stay in sync.</p></div>
+  </div>
+
+  <div class="tile t-forest field" data-tile>
+    <span aria-hidden="true"></span>
+    <div class="sc" data-ui data-rise>
+      <div class="sc-top"><div><b>Aliox AI</b><span>Widget settings</span></div></div>
+      <span class="sc-pill"><span class="dot"></span>Connected · Loom &amp; Line</span>
+      <ul class="sc-list">
+        <li>Name <b>Aliox</b></li>
+        <li>Tone <b>Friendly</b></li>
+        <li>Colour <b><span class="sw"></span>Forest</b></li>
+        <li>Avatar <b><span class="mini-av" aria-hidden="true"></span>Mascot</b></li>
+        <li>Position <b>Right · Light</b></li>
+      </ul>
+    </div>
+    <div class="fill"></div>
+    <div class="clause"><h3 data-rise>Make it yours.</h3><p data-rise>Name, greeting, tone, colour, your logo or the mascot, left or right, light or dark.</p></div>
+  </div>
+
+  <div class="tile t-ink field" data-tile>
+    <span aria-hidden="true"></span>
+    <div class="sc" data-ui data-rise>
+      <div class="sc-top"><div><b>Aliox AI</b><span>Widget settings</span></div></div>
+      <span class="sc-pill"><span class="dot"></span>Connected · Loom &amp; Line</span>
+      <ul class="sc-list"><li>Assistant on your store <b><span class="tog" aria-hidden="true"></span>On</b></li></ul>
+      <span class="sc-nudge">Looking for something? I can help.</span>
+      <span class="sc-launch">Ask our assistant</span>
+    </div>
+    <div class="fill fill--mascot">
+      <div class="dock" data-dock="setup"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt=""></div>
+      <p class="say" data-ui data-say="setup">That’s me, in the corner of every page.</p>
+    </div>
+    <div class="clause"><h3 data-rise>Switch it on.</h3><p data-rise>Shoppers see it in the corner. If Aliox is ever down, browsing, cart and checkout still work.</p></div>
+  </div>
+</section>
+
+<!-- ======================= pricing ======================= -->
+<section class="board pricing" id="pricing" aria-labelledby="price-h">
+  <div class="tile t-paper price-tile" data-tile>
+    <table class="pt">
+      <colgroup><col class="c0"><col><col><col></colgroup>
+      <thead>
+        <tr>
+          <th scope="col" class="pt-h"><h2 class="head" id="price-h" data-rise>Launch pricing</h2><p data-rise>US dollars, billed monthly. Every feature on every plan, no add-ons. Prices may change before launch.</p></th>
+          <th scope="col"><span class="pt-name">Starter</span><span class="pt-price">$29<small>/month</small></span></th>
+          <th scope="col" class="rec"><span class="pt-name">Growth</span><span class="pt-price">$79<small>/month</small></span>
+            <span class="pt-dock desk"><span class="dock" data-dock="price"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt=""></span></span></th>
+          <th scope="col"><span class="pt-name">Pro</span><span class="pt-price">$199<small>/month</small></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Conversations a month</th><td>500</td><td class="rec">2,000</td><td>6,000</td></tr>
+        <tr><th scope="row">That’s about</th><td>16 a day</td><td class="rec">66 a day</td><td>200 a day</td></tr>
+        <tr><th scope="row">Products</th><td>Up to 500</td><td class="rec">Up to 2,000</td><td>Up to 10,000</td></tr>
+        <tr><th scope="row">Features</th><td>Every feature</td><td class="rec">Every feature</td><td>Every feature</td></tr>
+        <tr><th scope="row">Made for</th><td>New and small shops</td><td class="rec">Most stores</td><td>Larger catalogues</td></tr>
+        <tr>
+          <th scope="row">At the monthly limit, new chats pause until the next period and your store keeps selling. Change plans any time.</th>
+          <td><a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&amp;body=Plan%3A%20Starter">Join the launch list</a></td>
+          <td class="rec"><a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&amp;body=Plan%3A%20Growth">Join the launch list</a></td>
+          <td><a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&amp;body=Plan%3A%20Pro">Join the launch list</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pp">
+      <div class="pp-head"><h2 class="head" data-rise>Launch pricing</h2><p>US dollars, billed monthly. Every feature on every plan, no add-ons. Prices may change before launch.</p></div>
+      <div class="pp-plan"><span class="pt-name">Starter</span><span class="pt-price">$29<small>/month</small></span>
+        <dl><div><dt>Conversations a month</dt><dd>500, about 16 a day</dd></div><div><dt>Products</dt><dd>Up to 500</dd></div><div><dt>Made for</dt><dd>New and small shops</dd></div></dl>
+        <a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&amp;body=Plan%3A%20Starter">Join the launch list</a></div>
+      <div class="pp-plan rec"><span class="pt-name">Growth</span><span class="pt-price">$79<small>/month</small></span>
+        <span class="pt-dock"><span class="dock" data-dock="price-m"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt=""></span></span>
+        <dl><div><dt>Conversations a month</dt><dd>2,000, about 66 a day</dd></div><div><dt>Products</dt><dd>Up to 2,000</dd></div><div><dt>Made for</dt><dd>Most stores</dd></div></dl>
+        <a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&amp;body=Plan%3A%20Growth">Join the launch list</a></div>
+      <div class="pp-plan"><span class="pt-name">Pro</span><span class="pt-price">$199<small>/month</small></span>
+        <dl><div><dt>Conversations a month</dt><dd>6,000, about 200 a day</dd></div><div><dt>Products</dt><dd>Up to 10,000</dd></div><div><dt>Made for</dt><dd>Larger catalogues</dd></div></dl>
+        <a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&amp;body=Plan%3A%20Pro">Join the launch list</a></div>
+      <p class="pp-note">At the monthly limit, new chats pause until the next period and your store keeps selling. Change plans any time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= faq ======================= -->
+<section class="board faq" id="faq" aria-labelledby="faq-h">
+  <div class="tile t-sage faq-head" data-tile>
+    <h2 class="display" id="faq-h" data-rise>Questions</h2>
+    <p data-rise>What store owners ask us first, answered in full.</p>
+  </div>
+  <div class="tile t-paper band" data-tile><h3 data-rise>Will it make things up?</h3><p data-rise>No. It answers only from your catalogue and the policy pages you approve, and says plainly when nothing matches. Policy answers carry a link to the page. If a policy is missing, it sends the shopper to you instead of guessing.</p></div>
+  <div class="tile t-mist band" data-tile><h3 data-rise>What happens at checkout?</h3><p data-rise>Nothing new. Aliox adds the exact variation to the shopper’s own WooCommerce cart after re-checking stock, and shows “added” only once WooCommerce confirms. Checkout and payment stay in WooCommerce.</p></div>
+  <div class="tile t-paper band" data-tile><h3 data-rise>Which languages does it speak?</h3><p data-rise>It replies in the shopper’s language. In the pilot that is English and Bangla, and Banglish is being tested.</p></div>
+  <div class="tile t-mist band" data-tile><h3 data-rise>Can a person from my team take over?</h3><p data-rise>Yes, if you turn on live chat (it is off by default). Live chats show in wp-admin under Aliox AI → Conversations. A shop manager takes one over and replies under their own name, always labelled as staff, then hands it back. Shoppers see “Talk to a person” only while a manager is set to Available; if nobody picks up within 3 minutes, the assistant carries on and shows your contact link.</p></div>
+  <div class="tile t-paper band" data-tile><h3 data-rise>What about shoppers’ privacy?</h3><p data-rise>Shoppers stay anonymous. Emails, phone numbers and card numbers they type are hidden, and each store’s data is kept separate. You see full transcripts and the searches that found nothing.</p></div>
+  <div class="tile t-mist band" data-tile><h3 data-rise>What if Aliox is down?</h3><p data-rise>Your store carries on as usual: browsing, cart and checkout all keep working without it.</p></div>
+  <div class="tile t-paper band" data-tile><h3 data-rise>What can’t it do yet?</h3><p data-rise>Bundles, subscriptions, gift cards, add-ons, order lookup, refunds and payment in the chat are not supported.</p></div>
+</section>
+
+<!-- ======================= cta ======================= -->
+<section class="board cta" id="join" aria-labelledby="join-h">
+  <figure class="tile flank flank--pic" data-tile><img src="../../assets/screens/kurta.webp" width="580" height="532" loading="lazy" decoding="async" alt="The Breezy Linen Kurta from Loom &amp; Line, ৳2,200, on a hanger"></figure>
+  <div class="tile t-sage cta-tile" data-tile>
+    <h2 class="head" id="join-h" data-rise>Be first when it opens</h2>
+    <p data-rise>Aliox AI is coming soon. A pilot is running with a few stores, and the plugin and plans open after it. Join the list and we’ll write when it does.</p>
+    <div data-rise><a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">Join the launch list
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a></div>
+  </div>
+  <div class="tile t-forest flank flank--mascot" data-tile>
+    <div class="dock" data-dock="cta"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt=""></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================= footer ======================= -->
+<footer class="board foot">
+  <div class="tile t-ink foot-tile" data-tile>
+    <div class="mark mark--wide" data-rise><svg viewBox="0 0 1360 300" role="img" aria-label="aliox"><rect x="0.0" y="60" width="281.1" height="240" rx="16" fill="#2a573f"/><g transform="translate(-4.6 48.0) scale(1.860)"><path d="M44 30 H84 A20 20 0 0 1 104 50 V74 A20 20 0 0 1 84 94 H56 L37 107 Q32 110.5 33 105 L35 92.5 A20 20 0 0 1 24 74 V50 A20 20 0 0 1 44 30 Z" fill="#f6f9f6"/><path d="M0 -1 Q0.22 -0.22 1 0 Q0.22 0.22 0 1 Q-0.22 0.22 -1 0 Q-0.22 -0.22 0 -1 Z" transform="translate(64 62) scale(19)" fill="#8dc63f"/></g><rect x="289.1" y="114" width="241.1" height="186" rx="16" fill="#b9dca0"/><g transform="translate(329.1 20.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><circle cx="28" cy="72" r="21"/><path d="M49 51 V93"/></g><rect x="538.2" y="0" width="168.7" height="300" rx="16" fill="#e8f0eb"/><g transform="translate(400.6 20.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><path d="M81 23 V93"/></g><rect x="714.8" y="30" width="168.7" height="270" rx="16" fill="#f6f9f6"/><g transform="translate(517.2 20.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><path d="M113 51 V93"/><path d="M0 -1 Q0.22 -0.22 1 0 Q0.22 0.22 0 1 Q-0.22 0.22 -1 0 Q-0.22 -0.22 0 -1 Z" transform="translate(113 25) scale(14)" fill="#8dc63f" stroke="none"/></g><rect x="891.5" y="96" width="241.1" height="204" rx="16" fill="#b9dca0"/><g transform="translate(600.3 20.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><circle cx="166" cy="72" r="21"/></g><rect x="1140.5" y="72" width="219.5" height="228" rx="16" fill="#e8f0eb"/><g transform="translate(671.7 20.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><path d="M219 51 L253 93 M253 51 L219 93"/></g></svg></div>
+    <div class="mark mark--narrow" data-rise><svg viewBox="0 0 700 608" role="img" aria-hidden="true"><rect x="0.0" y="60" width="278.3" height="240" rx="16" fill="#2a573f"/><g transform="translate(-4.6 48.0) scale(1.860)"><path d="M44 30 H84 A20 20 0 0 1 104 50 V74 A20 20 0 0 1 84 94 H56 L37 107 Q32 110.5 33 105 L35 92.5 A20 20 0 0 1 24 74 V50 A20 20 0 0 1 44 30 Z" fill="#f6f9f6"/><path d="M0 -1 Q0.22 -0.22 1 0 Q0.22 0.22 0 1 Q-0.22 0.22 -1 0 Q-0.22 -0.22 0 -1 Z" transform="translate(64 62) scale(19)" fill="#8dc63f"/></g><rect x="286.3" y="114" width="238.7" height="186" rx="16" fill="#b9dca0"/><g transform="translate(326.3 20.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><circle cx="28" cy="72" r="21"/><path d="M49 51 V93"/></g><rect x="533.0" y="0" width="167.0" height="300" rx="16" fill="#e8f0eb"/><g transform="translate(395.4 20.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><path d="M81 23 V93"/></g><rect x="0.0" y="338" width="183.3" height="270" rx="16" fill="#f6f9f6"/><g transform="translate(-197.6 328.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><path d="M113 51 V93"/><path d="M0 -1 Q0.22 -0.22 1 0 Q0.22 0.22 0 1 Q-0.22 0.22 -1 0 Q-0.22 -0.22 0 -1 Z" transform="translate(113 25) scale(14)" fill="#8dc63f" stroke="none"/></g><rect x="191.3" y="404" width="262.1" height="204" rx="16" fill="#b9dca0"/><g transform="translate(-99.9 328.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><circle cx="166" cy="72" r="21"/></g><rect x="461.4" y="380" width="238.6" height="228" rx="16" fill="#e8f0eb"/><g transform="translate(-7.4 328.0) scale(2.4)" fill="none" stroke="#16261d" stroke-width="14" stroke-linecap="round"><path d="M219 51 L253 93 M253 51 L219 93"/></g></svg></div>
+    <div class="foot-cols">
+      <div><h2>Product</h2><a href="#demo">Live demo</a><a href="#features">Features</a><a href="#setup">Setup</a></div>
+      <div><h2>Plans</h2><a href="#pricing">Pricing</a><a href="#faq">Questions</a></div>
+      <div><h2>Made by</h2><a href="https://trinomiallabs.com">Trinomial Labs</a></div>
+      <div><h2>Works with</h2><p>WordPress and WooCommerce</p></div>
+      <div class="contact"><h2>Contact</h2><a href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">hello@alioxai.com</a><p>Screens show Loom &amp; Line, our demo linen shop.</p></div>
+    </div>
+    <div class="foot-last">
+      <a class="co" href="https://trinomiallabs.com">© 2026 Trinomial Labs</a>
+      <a class="btn btn--sage btn--small" href="#top">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<div class="traveller" aria-hidden="true"><div class="tb"><img src="../../assets/aliox-mascot-cut.webp" width="823" height="965" alt=""></div></div>
+
+<script>
+/* ---------- phone menu ---------- */
+(() => {
+  const btn = document.getElementById('menuBtn'), nav = document.getElementById('nav');
+  btn.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') !== 'true';
+    btn.setAttribute('aria-expanded', String(open));
+    nav.classList.toggle('open', open);
+  });
+  nav.addEventListener('click', (e) => { if (e.target.closest('a')) { btn.setAttribute('aria-expanded', 'false'); nav.classList.remove('open'); } });
+})();
+
+/* ---------- the live widget ---------- */
+(() => {
+  const HEAD = '../../aliox-mascot-head.webp';
+  const SHIRT = '../../assets/screens/shirt.webp', KURTA = '../../assets/screens/kurta.webp';
+  const w = document.getElementById('w'), thread = document.getElementById('wThread');
+  const form = document.getElementById('wForm'), input = document.getElementById('wq');
+  const chips = document.getElementById('wChips'), sheet = document.getElementById('wSheet');
+  const state = { name: 'Aliox', tone: 'Friendly', logo: false, cart: [], color: 'Black', size: 'M' };
+  const STOCK = { 'Beige/XL': false };
+  const PRICE = { L: 1890, M: 1890, XL: 1990 };
+  const tk = (n) => '৳' + n.toLocaleString('en-US');
+  const bnDigits = (s) => s.replace(/[০-৯]/g, (d) => '০১২৩৪৫৬৭৮৯'.indexOf(d));
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const av = () => state.logo ? '<span class="m-av m-av--logo">L&amp;L</span>' : `<span class="m-av"><img src="${HEAD}" width="128" height="128" alt=""></span>`;
+
+  const T = {
+    greet: {
+      Friendly: (n) => `Hi! I’m ${n}, Loom & Line’s shopping assistant. Looking for something? I can help.`,
+      Professional: (n) => `Hello. I’m ${n}, the shopping assistant for Loom & Line. How can I help you today?`,
+      Casual: (n) => `Hey! ${n} here. What are you shopping for today?`,
+      bn: (n) => `হ্যালো! আমি ${n}, Loom & Line-এর শপিং অ্যাসিস্ট্যান্ট। কী খুঁজছেন?`,
+    },
+    found: { Friendly: 'Here’s what I found.', Professional: 'These are the matching products.', Casual: 'Got a couple for you.', bn: 'এই যে পেয়েছি, নিচে দেখুন।' },
+    shirt: { Friendly: 'The Everyday Linen Shirt comes in Beige or Black, sizes L, M and XL.', Professional: 'The Everyday Linen Shirt is available in Beige and Black, in sizes L, M and XL.', Casual: 'The Everyday Linen Shirt: Beige or Black, L, M or XL.', bn: 'Everyday Linen Shirt: বেইজ বা কালো, সাইজ L, M, XL।' },
+    picked: { Friendly: (v) => `${v} is in stock. I’ve picked it for you.`, Professional: (v) => `${v} is in stock and selected.`, Casual: (v) => `${v}? In stock. Picked it for you.`, bn: (v) => `${v} স্টকে আছে, আপনার জন্য বেছে রেখেছি।` },
+    out: { Friendly: (v) => `Sorry, ${v} is out of stock right now. The other sizes are in.`, Professional: (v) => `${v} is currently out of stock. Other sizes are available.`, Casual: (v) => `${v} is sold out, sorry. Other sizes are fine.`, bn: (v) => `দুঃখিত, ${v} এখন স্টকে নেই।` },
+    none: { Friendly: (q) => `I couldn’t find ${q} at Loom & Line. They sell linen shirts and kurtas; want to see those?`, Professional: (q) => `Loom & Line doesn’t carry ${q}. Their range is linen shirts and kurtas.`, Casual: (q) => `No ${q} here, sorry. It’s linen shirts and kurtas at this shop.`, bn: () => 'দুঃখিত, Loom & Line-এ এমন কিছু পাইনি। এখানে লিনেন শার্ট আর কুর্তা আছে।' },
+    budget: { Friendly: (n) => `Under ${n}, there’s one: the Everyday Linen Shirt.`, Professional: (n) => `One product is under ${n}:`, Casual: (n) => `Under ${n}? This one.`, bn: (n) => `${n}-এর মধ্যে এটা আছে:` },
+    budgetNone: { Friendly: (n) => `Nothing at Loom & Line is under ${n}, sorry. The lowest price is ৳1,890.`, Professional: (n) => `There are no products under ${n}. Prices start at ৳1,890.`, Casual: (n) => `Nothing under ${n}, sorry. Cheapest is ৳1,890.`, bn: () => 'দুঃখিত, এই দামের মধ্যে কিছু নেই। দাম শুরু ৳১,৮৯০ থেকে।' },
+    added: { Friendly: 'Done! It’s in your cart.', Professional: 'The item has been added to your cart.', Casual: 'In your cart.', bn: 'আপনার কার্টে যোগ হয়েছে!' },
+    checking: { Friendly: 'Checking stock with the store…', Professional: 'Confirming stock with the store…', Casual: 'Checking with the store…', bn: 'স্টোরে স্টক দেখছি…' },
+    returns: { en: 'You can return or exchange unworn items within 7 days of delivery. Refunds are handled by the store, not in this chat.', bn: 'ডেলিভারির ৭ দিনের মধ্যে না-পরা পণ্য ফেরত বা বদল করা যায়।', src: 'Returns & Exchanges' },
+    shipping: { en: 'Delivery takes 1–2 days inside Dhaka and 3–5 days outside Dhaka.', bn: 'ঢাকার ভেতরে ১–২ দিন, ঢাকার বাইরে ৩–৫ দিনে ডেলিভারি।', src: 'Shipping Policy' },
+    sizing: { en: 'The Everyday Linen Shirt runs true to size with a relaxed fit. The size guide has the chest measurements.', bn: 'Everyday Linen Shirt সাইজ অনুযায়ী ঠিক ফিট, একটু ঢিলেঢালা।', src: 'Size Guide' },
+    missing: { en: 'Loom & Line hasn’t approved a page about that yet, so I won’t guess. Their team can answer on the Contact page.', bn: 'এ বিষয়ে স্টোরের কোনো পেজ নেই, তাই অনুমান করব না। Contact পেজে স্টোরকে জিজ্ঞেস করুন।' },
+    person: { en: 'Nobody from the Loom & Line team is available right now, so I’ll keep helping. You can also reach them on the Contact page.', bn: 'এখন Loom & Line-এর কেউ নেই, আমিই সাহায্য করছি। Contact পেজেও যোগাযোগ করতে পারেন।' },
+    unsupported: { en: 'I can’t look up orders, gift cards or refunds in this chat. The Loom & Line team can help on their Contact page.', bn: 'এই চ্যাটে অর্ডার বা রিফান্ড দেখা যায় না। Contact পেজে স্টোরকে জিজ্ঞেস করুন।' },
+    fallback: { en: 'I’m not sure I understood. I can find products by colour, size or price, or answer questions about shipping, returns and sizing.', bn: 'দুঃখিত, বুঝতে পারিনি। রং, সাইজ বা দাম দিয়ে খুঁজে দেখুন।' },
+    checkout: { en: 'Checkout happens on Loom & Line’s own WooCommerce checkout page. This is a demo, so it stops here.', bn: 'চেকআউট হয় Loom & Line-এর নিজের WooCommerce পেজে। এটা ডেমো, তাই এখানেই শেষ।' },
+  };
+  let lang = 'en';
+  const t = (k, ...a) => { const e = T[k][lang === 'bn' ? 'bn' : state.tone]; return typeof e === 'function' ? e(...a) : e; };
+  const tl = (k) => T[k][lang];
+
+  const scrollDown = () => { thread.scrollTop = thread.scrollHeight; };
+  const add = (html) => { const d = document.createElement('div'); d.innerHTML = html.trim(); const el = d.firstElementChild; el.classList.add('m-in'); thread.appendChild(el); scrollDown(); return el; };
+  const bot = (text, extra = '') => add(`<div class="m m-bot">${av()}<div class="m-b">${esc(text)}${extra}</div></div>`);
+  const me = (text) => add(`<div class="m m-me"><div class="m-b">${esc(text)}</div></div>`);
+  const src = (label) => `<br><a class="m-src" href="#faq">From: ${esc(label)}</a>`;
+  const typing = () => add(`<div class="m m-bot">${av()}<div class="m-b"><span class="dots" aria-label="Typing"><i></i><i></i><i></i></span></div></div>`);
+  const card = (p, two) => p === 'shirt'
+    ? `<div class="pc"><img class="pc-img" src="${SHIRT}" width="580" height="518" alt="Everyday Linen Shirt"><div class="pc-body"><p class="pc-name">Everyday Linen Shirt</p><p class="pc-price">৳1,890 – ৳1,990</p><p class="pc-stock${state.picked ? ' ok' : ''}"><i></i>${state.picked ? esc(state.color + ' / ' + state.size) + ' picked' : 'Select size'}</p><button class="wbtn" type="button" data-act="sheet">Select options</button>${two ? '' : '<a class="pc-link" href="#demo">View details</a>'}</div></div>`
+    : `<div class="pc"><img class="pc-img" src="${KURTA}" width="580" height="532" alt="Breezy Linen Kurta"><div class="pc-body"><p class="pc-name">Breezy Linen Kurta</p><p class="pc-price">৳2,200</p><p class="pc-stock ok"><i></i>In stock</p><button class="wbtn" type="button" data-act="add-kurta">Add to cart</button>${two ? '' : '<a class="pc-link" href="#demo">View details</a>'}</div></div>`;
+  const cards = (list) => add(`<div class="cards${list.length > 1 ? ' cards--2' : ''}">${list.map((p) => card(p, list.length > 1)).join('')}</div>`);
+
+  function answer(raw) {
+    const q = bnDigits(raw.toLowerCase());
+    lang = /[ঀ-৿]/.test(raw) ? 'bn' : 'en';
+    const has = (re) => re.test(q);
+    if (has(/\b(order|track|tracking|gift ?card|subscription|bundle|refund status|অর্ডার)\b/)) return bot(tl('unsupported'));
+    if (has(/return|exchange|refund|ফেরত|বদল/)) return bot(tl('returns'), src(T.returns.src));
+    if (has(/ship|deliver|ডেলিভারি/)) return bot(tl('shipping'), src(T.shipping.src));
+    if (has(/true to size|size guide|\bfit\b|run(s)? (small|large|big)|সাইজ গাইড/)) return bot(tl('sizing'), src(T.sizing.src));
+    if (has(/\b(pay|payment|bkash|nagad|cash on|card|wash|care|iron)\b|পেমেন্ট/)) return bot(tl('missing'));
+    if (has(/person|human|someone|staff|agent|talk to|মানুষ/)) return bot(tl('person'));
+    const budget = q.match(/(under|below|less than|within|max|cheaper than|নিচে|মধ্যে|কম)\D{0,6}([\d,]{3,6})|([\d,]{3,6})\s*(taka|tk|৳)?\s*(er moddhe|এর মধ্যে|-এর মধ্যে|নিচে|or less)/);
+    const num = budget ? parseInt((budget[2] || budget[3]).replace(/,/g, ''), 10) : null;
+    if (num) {
+      const list = []; if (num >= 1890) list.push('shirt'); if (num >= 2200) list.push('kurta');
+      state.picked = false;
+      if (!list.length) return bot(t('budgetNone', tk(num)));
+      bot(list.length > 1 ? t('found') : t('budget', tk(num))); return cards(list);
+    }
+    const wantsKurta = has(/kurta|panjabi|কুর্তা|পাঞ্জাবি/), wantsShirt = has(/shirt|শার্ট/);
+    const col = has(/black|কালো/) ? 'Black' : has(/beige|cream|off.?white|বেইজ/) ? 'Beige' : null;
+    const size = (q.match(/\b(xl|l|m)\b(?!\w)/) || q.match(/size\s*(xl|l|m)/) || [])[1];
+    if (has(/\b(xs|s|xxl|2xl|small)\b/) && !size) return bot(lang === 'bn' ? tl('fallback') : 'The Everyday Linen Shirt comes in L, M and XL only. Want to see it?');
+    if (wantsKurta && !wantsShirt) { state.picked = false; bot(t('found')); return cards(['kurta']); }
+    if (wantsShirt || col || size) {
+      state.picked = false;
+      if (col) state.color = col; if (size) state.size = size.toUpperCase();
+      if (col && size) {
+        const v = state.color + ' / ' + state.size;
+        if (STOCK[state.color + '/' + state.size] === false) { bot(t('out', v)); return cards(['shirt']); }
+        state.picked = true; bot(t('picked', v)); return cards(['shirt']);
+      }
+      bot(t('found') + ' ' + t('shirt')); return cards(['shirt']);
+    }
+    if (has(/linen|লিনেন|clothes|kapor|কাপড়|show me|what do you (have|sell)/)) { state.picked = false; bot(t('found')); return cards(['shirt', 'kurta']); }
+    const other = q.match(/\b(dress|jeans|saree|sari|shoes?|sneakers?|pants|trousers?|jacket|hat|bag|t-?shirt|hoodie|watch|skirt)\b|শাড়ি|জুতা/);
+    if (other) return bot(t('none', other[0]));
+    if (has(/^(hi|hello|hey|salam|assalam|হাই|হ্যালো)/)) return bot(t('greet', state.name));
+    return bot(tl('fallback'));
+  }
+
+  function ask(text) {
+    const v = text.trim(); if (!v) return;
+    me(v); input.value = '';
+    const dot = typing();
+    setTimeout(() => { dot.remove(); answer(v); }, 520 + Math.min(v.length * 12, 500));
+  }
+  form.addEventListener('submit', (e) => { e.preventDefault(); ask(input.value); });
+  chips.addEventListener('click', (e) => { const c = e.target.closest('.chip'); if (c) ask(c.textContent); });
+
+  /* variation sheet */
+  const shColor = document.getElementById('shColor'), shSize = document.getElementById('shSize'), shPrice = document.getElementById('shPrice'), shAvail = document.getElementById('shAvail'), shAdd = document.getElementById('shAdd');
+  function syncSheet() {
+    sheet.querySelectorAll('[data-color]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.color === state.color)));
+    sheet.querySelectorAll('[data-size]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.size === state.size)));
+    shColor.textContent = state.color; shSize.textContent = state.size; shPrice.textContent = tk(PRICE[state.size]);
+    const ok = STOCK[state.color + '/' + state.size] !== false;
+    shAvail.classList.toggle('no', !ok);
+    shAvail.querySelector('span').textContent = `${state.color} / ${state.size} ${ok ? 'is available' : 'is out of stock'}`;
+    shAvail.querySelector('svg').innerHTML = ok ? '<path d="M4 10.5l4 4 8-9"/>' : '<path d="M5 5l10 10M15 5L5 15"/>';
+    shAdd.disabled = !ok;
+  }
+  const openSheet = () => { syncSheet(); sheet.classList.add('open'); sheet.setAttribute('aria-hidden', 'false'); setTimeout(() => shAdd.disabled ? sheet.querySelector('[data-size]').focus() : shAdd.focus(), 60); };
+  const closeSheet = () => { sheet.classList.remove('open'); sheet.setAttribute('aria-hidden', 'true'); };
+  sheet.addEventListener('click', (e) => {
+    const c = e.target.closest('[data-color]'), s = e.target.closest('[data-size]');
+    if (c) { state.color = c.dataset.color; syncSheet(); }
+    if (s) { state.size = s.dataset.size; syncSheet(); }
+    if (e.target.closest('[data-act="sheet-close"]')) closeSheet();
+  });
+
+  function addToCart(item) {
+    const dot = bot(t('checking'));
+    setTimeout(() => {
+      dot.remove();
+      state.cart.push(item);
+      const count = state.cart.length, sub = state.cart.reduce((a, b) => a + b.price, 0);
+      add(`<div class="ac"><div class="ac-h"><span class="ac-tick"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg></span>${lang === 'bn' ? 'আপনার কার্টে যোগ হয়েছে!' : 'Added to your cart!'}</div>
+        <div class="ac-row"><img src="${item.img}" width="580" height="518" alt=""><div><p>${esc(item.name)}</p><p class="pc-stock">${esc(item.variant)}Qty 1</p><p class="pc-price">${tk(item.price)}</p></div></div>
+        <p class="ac-sum">${count} item${count > 1 ? 's' : ''} in your cart · Subtotal ${tk(sub)}</p>
+        <div class="ac-btns"><button class="wbtn wbtn--ghost" type="button" data-act="continue">Continue shopping</button><button class="wbtn" type="button" data-act="checkout">Checkout →</button></div></div>`);
+      window.dispatchEvent(new CustomEvent('aliox:added'));
+    }, 900);
+  }
+  shAdd.addEventListener('click', () => {
+    closeSheet();
+    addToCart({ name: 'Everyday Linen Shirt', variant: state.color + ' / ' + state.size + ' · ', price: PRICE[state.size], img: SHIRT });
+  });
+  thread.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const a = b.dataset.act;
+    if (a === 'sheet') openSheet();
+    if (a === 'add-kurta') addToCart({ name: 'Breezy Linen Kurta', variant: '', price: 2200, img: KURTA });
+    if (a === 'checkout') bot(tl('checkout'));
+    if (a === 'continue') { input.focus(); }
+  });
+  thread.addEventListener('click', (e) => { if (e.target.closest('.pc-link')) e.preventDefault(); });
+
+  /* open / close / reset */
+  const setOpen = (o) => { w.dataset.open = String(o); if (!o) closeSheet(); };
+  document.getElementById('wClose').addEventListener('click', () => setOpen(false));
+  document.getElementById('wLaunch').addEventListener('click', () => { setOpen(true); input.focus(); });
+  document.getElementById('wReset').addEventListener('click', () => {
+    thread.innerHTML = ''; state.cart = []; state.picked = false; lang = 'en'; closeSheet(); setOpen(true);
+    bot(t('greet', state.name));
+  });
+
+  /* settings */
+  const set = document.getElementById('set');
+  const nameIn = document.getElementById('sName'), nudgeIn = document.getElementById('sNudge'), count = document.getElementById('sNudgeCount');
+  const wName = document.getElementById('wName'), wAv = document.getElementById('wAv'), wNudge = document.getElementById('wNudge');
+  const refreshGreeting = () => { const first = thread.querySelector('.m-bot .m-b'); if (first && thread.firstElementChild === first.parentElement) first.textContent = t('greet', state.name); };
+  nameIn.addEventListener('input', () => { state.name = nameIn.value.trim() || 'Aliox'; wName.textContent = state.name; refreshGreeting(); });
+  document.getElementById('sTone').addEventListener('change', (e) => { state.tone = e.target.value; lang = 'en'; refreshGreeting(); });
+  set.addEventListener('change', (e) => {
+    const el = e.target;
+    if (el.name === 'col') w.style.setProperty('--wa', el.value);
+    if (el.name === 'av') {
+      state.logo = el.value === 'logo';
+      wAv.className = 'w-av' + (state.logo ? ' w-av--logo' : '');
+      wAv.innerHTML = state.logo ? 'L&amp;L' : `<img src="${HEAD}" width="128" height="128" alt="">`;
+      thread.querySelectorAll('.m-av').forEach((a) => { a.outerHTML = av(); });
+    }
+    if (el.name === 'side') w.dataset.side = el.value;
+    if (el.name === 'theme') w.dataset.theme = el.value;
+  });
+  nudgeIn.addEventListener('focus', () => setOpen(false));
+  nudgeIn.addEventListener('input', () => { wNudge.textContent = nudgeIn.value || ' '; count.textContent = `${nudgeIn.value.length} / 60`; });
+  set.addEventListener('submit', (e) => e.preventDefault());
+  const more = document.getElementById('setMore');
+  more.addEventListener('click', () => { const on = !set.classList.contains('all'); set.classList.toggle('all', on); more.setAttribute('aria-expanded', String(on)); more.textContent = on ? 'Fewer settings' : 'More settings'; });
+})();
+
+/* ---------- motion ---------- */
+(() => {
+  const root = document.documentElement;
+  if (!root.classList.contains('motion')) return;
+  gsap.registerPlugin(ScrollTrigger);
+  const R = 16;
+  const FROM = {
+    t: `inset(0% 0% 99.5% 0% round ${R}px)`, b: `inset(99.5% 0% 0% 0% round ${R}px)`,
+    l: `inset(0% 99.5% 0% 0% round ${R}px)`, r: `inset(0% 0% 0% 99.5% round ${R}px)`,
+  };
+  const OPEN = `inset(0% 0% 0% 0% round ${R}px)`;
+
+  function build(tiles, base = 0) {
+    tiles.forEach((tile, i) => {
+      const d = base + i * 0.075;
+      gsap.fromTo(tile, { clipPath: FROM[tile.dataset.from || 't'] }, { clipPath: OPEN, duration: 1, ease: 'expo.out', delay: d, onComplete: () => { tile.style.clipPath = 'none'; } });
+      const parts = tile.querySelectorAll('[data-rise]');
+      if (parts.length) gsap.fromTo(parts, { y: 28 }, { y: 0, duration: 0.9, ease: 'expo.out', stagger: 0.075, delay: d + 0.12 });
+    });
+  }
+
+  /* load: the hero board assembles, the picture opens like a shutter */
+  const hero = document.querySelector('.hero');
+  build([...hero.querySelectorAll('[data-tile]')].filter((t) => getComputedStyle(t).display !== 'none'), 0.02);
+  gsap.fromTo('.title-tile [data-line]', { yPercent: 105, y: 0 }, { yPercent: 0, y: 0, duration: 0.9, ease: 'expo.out', stagger: 0.1, delay: 0.12 });
+  const shutter = document.querySelector('.shutter');
+  gsap.fromTo(shutter, { clipPath: `inset(0% 0% 100% 0% round ${R}px)` }, { clipPath: OPEN, duration: 1.1, ease: 'power3.inOut', delay: 0.15, onComplete: () => { shutter.style.clipPath = 'none'; } });
+  gsap.fromTo('.shutter img', { scale: 1.12 }, { scale: 1, duration: 1.5, ease: 'power2.out', delay: 0.1 });
+  gsap.fromTo('.shutter .drift', { yPercent: -3 }, { yPercent: 3, ease: 'none', scrollTrigger: { trigger: shutter, start: 'top top', end: 'bottom top', scrub: true } });
+
+  /* sections: tiles assemble as they enter */
+  const later = [...document.querySelectorAll('[data-tile]')].filter((t) => !hero.contains(t));
+  later.forEach((t) => { if (getComputedStyle(t).display === 'none') t.style.clipPath = 'none'; });
+  ScrollTrigger.batch(later, { start: 'top 92%', once: true, interval: 0.12, onEnter: (batch) => build(batch) });
+
+  /* the dashboard figures count up once */
+  document.querySelectorAll('[data-count]').forEach((el) => {
+    const n = +el.dataset.count, o = { v: 0 };
+    ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: () => gsap.to(o, { v: n, duration: 1.2, ease: 'power2.out', onUpdate: () => { el.textContent = Math.round(o.v); } }) });
+  });
+
+  /* safety net: anything still closed after the page settles opens */
+  window.addEventListener('load', () => setTimeout(() => {
+    later.forEach((t) => { if (t.style.clipPath !== 'none' && t.getBoundingClientRect().top < innerHeight) build([t]); });
+  }, 2500));
+
+  /* ---------- the traveller: one mascot hopping from tile to tile ---------- */
+  const trav = document.querySelector('.traveller'), body = trav.querySelector('.tb');
+  const BASE = 200;
+  const docks = () => [...document.querySelectorAll('[data-dock]')].filter((d) => d.offsetParent !== null && d.getBoundingClientRect().width > 0);
+  let cur = null, tl = null;
+  const where = (d) => { const r = d.getBoundingClientRect(); return { x: r.left + scrollX, y: r.top + scrollY, s: r.width / BASE }; };
+  const say = (d) => {
+    const b = document.querySelector(`[data-say="${d.dataset.dock}"]`);
+    if (b) gsap.fromTo(b, { scale: 0.9, y: 6 }, { scale: 1, y: 0, duration: 0.5, ease: 'expo.out' });
+  };
+  function place() { if (cur) { const p = where(cur); gsap.set(trav, { x: p.x, y: p.y, scale: p.s }); } }
+  function go(d) {
+    if (d === cur) return;
+    const prev = cur; cur = d;
+    const p = where(d);
+    if (tl) tl.kill();
+    if (!prev) { gsap.set(trav, { x: p.x, y: p.y + 40, scale: p.s }); tl = gsap.timeline().to(trav, { y: p.y, duration: 0.7, ease: 'expo.out', delay: 0.6 }).add(() => say(d)); return; }
+    let from = { x: gsap.getProperty(trav, 'x'), y: gsap.getProperty(trav, 'y'), s: gsap.getProperty(trav, 'scaleX') };
+    const h = BASE * 492 / 420 * from.s, top = scrollY, bottom = scrollY + innerHeight;
+    const onScreen = from.y + h > top && from.y < bottom, near = Math.hypot(p.x - from.x, p.y - from.y) < 700;
+    /* from far away it hops in from the side, level with its new tile, so it never falls across the text */
+    if (!onScreen || !near) from = { x: p.x + (p.x + 100 * p.s > innerWidth / 2 ? 260 : -260), y: p.y - 10, s: p.s };
+    const dir = p.x >= from.x ? 1 : -1, dur = 0.95;
+    const peak = Math.min(from.y, p.y) - (near && onScreen ? 90 : 50);
+    gsap.set(trav, { x: from.x, y: from.y, scale: from.s });
+    tl = gsap.timeline({ onComplete: () => say(d) })
+      .to(trav, { x: p.x, scale: p.s, duration: dur, ease: 'power1.inOut' }, 0)
+      .to(trav, { y: peak, duration: dur * 0.45, ease: 'power2.out' }, 0)
+      .to(trav, { y: p.y, duration: dur * 0.55, ease: 'power2.in' }, dur * 0.45)
+      .to(body, { rotation: dir * 9, duration: dur * 0.4, ease: 'power2.out' }, 0)
+      .to(body, { rotation: 0, duration: dur * 0.5, ease: 'power2.inOut' }, dur * 0.5)
+      .fromTo(body, { scaleY: 1, scaleX: 1 }, { scaleY: 0.9, scaleX: 1.06, duration: 0.1, ease: 'power2.out' }, dur)
+      .to(body, { scaleY: 1, scaleX: 1, duration: 0.4, ease: 'power3.out' }, dur + 0.1);
+  }
+  root.classList.add('travel');
+  const list = docks();
+  list.forEach((d) => {
+    const zone = d.closest('.tile') || d;
+    ScrollTrigger.create({ trigger: zone, start: d.dataset.dock === 'hero' ? 'top bottom' : 'top 70%', end: 'bottom 30%', onToggle: (self) => { if (self.isActive) go(d); } });
+  });
+  if (list[0]) go(list[0]);
+  ScrollTrigger.addEventListener('refresh', place);
+  window.addEventListener('aliox:added', () => {
+    if (!cur || cur.dataset.dock !== 'demo') return;
+    gsap.timeline().to(body, { y: -36, duration: 0.25, ease: 'power2.out' }).to(body, { y: 0, duration: 0.3, ease: 'power2.in' }).fromTo(body, { scaleY: 0.92, scaleX: 1.05 }, { scaleY: 1, scaleX: 1, duration: 0.35, ease: 'power3.out' });
+  });
+})();
+</script>
+</body>
+</html>
