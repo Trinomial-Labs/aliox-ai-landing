@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aliox AI · the shopping assistant for WooCommerce</title>
+<meta name="description" content="Aliox AI answers shoppers on your WooCommerce store from your real catalogue and puts the exact size and colour in their cart. Coming soon.">
+<link rel="icon" href="../../assets/aliox-icon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+Bengali:wght@500&display=swap">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root {
+  --forest: #2a573f;
+  --forest-deep: #1e3f2d;
+  --mist: #e8f0eb;
+  --sage: #b9dca0;
+  --sage-dark: #a2cb85;
+  --spark: #8dc63f;
+  --ink: #16261d;
+  --white: #ffffff;
+
+  --font: 'Inter', 'Noto Sans Bengali', system-ui, sans-serif;
+  --t-display: clamp(48px, 9.6vw, 186px);
+  --t-big: clamp(36px, 5.4vw, 88px);
+  --t-mid: clamp(22px, 2vw, 30px);
+  --t-body: clamp(17px, 1.4vw, 20px);
+  --t-small: 16px;
+
+  --m: clamp(16px, 2vw, 28px);
+  --gut: clamp(12px, 1.4vw, 20px);
+  --section: clamp(88px, 10vw, 160px);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --t-press: 140ms;
+  --t-hover: 180ms;
+  --t-ui: 260ms;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body { margin: 0; background: var(--mist); color: var(--ink); font-family: var(--font); font-size: var(--t-body); line-height: 1.5; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+::selection { background: var(--forest); color: var(--white); }
+:focus-visible { outline: 3px solid var(--forest); outline-offset: 3px; }
+.on-dark :focus-visible { outline-color: var(--sage); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+section, header, footer { scroll-margin-top: 0; }
+.wrap { padding-inline: var(--m); }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* type */
+.display { font-size: var(--t-display); font-weight: 900; letter-spacing: -0.045em; line-height: 0.86; }
+.big { font-size: var(--t-big); font-weight: 900; letter-spacing: -0.035em; line-height: 0.95; }
+.mid { font-size: var(--t-mid); font-weight: 700; letter-spacing: -0.015em; line-height: 1.15; }
+.lines .line { display: block; overflow: clip; padding-bottom: 0.2em; margin-bottom: -0.2em; }
+.lines .line > span { display: inline-block; white-space: nowrap; }
+
+/* the one button */
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 26px; border: 0; border-radius: 0; background: var(--forest-deep); color: var(--white); font: 700 var(--t-small)/1 var(--font); text-decoration: none; cursor: pointer; transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease, color var(--t-hover) ease; }
+.btn:hover { background: var(--ink); }
+.btn:active { transform: scale(0.97); }
+.btn--light { background: var(--sage); color: var(--ink); }
+.btn--light:hover { background: var(--white); }
+.link { text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.22em; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); transition: text-decoration-color var(--t-hover) ease; }
+.link:hover { text-decoration-color: currentColor; }
+
+/* ───────── hero ───────── */
+.hero { background: var(--sage); position: relative; overflow: clip; padding-bottom: clamp(28px, 4vw, 56px); }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; position: relative; z-index: 3; }
+.nav__logo { display: block; width: clamp(120px, 10vw, 148px); }
+.nav__links { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 36px); }
+.nav__links a:not(.btn) { font-size: var(--t-small); font-weight: 500; text-decoration: none; padding-block: 12px; position: relative; }
+.nav__links a:not(.btn)::after { content: ''; position: absolute; left: 0; right: 0; bottom: 6px; height: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--t-ui) var(--ease-out); }
+.nav__links a:not(.btn):hover::after { transform: scaleX(1); }
+.hero__title { position: relative; z-index: 2; margin-top: clamp(28px, 5vh, 64px); }
+.hero__title .l2 { text-align: right; }
+.hero__body { position: relative; margin-top: 8px; align-items: end; }
+.hero__mascot { grid-column: 1 / span 4; position: relative; z-index: 1; margin-top: clamp(-90px, -6vw, -24px); }
+.hero__mascot img { width: min(100%, 420px); transform: rotate(-4deg); transform-origin: 50% 100%; }
+.hero__text { grid-column: 5 / span 4; align-self: start; padding-top: clamp(24px, 3vw, 44px); position: relative; z-index: 2; }
+.hero__text p { font-size: var(--t-body); line-height: 1.45; max-width: 34ch; margin-bottom: 28px; }
+.hero__screen { grid-column: 9 / span 4; position: relative; z-index: 1; justify-self: end; width: min(100%, 380px); }
+.hero__screen img { border-radius: 16px; background: var(--white); transform: rotate(3deg); width: 100%; }
+.hero__screen figcaption { font-size: var(--t-small); margin-top: 18px; font-weight: 500; }
+
+/* ───────── try it ───────── */
+.try { background: var(--mist); padding-block: var(--section); position: relative; overflow: clip; }
+.try__head { align-items: end; margin-bottom: clamp(28px, 3vw, 44px); }
+.try__head h2 { grid-column: 1 / span 7; }
+.try__head p { grid-column: 9 / span 4; max-width: 40ch; }
+.ask { display: flex; gap: 0; align-items: stretch; position: relative; z-index: 2; }
+.ask input { flex: 1; min-width: 0; height: 1.5em; padding: 0 0.3em; border: 0; border-radius: 0; background: var(--white); color: var(--forest-deep); font: 900 var(--t-big)/1 var(--font); letter-spacing: -0.035em; caret-color: var(--forest); }
+.ask input::placeholder { color: color-mix(in srgb, var(--forest-deep) 70%, transparent); }
+.ask input:focus { outline: none; }
+.ask:focus-within { outline: 3px solid var(--forest); outline-offset: 3px; }
+.ask button { min-width: clamp(84px, 9vw, 150px); border: 0; border-radius: 0; background: var(--forest-deep); color: var(--white); font: 700 var(--t-mid)/1 var(--font); cursor: pointer; transition: background-color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
+.ask button:hover { background: var(--ink); }
+.ask button:active { transform: scale(0.97); }
+.try__body { margin-top: clamp(32px, 4vw, 48px); align-items: start; }
+.try__answer { grid-column: 1 / span 5; position: relative; }
+.try__examples { grid-column: 6 / span 3; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.try__examples h3 { font-size: var(--t-body); font-weight: 700; margin-bottom: 6px; }
+.chip { min-height: 48px; padding: 10px 16px; border: 0; border-radius: 0; background: var(--sage); color: var(--ink); font: 500 var(--t-small)/1.3 var(--font); text-align: left; cursor: pointer; transition: background-color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
+.chip:hover { background: var(--sage-dark); }
+.chip:active { transform: scale(0.97); }
+.chip[aria-pressed="true"] { background: var(--forest-deep); color: var(--white); }
+.try__mascot { position: absolute; right: calc(var(--m) * -1); bottom: calc(var(--section) * -1); width: min(36vw, 560px); z-index: 1; pointer-events: none; }
+.try__mascot img { transform: translateX(16%) rotate(-7deg); transform-origin: 50% 100%; }
+.try__peek { display: none; }
+
+/* ───────── on the page ───────── */
+.store { background: var(--forest); color: var(--white); padding-top: var(--section); position: relative; overflow: clip; }
+.store__head { align-items: end; margin-bottom: clamp(32px, 4vw, 56px); }
+.store__head h2 { grid-column: 1 / span 7; }
+.store__head p { grid-column: 9 / span 4; max-width: 40ch; }
+.store__shot { margin: 0 calc(var(--m) * -1) 0 0; position: relative; overflow: clip; border-radius: 16px 0 0 16px; background: var(--white); aspect-ratio: 2000 / 1100; }
+.store__shot img { width: 100%; height: auto; transform-origin: 50% 0; }
+.store__bar { background: var(--sage); color: var(--ink); margin-inline: calc(var(--m) * -1); padding: clamp(28px, 3vw, 44px) var(--m) clamp(40px, 4vw, 64px); position: relative; }
+.store__bar .grid > div { grid-column: 5 / span 8; display: grid; grid-template-columns: 1fr 1fr; gap: var(--gut); }
+.store__bar h3 { font-size: var(--t-mid); font-weight: 900; letter-spacing: -0.015em; line-height: 1.15; margin-bottom: 8px; }
+.store__phone { position: absolute; left: var(--m); bottom: clamp(40px, 4vw, 64px); width: clamp(150px, 19vw, 290px); z-index: 2; }
+.store__phone img { border-radius: 16px; background: var(--white); transform: rotate(-4deg); }
+
+/* ───────── what it does ───────── */
+.what { background: var(--white); padding-block: var(--section); }
+.what__head { align-items: end; margin-bottom: clamp(24px, 3vw, 40px); }
+.what__head h2 { grid-column: 1 / span 7; }
+.what__find { grid-column: 8 / span 5; }
+.what__find input { width: 100%; height: 60px; padding: 0 20px; border: 0; border-radius: 0; background: var(--mist); color: var(--ink); font: 500 var(--t-mid)/1 var(--font); }
+.what__find input::placeholder { color: color-mix(in srgb, var(--ink) 72%, transparent); }
+.what__find input:focus { outline: 3px solid var(--forest); outline-offset: 0; }
+.rows { list-style: none; margin: 0; padding: 0; position: relative; }
+.row h3 { font: inherit; }
+.row__btn { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; padding: 0.12em 0.18em 0.16em; border: 0; border-radius: 0; background: transparent; color: var(--ink); font: 900 var(--t-big)/1.05 var(--font); letter-spacing: -0.035em; text-align: left; cursor: pointer; transition: background-color var(--t-hover) ease, color var(--t-hover) ease; }
+.row__btn:hover { background: var(--mist); }
+.row.is-open .row__btn { background: var(--forest); color: var(--white); }
+.row__btn:focus-visible { outline-offset: -3px; }
+.row__more { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); align-items: start; background: var(--forest); color: var(--white); padding: 8px 0.18em 32px; min-height: 380px; }
+.row__more > p { grid-column: 1 / span 6; font-size: var(--t-mid); font-weight: 500; line-height: 1.3; letter-spacing: -0.01em; max-width: 30ch; padding-left: clamp(0px, 0.5vw, 8px); padding-top: 8px; }
+.row__more > .row__pic { grid-column: 7 / span 6; justify-self: start; padding-right: clamp(80px, 8vw, 120px); }
+.row__pic img { border-radius: 16px; background: var(--white); height: 400px; width: auto; max-width: 100%; object-fit: contain; }
+.row__pic--wide img { height: auto; }
+.row__pic--wide img { width: 100%; max-height: none; }
+.row__pic [data-ui].mini { max-width: 460px; }
+.js .row:not(.is-open) .row__more { display: none; }
+.row[hidden] { display: none; }
+.rows__none { font-size: var(--t-mid); font-weight: 700; padding: 24px 0; }
+.rows__head { position: absolute; right: 0.25em; top: 0; width: clamp(56px, 6vw, 92px); pointer-events: none; z-index: 2; transition: transform 520ms var(--ease-expo); }
+.rows__head img { transform: rotate(8deg); }
+
+/* ───────── set-up ───────── */
+.setup { display: grid; grid-template-columns: repeat(4, 1fr); }
+.field { min-height: 84svh; padding: clamp(24px, 2.2vw, 32px) clamp(20px, 2vw, 28px) 28px; display: flex; flex-direction: column; position: relative; }
+.field:nth-child(1) { background: var(--sage); }
+.field:nth-child(2) { background: var(--forest); color: var(--white); }
+.field:nth-child(3) { background: var(--mist); }
+.field:nth-child(4) { background: var(--forest-deep); color: var(--white); }
+.field h2 { font-size: var(--t-mid); font-weight: 900; letter-spacing: -0.015em; line-height: 1.15; max-width: 12ch; }
+.field__card { margin: auto auto; padding-block: 40px; width: min(100%, 268px); }
+.field__card [data-ui] { transition: transform 150ms var(--ease-out); }
+.field:hover .field__card [data-ui] { transform: translateY(-6px); }
+.field__say p:first-child { font-size: var(--t-mid); font-weight: 700; letter-spacing: -0.015em; line-height: 1.15; margin-bottom: 10px; }
+.field__say p + p { font-size: var(--t-small); max-width: 32ch; }
+
+/* ───────── pricing ───────── */
+.price { background: var(--mist); padding-block: var(--section) calc(var(--section) * 0.7); }
+.plans { align-items: end; row-gap: 8px; }
+.plans__head { grid-column: 1 / span 4; grid-row: 1; align-self: start; }
+.plan { grid-row: 1; display: flex; flex-direction: column; position: relative; }
+.plan--starter { grid-column: 1 / span 4; height: 360px; background: var(--sage); }
+.plan--growth { grid-column: 5 / span 4; height: 500px; background: var(--forest); color: var(--white); }
+.plan--pro { grid-column: 9 / span 4; height: 640px; background: var(--forest-deep); color: var(--white); }
+.plan__in { padding: 28px; flex: 1; position: relative; z-index: 2; background: inherit; }
+.plan h3 { font-size: var(--t-mid); font-weight: 700; line-height: 1.15; }
+.plan__price { font-size: var(--t-big); font-weight: 900; letter-spacing: -0.035em; line-height: 1; margin: 10px 0 18px; }
+.plan__price span { font-size: var(--t-small); font-weight: 500; letter-spacing: 0; }
+.plan ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.plan li { font-size: var(--t-small); }
+.plan__go { display: flex; align-items: center; height: 64px; padding: 0 28px; font-weight: 700; font-size: var(--t-small); text-decoration: none; position: relative; z-index: 2; transition: background-color var(--t-hover) ease; }
+.plan__go::after { content: ''; width: 10px; height: 10px; margin-left: auto; border-top: 3px solid currentColor; border-right: 3px solid currentColor; transform: rotate(45deg); transition: transform var(--t-ui) var(--ease-out); }
+.plan__go:hover::after { transform: translateX(5px) rotate(45deg); }
+.plan__go:active { transform: scale(0.99); }
+.plan--starter .plan__go { background: var(--sage-dark); }
+.plan--starter .plan__go:hover { background: #8fbe70; }
+.plan--growth .plan__go { background: var(--forest-deep); }
+.plan--growth .plan__go:hover { background: var(--ink); }
+.plan--pro .plan__go { background: var(--ink); }
+.plan--pro .plan__go:hover { background: #0c1711; }
+.plan__holder { position: absolute; right: 18px; bottom: calc(100% - 150px); width: 300px; z-index: 1; pointer-events: none; }
+.price__note { margin-top: 28px; max-width: 70ch; }
+
+/* ───────── questions ───────── */
+.faq { background: var(--white); padding-block: var(--section); }
+.faq__side { grid-column: 1 / span 4; align-self: start; position: sticky; top: 96px; }
+.faq__side h2 { margin-bottom: 20px; }
+.faq__peek { margin-top: 170px; position: relative; max-width: 340px; }
+.faq__peek-mascot { position: absolute; left: 24px; bottom: calc(100% - 112px); width: 200px; z-index: 0; transform-origin: 50% 100%; transition: transform 520ms var(--ease-expo); }
+.faq__peek-block { position: relative; z-index: 1; background: var(--sage); padding: 24px; }
+.faq__peek-block p { font-size: var(--t-small); }
+.faq__peek-block a { font-weight: 700; }
+.faq.is-asking .faq__peek-mascot { transform: translateY(-22px) rotate(5deg); }
+.faq__list { grid-column: 5 / span 8; display: grid; gap: 8px; }
+.qa { background: var(--mist); transition: background-color var(--t-ui) ease; }
+.qa summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 72px; padding: 18px 24px; font-size: var(--t-body); font-weight: 500; cursor: pointer; }
+.qa summary::-webkit-details-marker { display: none; }
+.qa summary:hover { background: color-mix(in srgb, var(--sage) 40%, var(--mist)); }
+.plus { position: relative; flex: none; width: 16px; height: 16px; }
+.plus::before, .plus::after { content: ''; position: absolute; left: 0; top: 6.5px; width: 16px; height: 3px; background: currentColor; transition: transform var(--t-ui) var(--ease-out); }
+.plus::after { transform: rotate(90deg); }
+.qa[open] { background: var(--forest); color: var(--white); }
+.qa[open] summary:hover { background: transparent; }
+.qa[open] .plus::after { transform: rotate(0deg); }
+.qa__a { padding: 0 24px 26px; max-width: calc(52ch + 48px); font-size: var(--t-body); }
+.qa__a a { font-weight: 700; }
+
+/* ───────── close ───────── */
+.close { background: var(--ink); color: var(--sage); min-height: 90svh; display: flex; flex-direction: column; justify-content: space-between; padding-block: clamp(56px, 8vw, 120px) 40px; }
+.close__foot { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-top: 64px; }
+.close__foot p { color: var(--mist); max-width: 46ch; font-size: var(--t-body); }
+.close__foot .btn { min-height: 56px; }
+
+/* ───────── footer ───────── */
+.foot { background: var(--forest); color: var(--white); padding-block: clamp(64px, 7vw, 112px) 28px; overflow: clip; }
+.mark { display: grid; grid-template-columns: 1.15fr repeat(5, 1fr); gap: 4px; align-items: end; height: clamp(180px, 34svh, 340px); position: relative; }
+.mark__b { position: relative; height: var(--h); display: flex; align-items: flex-end; justify-content: center; overflow: clip; transform-origin: 50% 100%; }
+.mark__b { font-size: clamp(64px, 14vw, 230px); }
+.mark__b span { font-size: inherit; font-weight: 900; letter-spacing: -0.05em; line-height: 0.74; color: var(--forest); }
+.mark__b svg { width: 70%; height: auto; margin-bottom: 12%; }
+.mark__b .mark__star { margin: 0; position: absolute; width: 0.3em; left: 50%; bottom: 0.66em; transform: translateX(-50%); }
+.mark__mascot { position: absolute; width: clamp(110px, 12vw, 190px); z-index: 0; pointer-events: none; }
+.mark__b { z-index: 1; }
+.foot__links { margin-top: 56px; row-gap: 32px; }
+.foot__col { grid-column: span 2; }
+.foot__col--wide { grid-column: 9 / span 4; }
+.foot__col h3 { font-size: var(--t-small); font-weight: 700; margin-bottom: 10px; color: var(--sage); }
+.foot__col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.foot__col a, .foot__col p { font-size: var(--t-small); }
+.foot__col a { text-decoration: none; }
+.foot__col a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+.foot__last { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 56px; font-size: var(--t-small); }
+
+/* ───────── interface fragments (the widget's own look) ───────── */
+[data-ui] { font-family: 'Inter', 'Noto Sans Bengali', system-ui, sans-serif; color: #1b2733; font-size: 15px; line-height: 1.45; letter-spacing: 0; text-align: left; }
+[data-ui].panel { background: #fff; border-radius: 16px; border: 1px solid #dfe5ea; overflow: hidden; position: relative; z-index: 1; }
+[data-ui] .panel__top { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #edf1f4; }
+[data-ui] .panel__top img { width: 40px; height: 40px; border-radius: 50%; background: #f1f4f2; }
+[data-ui] .panel__name { font-weight: 600; font-size: 15px; line-height: 1.2; }
+[data-ui] .panel__status { font-size: 13px; color: #5b6b7a; display: flex; align-items: center; gap: 6px; }
+[data-ui] .panel__status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #5aa54a; }
+[data-ui] .thread { padding: 16px; display: flex; flex-direction: column; gap: 12px; min-height: 360px; max-height: 560px; overflow-y: auto; scroll-behavior: smooth; }
+[data-ui] .me { align-self: flex-end; max-width: 82%; background: #e8f0eb; border-radius: 16px; padding: 10px 14px; overflow-wrap: anywhere; }
+[data-ui] .ai { display: flex; gap: 8px; align-items: flex-start; }
+[data-ui] .ai > img { width: 28px; height: 28px; border-radius: 50%; flex: none; background: #f1f4f2; }
+[data-ui] .ai__stack { display: flex; flex-direction: column; gap: 10px; min-width: 0; flex: 1; }
+[data-ui] .bubble { background: #eef2f5; border-radius: 16px; padding: 10px 14px; max-width: 100%; align-self: flex-start; }
+[data-ui] .bubble a { color: #2a573f; font-weight: 600; }
+[data-ui] .who { font-size: 13px; color: #5b6b7a; margin-bottom: -6px; }
+[data-ui] .sys { align-self: center; background: #eef2f5; border-radius: 999px; padding: 6px 14px; font-size: 13px; }
+[data-ui] .staff { width: 28px; height: 28px; border-radius: 50%; background: #16261d; color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 600; flex: none; }
+[data-ui] .staff-bubble { background: #fff; border: 1px solid #dfe5ea; }
+[data-ui] .cards { display: flex; gap: 10px; flex-wrap: wrap; }
+[data-ui] .card { width: 200px; border: 1px solid #dfe5ea; border-radius: 12px; overflow: hidden; background: #fff; }
+[data-ui] .card img { width: 100%; aspect-ratio: 580 / 500; object-fit: cover; background: #ddd8d0; }
+[data-ui] .card__b { padding: 10px 12px 12px; display: grid; gap: 6px; }
+[data-ui] .card__price { font-weight: 600; }
+[data-ui] .card__hint { font-size: 13px; color: #5b6b7a; display: flex; align-items: center; gap: 6px; }
+[data-ui] .card__hint::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #9aa9b8; }
+[data-ui] .ubtn { height: 40px; border: 0; border-radius: 8px; background: #2a573f; color: #fff; font: 500 14px/1 'Inter', system-ui, sans-serif; cursor: pointer; padding: 0 14px; transition: background-color 180ms ease, transform 140ms cubic-bezier(0.22, 1, 0.36, 1); }
+[data-ui] .ubtn:hover { background: #1e3f2d; }
+[data-ui] .ubtn:active { transform: scale(0.97); }
+[data-ui] .ubtn--ghost { background: #fff; color: #1b2733; border: 1px solid #dfe5ea; }
+[data-ui] .ubtn--ghost:hover { background: #f4f7f5; }
+[data-ui] .ulink { font-size: 13px; color: #5b6b7a; text-align: center; text-decoration: underline; }
+[data-ui] .opts { background: #fff; border: 1px solid #dfe5ea; border-radius: 12px; padding: 12px; display: grid; gap: 10px; }
+[data-ui] .opts__label { font-size: 13px; color: #5b6b7a; }
+[data-ui] .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+[data-ui] .pill { min-width: 44px; height: 34px; padding: 0 12px; border: 1px solid #dfe5ea; border-radius: 999px; background: #fff; font: 500 14px/1 'Inter', system-ui, sans-serif; color: #1b2733; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+[data-ui] .pill--size { border-radius: 8px; justify-content: center; }
+[data-ui] .pill.is-on { border: 2px solid #2a573f; background: #e8f0eb; }
+[data-ui] .pill i { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #cfd6c4; }
+[data-ui] .ok { font-size: 14px; color: #1e3f2d; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+[data-ui] .ok::before { content: ''; width: 5px; height: 10px; border-right: 2px solid #2a573f; border-bottom: 2px solid #2a573f; transform: rotate(45deg) translate(-2px, -2px); }
+[data-ui] .added { border: 1.5px solid #b9dca0; border-radius: 12px; overflow: hidden; background: #fff; }
+[data-ui] .added__top { background: #f3f9ec; padding: 10px 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+[data-ui] .added__top::before { content: ''; width: 20px; height: 20px; border-radius: 50%; background: #2a573f url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5l3 3 6-6.5' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 20px no-repeat; flex: none; }
+[data-ui] .added__item { display: flex; gap: 10px; padding: 12px; align-items: center; }
+[data-ui] .added__item img { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; background: #ddd8d0; }
+[data-ui] .added__meta { font-size: 13px; color: #5b6b7a; }
+[data-ui] .added__sub { font-size: 13px; color: #5b6b7a; padding: 0 12px 10px; }
+[data-ui] .added__go { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 12px; }
+[data-ui] .panel__foot { font-size: 13px; color: #6b7886; text-align: center; padding: 10px 16px 14px; border-top: 1px solid #edf1f4; }
+[data-ui] .src { font-size: 13px; display: inline-flex; gap: 4px; margin-top: 6px; }
+[data-ui] .typing { display: inline-flex; gap: 4px; padding: 14px; background: #eef2f5; border-radius: 16px; align-self: flex-start; }
+[data-ui] .typing i { width: 6px; height: 6px; border-radius: 50%; background: #8a99a6; animation: dot 900ms infinite ease-in-out both; }
+[data-ui] .typing i:nth-child(2) { animation-delay: 150ms; }
+[data-ui] .typing i:nth-child(3) { animation-delay: 300ms; }
+@keyframes dot { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+[data-ui].mini { background: #fff; border-radius: 16px; padding: 14px; display: grid; gap: 10px; width: 100%; max-width: 420px; }
+[data-ui].setup-card { background: #fff; border-radius: 16px; padding: 14px; display: grid; gap: 10px; color: #1b2733; }
+[data-ui] .sc__top { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+[data-ui] .sc__state { margin-left: auto; font-size: 13px; font-weight: 600; border-radius: 999px; padding: 3px 10px; background: #eef2f5; color: #3d4b58; }
+[data-ui] .sc__state--on { background: #e3f1d6; color: #1e3f2d; }
+[data-ui] .sc__rows { display: grid; gap: 7px; font-size: 14px; }
+[data-ui] .sc__row { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+[data-ui] .sc__row b { font-weight: 600; }
+[data-ui] .sc__row .tick { color: #2a573f; font-weight: 600; }
+[data-ui] .sc__row .off { color: #5b6b7a; }
+[data-ui] .sc__row img { width: 24px; height: 24px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 6px; }
+[data-ui] .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; background: #2a573f; vertical-align: -2px; margin-right: 6px; }
+[data-ui] .toggle { width: 36px; height: 20px; border-radius: 999px; background: #2a573f; position: relative; }
+[data-ui] .toggle::after { content: ''; position: absolute; right: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+[data-ui] .nudge { background: #fff; border: 1px solid #dfe5ea; border-radius: 12px; padding: 10px 12px; font-size: 14px; }
+[data-ui] .launcher { justify-self: end; display: inline-flex; align-items: center; gap: 8px; background: #2a573f; color: #fff; border-radius: 999px; padding: 6px 14px 6px 6px; font-size: 14px; font-weight: 500; }
+[data-ui] .launcher img { width: 28px; height: 28px; border-radius: 50%; background: #fff; }
+
+/* ───────── motion (finished state is the default; travel only when allowed) ───────── */
+@media (prefers-reduced-motion: no-preference) {
+  .js .hero__title .line > span { transform: translateY(108%); animation: rise 900ms var(--ease-expo) forwards; animation-delay: calc(140ms + var(--i, 0) * 110ms); }
+  .js .hero__text { animation: fade-up 600ms var(--ease-out) 460ms both; }
+  .js .hero__mascot img { animation: slide-in 1150ms var(--ease-expo) 260ms both; }
+  .js .hero__screen img { animation: stamp 620ms var(--ease-expo) 620ms both; }
+  .js .hero__screen figcaption { animation: fade-up 500ms var(--ease-out) 900ms both; }
+
+  .js [data-rise] .line > span { transform: translateY(108%); transition: transform 900ms var(--ease-expo); transition-delay: calc(var(--i, 0) * 100ms); }
+  .js [data-rise].is-in .line > span { transform: none; }
+  .js [data-up] > * { transform: translateY(28px); transition: transform 800ms var(--ease-expo); }
+  .js [data-up] > *:nth-child(2) { transition-delay: 80ms; }
+  .js [data-up] > *:nth-child(3) { transition-delay: 160ms; }
+  .js [data-up] > *:nth-child(4) { transition-delay: 240ms; }
+  .js [data-up].is-in > * { transform: none; }
+  .js .rows.is-in-wait .row { clip-path: inset(0 0 99.5% 0); transform: translateY(24px); }
+  .js .rows .row { transition: clip-path 800ms var(--ease-expo), transform 800ms var(--ease-expo); transition-delay: calc(var(--i, 0) * 70ms); }
+  .js .try__mascot.is-wait img { transform: translateX(70%) rotate(8deg); }
+  .js .try__mascot img { transition: transform 1100ms var(--ease-expo); }
+  .js .try__mascot.hop img, .js .try__peek.hop img { animation: hop 520ms var(--ease-out); }
+  .js .store__phone.is-wait img { transform: translateY(40px) rotate(4deg); }
+  .js .store__phone img { transition: transform 1100ms var(--ease-expo); }
+  .js .setup.is-wait .field__card [data-ui] { transform: translateY(48px); }
+  .js .setup .field__card { transition: transform 900ms var(--ease-expo); }
+  .js .setup.is-wait .field__card { transform: translateY(48px); }
+  .js .setup .field:nth-child(2) .field__card { transition-delay: 110ms; }
+  .js .setup .field:nth-child(3) .field__card { transition-delay: 220ms; }
+  .js .setup .field:nth-child(4) .field__card { transition-delay: 330ms; }
+  .js .plans.is-wait .plan { transform: translateY(60px); clip-path: inset(0 0 99.5% 0); }
+  .js .plans .plan { transition: transform 900ms var(--ease-expo), clip-path 900ms var(--ease-expo); }
+  .js .plans .plan--growth { transition-delay: 90ms; }
+  .js .plans .plan--pro { transition-delay: 180ms; }
+  .js .plans .plan__holder { transition: transform 1000ms var(--ease-expo) 250ms; }
+  .js .plans.is-wait .plan__holder { transform: translateY(70%); }
+  .js .faq__list.is-wait .qa { transform: translateY(24px); }
+  .js .faq__list .qa { transition: transform 700ms var(--ease-expo), background-color var(--t-ui) ease; transition-delay: calc(var(--i, 0) * 60ms), 0ms; }
+  .js .faq__peek.is-wait .faq__peek-mascot { transform: translateY(70%); }
+  .js .mark.is-wait .mark__b { transform: scaleY(0.4); }
+  .js .mark .mark__b { transition: transform 900ms var(--ease-expo); transition-delay: calc(var(--i, 0) * 70ms); }
+  .js .mark.is-wait .mark__mascot { transform: translateY(80%); }
+  .js .mark .mark__mascot { transition: transform 1000ms var(--ease-expo) 500ms; }
+  .js .chat-in { animation: fade-up 360ms var(--ease-out) both; }
+}
+@keyframes rise { to { transform: none; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes slide-in { from { transform: translate(-18%, 46%) rotate(-14deg); } to { transform: rotate(-4deg); } }
+@keyframes stamp { from { transform: scale(1.14) rotate(-2deg); opacity: 0; } 40% { opacity: 1; } to { transform: rotate(3deg); opacity: 1; } }
+@keyframes hop { 0% { translate: 0 0; } 40% { translate: 0 -18px; } 100% { translate: 0 0; } }
+@media (prefers-reduced-motion: reduce) { [data-ui] .typing i { animation: none; opacity: 0.7; } }
+
+/* ───────── tablet ───────── */
+@media (max-width: 1080px) {
+  .hero__mascot { grid-column: 1 / span 4; }
+  .hero__text { grid-column: 5 / span 4; }
+  .hero__screen { grid-column: 9 / span 4; }
+  .try__answer { grid-column: 1 / span 7; }
+  .try__examples { grid-column: 8 / span 5; }
+  .try__mascot { display: none; }
+  .try__body { margin-top: 104px; }
+  .try__peek { display: block; position: absolute; right: 18px; top: 0; width: 110px; transform: translateY(-74%); z-index: 0; pointer-events: none; }
+  .setup { grid-template-columns: 1fr 1fr; }
+  .field { min-height: 64svh; }
+  .row__more > p { grid-column: 1 / span 6; }
+  .row__more > .row__pic { grid-column: 7 / span 6; }
+  .faq__side { grid-column: 1 / span 12; position: static; display: grid; grid-template-columns: 1fr 1fr; gap: var(--gut); align-items: end; margin-bottom: 40px; }
+  .faq__peek { margin-top: 150px; }
+  .faq__list { grid-column: 1 / span 12; }
+  .plan__holder { width: 240px; bottom: calc(100% - 120px); }
+  .close { min-height: 64svh; }
+}
+@media (max-width: 860px) {
+  .hero__body { margin-top: 32px; row-gap: 24px; }
+  .hero__text { grid-column: 1 / span 12; grid-row: 1; }
+  .hero__mascot { grid-column: 1 / span 6; grid-row: 2; }
+  .hero__screen { grid-column: 7 / span 6; grid-row: 2; align-self: center; }
+  .store__bar .grid > div { grid-column: 1 / span 12; padding-left: calc(clamp(150px, 19vw, 290px) + 24px); }
+  .plans__head { grid-column: 1 / span 12; margin-bottom: 24px; }
+  .plans { align-items: stretch; row-gap: 32px; }
+  .plan { grid-row: auto; height: auto !important; }
+  .plan--starter, .plan--growth, .plan--pro { grid-column: 1 / span 12; }
+  .plan__in { padding-bottom: 32px; }
+  .plan--growth { margin-top: 110px; }
+  .plan__holder { width: 220px; bottom: calc(100% - 110px); }
+}
+
+/* ───────── phone ───────── */
+@media (max-width: 600px) {
+  :root { --t-big: clamp(34px, 9.4vw, 44px); --t-body: 17px; }
+  .nav { padding-block: 16px; }
+  .nav__links .btn, .nav__links .hide-s { display: none; }
+  .hero__title { margin-top: 36px; }
+  .hero__title .l2 { text-align: left; }
+  .hero__text p { font-size: 17px; margin-bottom: 20px; }
+  .hero__text .btn { width: 100%; min-height: 56px; }
+  .hero__mascot { grid-column: 1 / span 6; }
+  .hero__screen { grid-column: 6 / span 7; }
+  .hero__screen figcaption { font-size: var(--t-small); }
+  .try__head h2, .try__head p, .store__head h2, .store__head p, .what__head h2, .what__find { grid-column: 1 / span 12; }
+  .try__head p, .store__head p { margin-top: 16px; }
+  .what__find { margin-top: 20px; }
+  .what__find input { height: 56px; font-size: 20px; }
+  .ask input { font-size: 11vw; height: 1.6em; }
+  .ask button { min-width: 72px; font-size: 18px; }
+  .try__answer, .try__examples { grid-column: 1 / span 12; }
+  .try__answer { margin-top: 0; }
+  .try__examples { flex-direction: row; flex-wrap: wrap; margin-top: 24px; }
+  .try__examples h3 { width: 100%; }
+  .chip { min-height: 44px; }
+  .store__shot { aspect-ratio: auto; }
+  .store__phone { position: relative; left: auto; bottom: auto; width: 56%; margin: -96px 0 28px auto; }
+  .store__bar { padding-top: 0; }
+  .store__bar .grid > div { padding-left: 0; grid-template-columns: 1fr; gap: 20px; }
+  .row__btn { font-size: var(--t-big); }
+  .row__more > p, .row__more > .row__pic { grid-column: 1 / span 12; justify-self: start; }
+  .row__more > p { font-size: var(--t-body); margin-bottom: 16px; }
+  .row__pic img { height: auto; max-height: 360px; }
+  .rows__head { display: none; }
+  .setup { grid-template-columns: 1fr; }
+  .field { min-height: 0; }
+  .field__card { margin: 32px 0 32px; padding-block: 0; }
+  .field h2 { font-size: var(--t-mid); max-width: none; margin-bottom: 16px; order: -2; }
+  .field__say { order: -1; }
+  .price__note { font-size: 16px; }
+  .faq__side { grid-template-columns: 1fr; }
+  .faq__side h2 { font-size: 9.4vw; }
+  .qa summary { min-height: 64px; padding: 16px 20px; }
+  .qa__a { font-size: 16px; padding: 0 20px 20px; }
+  .faq__list { gap: 6px; }
+  .close { min-height: 72svh; }
+  .close__foot { flex-direction: column; align-items: stretch; }
+  .close__foot .btn { width: 100%; }
+  .foot { padding-top: 120px; }
+  .mark { grid-template-columns: repeat(3, 1fr); height: auto; row-gap: 4px; }
+  .mark__b { height: calc(var(--h) * 1.5); }
+  .mark__b { font-size: 34vw; }
+  .foot__col { grid-column: span 6; }
+  .foot__col--wide { grid-column: 1 / span 12; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <nav class="nav" aria-label="Main">
+      <a href="#top" class="nav__logo" aria-label="Aliox AI, back to top"><img src="../../assets/aliox-logo-light.svg" width="512" height="128" alt="Aliox AI"></a>
+      <div class="nav__links">
+        <a href="#try" class="hide-s">Try it</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#questions">Questions</a>
+        <a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">Join the launch list</a>
+      </div>
+    </nav>
+
+    <h1 class="display lines hero__title" data-fit="0.74" data-fit-s="1">
+      <span class="line l1"><span style="--i:0">got this in M?</span></span>
+      <span class="line l2"><span style="--i:1">yes, in black.</span></span>
+    </h1>
+
+    <div class="grid hero__body">
+      <div class="hero__mascot">
+        <img src="../../assets/aliox-mascot-cut.webp" width="823" height="965" fetchpriority="high" alt="Aliox, the green robot mascot with a speech-bubble head, waving">
+      </div>
+      <div class="hero__text">
+        <p>Aliox is the AI shopping assistant for WooCommerce stores. It answers shoppers from your real catalogue and puts the exact size and colour in their cart.</p>
+        <a class="btn" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">Join the launch list</a>
+      </div>
+      <figure class="hero__screen" style="margin:0">
+        <img src="../../assets/screens/sheet.webp" width="1194" height="1194" fetchpriority="high" alt="The Aliox chat's size sheet for the Everyday Linen Shirt: Black selected, size M selected, Black / M is available, Add to cart">
+        <figcaption>Aliox’s answer, inside the chat.</figcaption>
+      </figure>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="try wrap" id="try" aria-labelledby="try-h">
+  <div class="grid try__head">
+    <h2 class="big lines" id="try-h" data-rise><span class="line"><span>go on, ask it.</span></span></h2>
+    <p>Loom &amp; Line is a demo linen shop. Type what a shopper would, and Aliox answers from its catalogue, the way it would on your store.</p>
+  </div>
+
+  <form class="ask" id="ask" data-ui autocomplete="off">
+    <label class="sr-only" for="ask-q">Ask Loom &amp; Line's assistant</label>
+    <input id="ask-q" name="q" type="text" value="does it come in black?" maxlength="80" spellcheck="false">
+    <button type="submit">Ask</button>
+  </form>
+
+  <div class="grid try__body">
+    <div class="try__answer">
+      <div class="try__peek" aria-hidden="true"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt="" loading="lazy"></div>
+      <div class="panel" data-ui>
+        <div class="panel__top">
+          <img src="../../aliox-mascot-head.webp" width="128" height="128" alt="">
+          <div><div class="panel__name">Aliox</div><div class="panel__status">AI Shopping Assistant</div></div>
+        </div>
+        <div class="thread" id="thread" aria-live="polite">
+          <div class="me">does it come in black?</div>
+          <div class="ai"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt="">
+            <div class="ai__stack">
+              <div class="bubble">Yes. The Everyday Linen Shirt comes in Black and Beige, in sizes L, M and XL. Black is ৳1,890.</div>
+              <div class="cards"><div class="card"><img src="../../assets/screens/shirt.webp" width="580" height="518" alt="Everyday Linen Shirt on a hanger" loading="lazy"><div class="card__b"><div>Everyday Linen Shirt</div><div class="card__price">৳1,890 – ৳1,990</div><div class="card__hint">Select size</div><button class="ubtn" type="button" data-act="options">Select options</button></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel__foot">AI assistant · Responses may be imperfect</div>
+      </div>
+    </div>
+    <div class="try__examples" id="examples">
+      <h3>Or tap one</h3>
+      <button class="chip" type="button">got this in M?</button>
+      <button class="chip" type="button">something for a wedding</button>
+      <button class="chip" type="button">anything under ৳2,000?</button>
+      <button class="chip" type="button">can I return it?</button>
+      <button class="chip" type="button">how long is delivery?</button>
+      <button class="chip" type="button" lang="bn">শার্টটা কি M সাইজে আছে?</button>
+      <button class="chip" type="button">can I talk to a person?</button>
+      <button class="chip" type="button">where's my order?</button>
+    </div>
+  </div>
+  <div class="try__mascot is-wait" aria-hidden="true"><img src="../../assets/aliox-mascot-cut.webp" width="823" height="965" alt="" loading="lazy"></div>
+</section>
+
+<section class="store wrap on-dark" id="store" aria-labelledby="store-h">
+  <div class="grid store__head">
+    <h2 class="big lines" id="store-h" data-rise><span class="line"><span style="--i:0">right on the</span></span><span class="line"><span style="--i:1">product page.</span></span></h2>
+    <p>The chat opens beside the product the shopper is looking at, with your products, prices and sizes inside it.</p>
+  </div>
+  <div class="store__shot">
+    <img src="../../assets/screens/chat-desktop.webp" width="2000" height="1250" loading="lazy" alt="The Loom &amp; Line product page for the Everyday Linen Shirt with the Aliox chat open beside it, showing the shirt as a card with Select options">
+  </div>
+  <div class="store__bar">
+    <div class="store__phone is-wait"><img src="../../assets/screens/chat-phone.webp" width="780" height="1688" loading="lazy" alt="Aliox full screen on a phone: the Breezy Linen Kurta at ৳2,200 with Add to cart"></div>
+    <div class="grid">
+      <div>
+        <div><h3>A button in the corner</h3><p>With a nudge of up to 60 characters, like “Looking for something? I can help.”, and up to four suggested questions.</p></div>
+        <div><h3>Full screen on phones</h3><p>Big cards, one-tap sizes and the cart in reach of a thumb. Your name, greeting, colour and avatar throughout.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="what wrap" id="what" aria-labelledby="what-h">
+  <div class="grid what__head">
+    <h2 class="big lines" id="what-h" data-rise><span class="line"><span>what does it do?</span></span></h2>
+    <div class="what__find">
+      <label class="sr-only" for="find">Filter what Aliox does</label>
+      <input id="find" type="search" placeholder="find: cart, Bangla, Sara…" autocomplete="off">
+    </div>
+  </div>
+  <ul class="rows is-in-wait" id="rows">
+    <li class="row is-open" style="--i:0" data-k="find search catalogue colour size fit material price occasion nothing match">
+      <h3><button class="row__btn" type="button" aria-expanded="true" aria-controls="r1">finds the right thing</button></h3>
+      <div class="row__more" id="r1"><p>Shoppers ask in their own words: colour, size, fit, material, price, occasion. Aliox searches your real catalogue and says plainly when nothing matches.</p><div class="row__pic"><img src="../../assets/screens/card.webp" width="624" height="1083" loading="lazy" alt="A product card in the chat: Everyday Linen Shirt, ৳1,890 – ৳1,990, Select options"></div></div>
+    </li>
+    <li class="row" style="--i:1" data-k="size stock colour variation check available">
+      <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r2">checks size and stock</button></h3>
+      <div class="row__more" id="r2"><p>It reads your variations and your stock, so when it says “Black / M is available”, it is.</p><div class="row__pic"><img src="../../assets/screens/sheet.webp" width="1194" height="1194" loading="lazy" alt="The size sheet: Black and size M chosen, Black / M is available"></div></div>
+    </li>
+    <li class="row" style="--i:2" data-k="cart add checkout woocommerce buy">
+      <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r3">fills their own cart</button></h3>
+      <div class="row__more" id="r3"><p>The exact variation goes into the shopper's own WooCommerce cart. Stock is checked again, and “Added” only shows once WooCommerce confirms it. Checkout and payment stay in WooCommerce.</p><div class="row__pic"><img src="../../assets/screens/added.webp" width="990" height="660" loading="lazy" alt="Added to your cart: Everyday Linen Shirt, Black / M, Qty 1, ৳1,890, with Continue shopping and Checkout"></div></div>
+    </li>
+    <li class="row" style="--i:3" data-k="policy policies shipping returns exchange payment size guide care link source">
+      <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r4">quotes your policies</button></h3>
+      <div class="row__more" id="r4"><p>Shipping, returns, exchanges, payments, the size guide and product care, answered from the pages you approve, with a link to the page. If a policy is missing, it sends the shopper to you.</p>
+        <div class="row__pic"><div class="mini" data-ui><div class="me">can I exchange it if M is too big?</div><div class="ai"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt=""><div class="ai__stack"><div class="bubble">Yes. Unworn items can be exchanged within 7 days of delivery.<br><span class="src">Source: <a href="#what">Returns &amp; Exchanges</a></span></div></div></div></div></div></div>
+    </li>
+    <li class="row" style="--i:4" data-k="bangla language english banglish">
+      <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r5">answers in Bangla</button></h3>
+      <div class="row__more" id="r5"><p>It replies in the shopper's language. The pilot runs in English and Bangla, and Banglish is being tested.</p>
+        <div class="row__pic"><div class="mini" data-ui lang="bn"><div class="me">রিটার্ন করা যাবে?</div><div class="ai"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt=""><div class="ai__stack"><div class="bubble">জি, ডেলিভারির ৭ দিনের মধ্যে না-পরা পণ্য রিটার্ন বা এক্সচেঞ্জ করা যাবে।<br><span class="src"><a href="#what" lang="en">Returns &amp; Exchanges</a></span></div></div></div></div></div></div>
+    </li>
+    <li class="row" style="--i:5" data-k="sara team person human staff live chat takeover hand back conversations">
+      <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r6">lets Sara step in</button></h3>
+      <div class="row__more" id="r6"><p>Live chats show up in wp-admin under Aliox AI → Conversations. A shop manager takes one over and replies under their own name, always labelled as staff, then hands it back. If nobody picks up within 3 minutes, Aliox carries on and shows your contact link.</p><div class="row__pic row__pic--wide"><img src="../../assets/screens/admin-thread.webp" width="1712" height="1298" loading="lazy" alt="The wp-admin thread: Sara took over, answered that the shirt runs true to size, with Hand back to assistant"></div></div>
+    </li>
+    <li class="row" style="--i:6" data-k="numbers insights analytics conversations transcripts cart checkout clicks searches">
+      <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r7">shows you the numbers</button></h3>
+      <div class="row__more" id="r7"><p>Conversations started, product pages opened, added to cart and checkout clicks (never counted as orders), full transcripts, and the searches that found nothing.</p><div class="row__pic row__pic--wide"><img src="../../assets/screens/admin-metrics.webp" width="2476" height="390" loading="lazy" alt="Four counters in wp-admin: conversations started, product pages opened, added to cart, checkout clicks"></div></div>
+    </li>
+    <li class="row" style="--i:7" data-k="anonymous privacy email phone card hidden data separate down">
+      <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r8">keeps shoppers anonymous</button></h3>
+      <div class="row__more" id="r8"><p>Emails, phone and card numbers that shoppers type are hidden. Each store's data is kept separate, and if Aliox is ever down, browsing, the cart and checkout still work.</p><div class="row__pic row__pic--wide"><img src="../../assets/screens/anonymous.webp" width="900" height="210" loading="lazy" alt="The Conversations page note: shoppers stay anonymous; emails, phone and card numbers they typed are hidden"></div></div>
+    </li>
+    <li class="rows__head" id="rowsHead" aria-hidden="true"><img src="../../assets/aliox-mascot-avatar.png" width="512" height="512" alt="" loading="lazy"></li>
+  </ul>
+  <p class="rows__none" id="none" hidden>Nothing by that name. Try “cart” or “Sara”.</p>
+</section>
+
+<section class="setup on-dark" id="setup" aria-labelledby="setup-h">
+  <div class="field">
+    <h2 id="setup-h">how do I set it&nbsp;up?</h2>
+    <div class="field__card"><div class="setup-card" data-ui>
+      <div class="sc__top">Aliox AI<span class="sc__state">Installed</span></div>
+      <div class="sc__rows"><div class="sc__row">WordPress <span class="tick">Ready</span></div><div class="sc__row">WooCommerce <span class="tick">Ready</span></div><div class="sc__row">Store <span class="off">Not connected</span></div></div>
+    </div></div>
+    <div class="field__say"><p>First, install the plugin.</p><p>It checks that WordPress and WooCommerce are ready.</p></div>
+  </div>
+  <div class="field">
+    <div class="field__card"><div class="setup-card" data-ui>
+      <div class="sc__top">Loom &amp; Line<span class="sc__state sc__state--on">Connected</span></div>
+      <div class="sc__rows"><div class="sc__row">Products <b class="num">20</b></div><div class="sc__row">Variations <b class="num">13</b></div><div class="sc__row">Policy pages <b class="num">4</b></div><div class="sc__row">Sync <span class="tick">Up to date</span></div></div>
+    </div></div>
+    <div class="field__say"><p>Then connect your store.</p><p>Products, variations and policy pages sync, and stay in sync.</p></div>
+  </div>
+  <div class="field">
+    <div class="field__card"><div class="setup-card" data-ui>
+      <div class="sc__top">Widget<span class="sc__state sc__state--on">Saved</span></div>
+      <div class="sc__rows"><div class="sc__row"><span><img src="../../aliox-mascot-head.webp" width="128" height="128" alt="">Aliox</span><b>Avatar</b></div><div class="sc__row">Tone <b>Friendly</b></div><div class="sc__row">Colour <b><span class="swatch"></span>#2a573f</b></div><div class="sc__row">Position <b>Right · Light</b></div></div>
+    </div></div>
+    <div class="field__say"><p>Make it yours.</p><p>Name, greeting, tone, colour, your logo or the mascot, left or right, light or dark.</p></div>
+  </div>
+  <div class="field">
+    <div class="field__card"><div class="setup-card" data-ui>
+      <div class="sc__top">Chat widget<span class="sc__state sc__state--on">On</span><span class="toggle"></span></div>
+      <div class="nudge">Looking for something? I can help.</div>
+      <div class="launcher"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt="">Ask our assistant</div>
+    </div></div>
+    <div class="field__say"><p>Switch it on.</p><p>The button appears on your store, and shoppers can start asking.</p></div>
+  </div>
+</section>
+
+<section class="price wrap" id="pricing" aria-labelledby="price-h">
+  <div class="grid plans is-wait" id="plans">
+    <div class="plans__head">
+      <h2 class="big lines" id="price-h" data-rise><span class="line"><span style="--i:0">how much</span></span><span class="line"><span style="--i:1">is it?</span></span></h2>
+    </div>
+    <article class="plan plan--starter">
+      <div class="plan__in"><h3>Starter</h3><p class="plan__price num">$29<span> a month</span></p>
+        <ul><li>500 conversations a month, about 16 a day</li><li>Up to 500 products</li><li>For new and small shops</li></ul></div>
+      <a class="plan__go" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&amp;body=Plan%3A%20Starter">Join the launch list</a>
+    </article>
+    <article class="plan plan--growth on-dark">
+      <div class="plan__holder" aria-hidden="true"><img src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt="" loading="lazy"></div>
+      <div class="plan__in"><h3>Growth</h3><p class="plan__price num">$79<span> a month</span></p>
+        <ul><li>Best for most stores</li><li>2,000 conversations a month, about 66 a day</li><li>Up to 2,000 products</li></ul></div>
+      <a class="plan__go" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&amp;body=Plan%3A%20Growth">Join the launch list</a>
+    </article>
+    <article class="plan plan--pro on-dark">
+      <div class="plan__in"><h3>Pro</h3><p class="plan__price num">$199<span> a month</span></p>
+        <ul><li>6,000 conversations a month, about 200 a day</li><li>Up to 10,000 products</li><li>For big catalogues and busy shops</li></ul></div>
+      <a class="plan__go" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&amp;body=Plan%3A%20Pro">Join the launch list</a>
+    </article>
+  </div>
+  <p class="price__note">Every feature on every plan, no add-ons. Launch pricing in US dollars, billed monthly, and it may change before launch. At your monthly limit new chats pause until the next period, and your store keeps selling. Change plans any time.</p>
+</section>
+
+<section class="faq wrap" id="questions" aria-labelledby="faq-h">
+  <div class="grid">
+    <div class="faq__side">
+      <h2 class="big lines" id="faq-h" data-rise><span class="line"><span style="--i:0">anything</span></span><span class="line"><span style="--i:1">else?</span></span></h2>
+      <div class="faq__peek is-wait">
+        <img class="faq__peek-mascot" src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt="" loading="lazy">
+        <div class="faq__peek-block"><p>Something we missed? Write to <a class="link" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20question">hello@alioxai.com</a> and a person answers.</p></div>
+      </div>
+    </div>
+    <div class="faq__list is-wait" id="faqList">
+      <details class="qa" name="faq" style="--i:0" open><summary>When can I get it?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>Soon. A pilot is running with a few stores now; the plugin and the plans open after it. <a class="link" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">Join the launch list</a> and we'll write when it does.</p></div></details>
+      <details class="qa" name="faq" style="--i:1"><summary>Will it make things up?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>No. It answers from your catalogue and from the pages you approve, and when it doesn't know, it says so and points the shopper to your store. Every reply carries the line “AI assistant · Responses may be imperfect”.</p></div></details>
+      <details class="qa" name="faq" style="--i:2"><summary>Does it take payments?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>No. It puts the exact variation in the shopper's own cart. Checkout and payment stay in WooCommerce, the way they are today.</p></div></details>
+      <details class="qa" name="faq" style="--i:3"><summary>What can't it do yet?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>Bundles, subscriptions, gift cards, add-ons, order lookup, refunds and payment in the chat are not supported.</p></div></details>
+      <details class="qa" name="faq" style="--i:4"><summary>Can my team answer chats themselves?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>Yes, if you switch live chat on (it's a per-store setting, off by default). Shoppers see “Talk to a person” only while a manager is set to Available. If nobody picks up within 3 minutes, Aliox carries on and shows your contact link.</p></div></details>
+      <details class="qa" name="faq" style="--i:5"><summary>What happens at my monthly limit?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>New chats pause until the next period starts. Your store keeps selling as usual, and you can change plans any time.</p></div></details>
+      <details class="qa" name="faq" style="--i:6"><summary>What about shoppers' privacy?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>Shoppers stay anonymous: emails, phone and card numbers they type are hidden. Each store's data is kept separate.</p></div></details>
+      <details class="qa" name="faq" style="--i:7"><summary>What if Aliox is down?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>Your store carries on without it. Browsing, the cart and checkout still work.</p></div></details>
+      <details class="qa" name="faq" style="--i:8"><summary>Which languages does it speak?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>It replies in the shopper's language. The pilot runs in English and Bangla, and Banglish is being tested.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<section class="close wrap on-dark" id="join" aria-labelledby="close-h">
+  <h2 class="display lines" id="close-h" data-rise data-fit="0.86" data-fit-s="1"><span class="line"><span style="--i:0">your shoppers</span></span><span class="line"><span style="--i:1">are asking.</span></span></h2>
+  <div class="close__foot">
+    <p>Aliox is in a pilot with a few WooCommerce stores. Join the launch list and we'll write once, when the plugin opens.</p>
+    <a class="btn btn--light" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">Join the launch list</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot wrap on-dark" aria-labelledby="foot-h">
+  <h2 class="sr-only" id="foot-h">Aliox AI</h2>
+  <div class="mark is-wait" id="mark" aria-hidden="true">
+    <div class="mark__b" style="--h:100%;--i:0;background:var(--mist)"><svg viewBox="24 26 80 84"><path d="M44 30 H84 A20 20 0 0 1 104 50 V74 A20 20 0 0 1 84 94 H56 L37 107 Q32 110.5 33 105 L35 92.5 A20 20 0 0 1 24 74 V50 A20 20 0 0 1 44 30 Z" fill="#2a573f"/><path d="M0 -1 Q0.22 -0.22 1 0 Q0.22 0.22 0 1 Q-0.22 0.22 -1 0 Q-0.22 -0.22 0 -1 Z" transform="translate(64 62) scale(19)" fill="#8dc63f"/></svg></div>
+    <div class="mark__b" style="--h:78%;--i:1;background:var(--sage)"><span>a</span></div>
+    <div class="mark__b" style="--h:92%;--i:2;background:var(--mist)"><span>l</span></div>
+    <div class="mark__b mark__b--i" style="--h:66%;--i:3;background:var(--sage)"><span>ı</span><svg class="mark__star" viewBox="-1 -1 2 2"><path d="M0 -1 Q0.22 -0.22 1 0 Q0.22 0.22 0 1 Q-0.22 0.22 -1 0 Q-0.22 -0.22 0 -1 Z" fill="#8dc63f"/></svg></div>
+    <div class="mark__b" style="--h:86%;--i:4;background:var(--mist)"><span>o</span></div>
+    <div class="mark__b" style="--h:60%;--i:5;background:var(--sage)"><span>x</span></div>
+    <img class="mark__mascot" id="markMascot" src="../../assets/aliox-mascot-cut-420.webp" width="420" height="492" alt="" loading="lazy">
+  </div>
+  <div class="grid foot__links">
+    <div class="foot__col"><h3>On this page</h3><ul><li><a href="#try">Try it</a></li><li><a href="#what">What it does</a></li><li><a href="#setup">Set-up</a></li></ul></div>
+    <div class="foot__col"><h3>&nbsp;</h3><ul><li><a href="#pricing">Pricing</a></li><li><a href="#questions">Questions</a></li><li><a href="#top">Back to top</a></li></ul></div>
+    <div class="foot__col"><h3>Write to us</h3><ul><li><a href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">hello@alioxai.com</a></li></ul></div>
+    <div class="foot__col foot__col--wide"><h3>Made by Trinomial Labs</h3><p>Aliox AI is a WordPress plugin for WooCommerce stores, connected to a hosted service. Coming soon.</p></div>
+  </div>
+  <div class="foot__last">
+    <a class="link" href="https://trinomiallabs.com">© 2026 Trinomial Labs</a>
+    <a class="btn btn--light" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">Join the launch list</a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  /* fit display lines to the width by measurement */
+  const fit = () => {
+    $$('[data-fit]').forEach((el) => {
+      const share = parseFloat(innerWidth <= 600 ? el.dataset.fitS : el.dataset.fit);
+      const spans = $$('.line > span', el);
+      el.style.fontSize = '100px';
+      const widest = Math.max(...spans.map((s) => s.getBoundingClientRect().width));
+      const avail = el.clientWidth * share;
+      if (widest > 0) el.style.fontSize = Math.min(220, (100 * (avail - 6)) / widest) + 'px';
+    });
+    const h1 = $('h1[data-fit]'); if (!h1) return;
+    const size = h1.style.fontSize;
+    $$('.mark__b').forEach((el) => { el.style.fontSize = innerWidth <= 600 ? '' : size; });
+    placeMark();
+  };
+  document.fonts && document.fonts.ready.then(fit); fit();
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(fit, 120); });
+
+  /* entrances, once */
+  const once = (el, fn) => {
+    if (!el) return;
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { fn(e.target); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    io.observe(el);
+  };
+  $$('[data-rise]').forEach((el) => once(el, (t) => t.classList.add('is-in')));
+  once($('#rows'), (t) => t.classList.remove('is-in-wait'));
+  once($('.try__mascot'), (t) => t.classList.remove('is-wait'));
+  once($('.store__bar'), () => $('.store__phone').classList.remove('is-wait'));
+  once($('#plans'), (t) => t.classList.remove('is-wait'));
+  once($('#faqList'), (t) => t.classList.remove('is-wait'));
+  once($('.faq__side'), () => $('.faq__peek').classList.remove('is-wait'));
+  once($('#mark'), (t) => t.classList.remove('is-wait'));
+  const setup = $('#setup'); setup.classList.add('is-wait'); once(setup, (t) => t.classList.remove('is-wait'));
+
+  /* footer: the mascot pops up over the shortest block */
+  function placeMark() {
+    const blocks = $$('.mark__b'); const m = $('#markMascot'); if (!m) return;
+    const low = blocks.reduce((a, b) => (b.offsetHeight < a.offsetHeight ? b : a));
+    const w = low.offsetWidth * 0.86;
+    m.style.width = w + 'px';
+    m.style.left = (low.offsetLeft + (low.offsetWidth - w) / 2) + 'px';
+    m.style.top = (low.offsetTop - w * 1.17 * 0.52) + 'px';
+  }
+  placeMark(); addEventListener('resize', placeMark); document.fonts && document.fonts.ready.then(placeMark);
+
+  /* ───── what it does: rows, filter, the mascot head that points ───── */
+  const rows = $$('.row'); const head = $('#rowsHead'); const find = $('#find'); const none = $('#none');
+  const pointAt = (row) => { if (!row || !head) return; const b = row.querySelector('.row__btn'); head.style.transform = `translateY(${row.offsetTop + (b.offsetHeight - head.offsetHeight) / 2}px)`; };
+  const open = (row) => {
+    rows.forEach((r) => { const on = r === row; r.classList.toggle('is-open', on); r.querySelector('.row__btn').setAttribute('aria-expanded', on); });
+    pointAt(row);
+  };
+  rows.forEach((r, i) => {
+    const b = r.querySelector('.row__btn');
+    b.addEventListener('click', () => open(r));
+    b.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      e.preventDefault();
+      const vis = rows.filter((x) => !x.hidden); const k = vis.indexOf(r) + (e.key === 'ArrowDown' ? 1 : -1);
+      const next = vis[(k + vis.length) % vis.length]; open(next); next.querySelector('.row__btn').focus();
+    });
+  });
+  find && find.addEventListener('input', () => {
+    const q = find.value.trim().toLowerCase();
+    let first = null;
+    rows.forEach((r) => { const hit = !q || (r.textContent + ' ' + r.dataset.k).toLowerCase().includes(q); r.hidden = !hit; if (hit && !first) first = r; });
+    none.hidden = !!first; head.style.visibility = first ? 'visible' : 'hidden';
+    const cur = rows.find((r) => r.classList.contains('is-open') && !r.hidden);
+    open(cur || first);
+  });
+  pointAt(rows[0]); addEventListener('resize', () => pointAt(rows.find((r) => r.classList.contains('is-open'))));
+  document.fonts && document.fonts.ready.then(() => pointAt(rows.find((r) => r.classList.contains('is-open'))));
+
+  /* ───── questions: the mascot leans out while one is open ───── */
+  const faq = $('#questions');
+  const syncFaq = () => faq.classList.toggle('is-asking', $$('.qa', faq).some((d) => d.open));
+  $$('.qa', faq).forEach((d) => d.addEventListener('toggle', syncFaq)); syncFaq();
+
+  /* ───── the live demo: Loom & Line's assistant ───── */
+  const A = '../../aliox-mascot-head.webp', S = '../../assets/screens/';
+  const thread = $('#thread'); const form = $('#ask'); const input = $('#ask-q');
+  const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const ai = (inner) => `<div class="ai chat-in"><img src="${A}" width="128" height="128" alt=""><div class="ai__stack">${inner}</div></div>`;
+  const bub = (t) => `<div class="bubble">${t}</div>`;
+  const shirtCard = `<div class="card"><img src="${S}shirt.webp" width="580" height="518" alt="Everyday Linen Shirt on a hanger"><div class="card__b"><div>Everyday Linen Shirt</div><div class="card__price">৳1,890 – ৳1,990</div><div class="card__hint">Select size</div><button class="ubtn" type="button" data-act="options">Select options</button></div></div>`;
+  const kurtaCard = `<div class="card"><img src="${S}kurta.webp" width="580" height="532" alt="Breezy Linen Kurta on a hanger"><div class="card__b"><div>Breezy Linen Kurta</div><div class="card__price">৳2,200</div><button class="ubtn" type="button" data-act="add-kurta">Add to cart</button></div></div>`;
+  const sheet = (c = 'Black', s = 'M') => `<div class="opts"><div class="opts__label">Everyday Linen Shirt · ৳${c === 'Black' ? '1,890' : '1,990'}</div><div class="opts__label">Colour · ${c}</div><div class="pills">${['Beige', 'Black'].map((x) => `<button type="button" class="pill${x === c ? ' is-on' : ''}" data-act="c:${x}"><i style="background:${x === 'Black' ? '#111' : '#f3f0dc'}"></i>${x}</button>`).join('')}</div><div class="opts__label">Size · ${s}</div><div class="pills">${['L', 'M', 'XL'].map((x) => `<button type="button" class="pill pill--size${x === s ? ' is-on' : ''}" data-act="s:${x}">${x}</button>`).join('')}</div><div class="ok">${c} / ${s} is available</div><button class="ubtn" type="button" data-act="add:${c}:${s}">Add to cart</button></div>`;
+  const added = (name, meta, price, img) => `<div class="added"><div class="added__top">Added to your cart!</div><div class="added__item"><img src="${S}${img}" width="580" height="518" alt=""><div><div>${name}</div><div class="added__meta">${meta}</div><div class="card__price">${price}</div></div></div><div class="added__sub">1 item in your cart · Subtotal ${price}</div><div class="added__go"><button type="button" class="ubtn ubtn--ghost" data-act="more">Continue shopping</button><button type="button" class="ubtn" data-act="checkout">Checkout →</button></div></div>`;
+  const src = (page) => `<br><span class="src">Source: <a href="#try">${page}</a></span>`;
+
+  const reply = (raw) => {
+    const q = raw.toLowerCase();
+    if (/[অ-হা-ৌ]/.test(raw)) return bub('জি, আছে! Everyday Linen Shirt কালো রঙে M সাইজে স্টকে আছে, দাম ৳১,৮৯০।') + `<div class="cards">${shirtCard}</div>`;
+    if (/\b(person|human|someone|staff|agent|real people|team)\b/.test(q)) return bub('I can bring in someone from the Loom &amp; Line team.') + '<button class="ubtn ubtn--ghost" type="button" data-act="person" style="align-self:flex-start">Talk to a person</button>';
+    const nope = q.match(/gift ?card|subscription|bundle|add-?on|my order|order status|track|where.?s my|refund|pay (here|in chat|now)/);
+    if (nope) return bub(`That's not something I can do in the chat${/refund/.test(nope[0]) ? '. Refunds are handled by the store' : ''}. The Loom &amp; Line team can help with it.<br><span class="src"><a href="#try">Contact the store</a></span>`);
+    if (/return|exchange/.test(q)) return bub('Yes. Unworn items can be returned or exchanged within 7 days of delivery.' + src('Returns &amp; Exchanges'));
+    if (/ship|deliver|how long|arrive/.test(q)) return bub('Inside Dhaka it takes 1–2 days (৳80). Outside Dhaka, 3–5 days (৳150).' + src('Shipping Policy'));
+    if (/fit|true to size|run(s)? (small|big|large)|size guide|measure/.test(q)) return bub('The Everyday Linen Shirt has a relaxed cut and runs true to size. The size guide has the chest width for L, M and XL.' + src('Size Guide'));
+    if (/\b(add|cart|buy|take it|i.?ll have)\b/.test(q)) return bub('Done.') + added('Everyday Linen Shirt', 'Black / M · Qty 1', '৳1,890', 'shirt.webp');
+    if (/kurta|wedding|eid|party|occasion|festive|dinner|event/.test(q)) return bub('For an occasion, the Breezy Linen Kurta is our dressiest piece, in soft linen.') + `<div class="cards">${kurtaCard}</div>`;
+    const n = q.replace(/,/g, '').match(/(\d{3,6})/);
+    if (/under|cheap|less than|below|budget|max/.test(q) || n) {
+      const max = n ? +n[1] : 2000;
+      if (max < 1890) return bub(`Nothing at Loom &amp; Line is under ৳${max.toLocaleString('en-IN')}. The lowest price is the Everyday Linen Shirt in Black, ৳1,890.`);
+      return bub(max >= 2200 ? `Both pieces are under ৳${max.toLocaleString('en-IN')}.` : `Under ৳${max.toLocaleString('en-IN')}: the Everyday Linen Shirt, from ৳1,890.`) + `<div class="cards">${shirtCard}${max >= 2200 ? kurtaCard : ''}</div>`;
+    }
+    const other = q.match(/\b(blue|white|red|green|grey|gray|navy|pink|yellow|brown|olive)\b/);
+    if (other) return bub(`Not in ${other[1]}, sorry. The Everyday Linen Shirt comes in Black and Beige.`) + `<div class="cards">${shirtCard}</div>`;
+    const sz = q.match(/\b(xxs|xs|s|small|xxl|2xl|3xl)\b/);
+    if (sz && !/\bm\b|medium/.test(q)) return bub(`Not in ${sz[1].toUpperCase()}. The Everyday Linen Shirt comes in L, M and XL.`) + `<div class="cards">${shirtCard}</div>`;
+    if (/\bm\b|medium|\bl\b|large|\bxl\b|size|in stock|available/.test(q)) {
+      const s = /\bxl\b/.test(q) ? 'XL' : /\bl\b|large/.test(q) ? 'L' : 'M';
+      const c = /beige/.test(q) ? 'Beige' : 'Black';
+      return bub(`Yes. ${c} / ${s} is in stock.`) + sheet(c, s);
+    }
+    if (/black|beige|colou?r/.test(q)) return bub('Yes. The Everyday Linen Shirt comes in Black and Beige, in sizes L, M and XL. Black is ৳1,890.') + `<div class="cards">${shirtCard}</div>`;
+    if (/shirt|linen|top|clothes|something/.test(q)) return bub('Here’s what I found.') + `<div class="cards">${shirtCard}${kurtaCard}</div>`;
+    if (/^(hi|hello|hey|salam|assalamu)/.test(q)) return bub('Hi! Looking for linen? Ask me about sizes, colours, prices or the store’s policies.');
+    return bub('I couldn’t find that at Loom &amp; Line. Try a colour, a size or a price, or ask about delivery and returns.');
+  };
+
+  const hop = () => { [$('.try__mascot'), $('.try__peek')].forEach((m) => { if (!m) return; m.classList.remove('hop'); void m.offsetWidth; m.classList.add('hop'); }); };
+  const scrollEnd = () => { thread.scrollTop = thread.scrollHeight; };
+  let pending;
+  const ask = (text, keepThread) => {
+    text = text.trim(); if (!text) return;
+    clearTimeout(pending);
+    if (!keepThread) thread.innerHTML = '';
+    thread.insertAdjacentHTML('beforeend', `<div class="me chat-in">${esc(text)}</div><div class="typing" aria-label="Aliox is typing"><i></i><i></i><i></i></div>`);
+    scrollEnd();
+    pending = setTimeout(() => {
+      const t = $('.typing', thread); t && t.remove();
+      thread.insertAdjacentHTML('beforeend', ai(reply(text))); scrollEnd(); hop();
+    }, reduce ? 0 : 520);
+  };
+  const say = (html) => { thread.insertAdjacentHTML('beforeend', html); scrollEnd(); };
+  form.addEventListener('submit', (e) => { e.preventDefault(); ask(input.value); });
+  let typing; input.addEventListener('input', () => { clearTimeout(typing); typing = setTimeout(() => ask(input.value), 700); });
+  $$('#examples .chip').forEach((c) => c.addEventListener('click', () => {
+    $$('#examples .chip').forEach((x) => x.setAttribute('aria-pressed', x === c));
+    input.value = c.textContent; ask(c.textContent);
+  }));
+  thread.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const act = b.dataset.act;
+    if (act === 'options') say(ai(sheet()));
+    else if (act.startsWith('c:') || act.startsWith('s:')) {
+      const box = b.closest('.opts'); const c = $('.pill.is-on:not(.pill--size)', box).textContent.trim(); const s = $('.pill--size.is-on', box).textContent.trim();
+      box.outerHTML = sheet(act.startsWith('c:') ? act.slice(2) : c, act.startsWith('s:') ? act.slice(2) : s);
+    }
+    else if (act.startsWith('add:')) { const [, c, s] = act.split(':'); say(ai(added('Everyday Linen Shirt', `${c} / ${s} · Qty 1`, c === 'Black' ? '৳1,890' : '৳1,990', 'shirt.webp'))); hop(); }
+    else if (act === 'add-kurta') { say(ai(added('Breezy Linen Kurta', 'Qty 1', '৳2,200', 'kurta.webp'))); hop(); }
+    else if (act === 'person') { b.remove(); say('<div class="sys chat-in">Sara from Loom &amp; Line joined</div><div class="who chat-in">Sara · Loom &amp; Line team</div><div class="ai chat-in"><span class="staff">S</span><div class="bubble staff-bubble">Hi, I’m Sara from the store team! How can I help?</div></div>'); }
+    else if (act === 'checkout') say(ai(bub('Taking you to the Loom &amp; Line checkout. Payment happens there, in WooCommerce.')));
+    else if (act === 'more') say(ai(bub('Sure. Ask me for a colour, a size or a price.')));
+  });
+
+  /* ───── scroll-linked: the hero cut-out and the store picture drift ───── */
+  if (!reduce && window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.to('.hero__mascot', { yPercent: -10, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+    gsap.to('.hero__screen', { yPercent: -16, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+    gsap.fromTo('.store__shot img', { scale: 1.08, yPercent: 0 }, { scale: 1, yPercent: -3, ease: 'none', scrollTrigger: { trigger: '.store__shot', start: 'top bottom', end: 'bottom top', scrub: true } });
+  }
+})();
+</script>
+</body>
+</html>

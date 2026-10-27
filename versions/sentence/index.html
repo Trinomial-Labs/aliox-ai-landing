@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aliox AI</title>
+<meta name="description" content="Aliox AI is the AI shop assistant for WooCommerce stores. It answers from your real catalogue, adds the right size to the shopper's cart, and calls your team when a shopper wants a person.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Aliox AI | Shoppers ask, Aliox answers">
+<meta property="og:description" content="The AI shop assistant for WooCommerce stores. It answers from your real catalogue, adds the right size to the cart, and calls your team when a shopper wants a person.">
+<meta property="og:image" content="https://alioxai.com/og-image.png">
+<meta property="og:url" content="https://alioxai.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1e3f2d">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../assets/base.css">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+/* ---------- tokens: the Aliox brand (forest, mist, spark) on Inter ---------- */
+:root {
+  --bg: #f4f8f5;
+  --surface: #e8f0eb;          /* mist */
+  --sage: #b9dca0;
+  --forest: #2a573f;
+  --deep: #1e3f2d;
+  --spark: #8dc63f;            /* the star only, never text */
+  --ink: #16261d;
+  --muted: #3f5248;
+  --accent: #2a573f;
+  --accent-ink: #ffffff;
+  --accent-strong: #1e3f2d;
+  --paper: #ffffff;
+
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-text: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --step-small: 0.875rem;                                   /* 14 */
+  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);  /* 17–19 */
+  --step-lead: clamp(1.25rem, 1.05rem + 0.8vw, 1.625rem);   /* 20–26 */
+  --step-head: clamp(2.25rem, 1.2rem + 4.2vw, 5.5rem);      /* 36–88 */
+  --step-display: clamp(2.75rem, 0.6rem + 8.8vw, 10rem);    /* 44–160 */
+
+  --margin: clamp(1rem, 2.2vw, 2rem);
+  --gutter: clamp(0.75rem, 1.4vw, 1.5rem);
+  --section: clamp(6rem, 11vw, 13rem);
+  --radius: 999px;             /* buttons are pills, like the product's launcher; pictures stay square */
+}
+@media (max-width: 1024px) { :root { --cta-h: 72svh; } }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+section[id], header[id] { scroll-margin-top: 1rem; }
+::selection { background: var(--sage); color: var(--ink); }
+:focus-visible { outline: 3px solid var(--forest); outline-offset: 4px; border-radius: 4px; }
+html { scrollbar-color: var(--forest) var(--surface); }
+body { background: var(--bg); color: var(--ink); overflow-x: clip; }
+img { background: transparent; }
+h1, h2, h3 { font-weight: 600; }
+p { max-width: 62ch; text-wrap: pretty; }
+.display { line-height: 0.96; letter-spacing: -0.04em; }
+.head { line-height: 1.0; letter-spacing: -0.03em; }
+.lead { max-width: 44ch; line-height: 1.35; }
+.muted { color: var(--muted); }
+.section { padding-block: calc(var(--section) / 2); }
+.wrap { padding-inline: var(--margin); }
+.button { min-height: 3.25rem; padding: 0 1.6rem; font-weight: 600; font-size: var(--step-body); gap: 0.5rem; }
+.button:hover { background: var(--accent-strong); }
+.button--light { background: var(--paper); color: var(--deep); }
+.button--light:hover { background: var(--sage); color: var(--ink); }
+.link { font-weight: 500; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.tile img, .handover__shopper img, .handover__admin img, .handover__staff img, .claim__pic img, .hero__shot img { border-radius: 16px; }
+.caption { font-size: var(--step-body); line-height: 1.45; color: var(--ink); margin-top: 0.9rem; max-width: 40ch; }
+
+/* ---------- navigation: wordmark, four links, one action ---------- */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: var(--gutter); padding-block: 1.25rem; position: relative; z-index: 3; }
+.nav__logo { display: inline-flex; align-items: center; }
+.nav__logo svg { width: clamp(118px, 10vw, 150px); height: auto; }
+.nav__links { display: flex; gap: clamp(1rem, 2.4vw, 2.25rem); align-items: center; font-size: var(--step-body); font-weight: 500; }
+.nav__links a { text-decoration: none; }
+.nav__action { min-height: 2.75rem; padding-inline: 1.25rem; }
+@media (max-width: 760px) { .nav__links { display: none; } }
+
+/* ---------- hero: the sentence is the layout; the mascot stands on the bottom edge ---------- */
+.hero { position: relative; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; overflow: clip; view-timeline-name: --hero; }
+.hero__title { position: relative; z-index: 2; padding-top: clamp(2rem, 6vh, 5rem); }
+.hero__title h1 { max-width: 12ch; }
+.slot { display: inline-block; vertical-align: 0; width: 2.3em; height: 0.74em; margin-right: 0.08em; position: relative; }
+.slot svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.hero__foot { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end; padding-top: clamp(1.5rem, 4vh, 3rem); }
+.hero__copy { grid-column: 1 / span 5; display: grid; gap: 1.5rem; padding-bottom: clamp(1.5rem, 6vh, 4rem); }
+.hero__copy .lead { max-width: 36ch; }
+.hero__actions { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; }
+.hero__shot { grid-column: 6 / span 7; position: relative; margin: 0; }
+.hero__shot img { width: 100%; height: auto; }
+.hero__mascot { position: absolute; left: -24%; bottom: -3%; width: 52%; z-index: 2; margin: 0; }
+.hero__mascot img { width: 100%; height: auto; }
+@media (max-width: 900px) {
+  .hero { grid-template-rows: auto auto auto; min-height: 0; }
+  .hero__foot { display: block; padding-top: 1rem; }
+  .hero__copy { gap: 1.25rem; padding-bottom: 2rem; }
+  .hero__shot { margin: 0 calc(var(--margin) * -1) 0 0; padding-bottom: 10%; }
+  .hero__mascot { left: -2%; bottom: 0; width: 46%; }
+}
+
+/* ---------- the live face in the sentence ---------- */
+.face { --gx: 0px; --gy: 0px; }
+.face .eye { transform-origin: center; transform: translate(var(--gx), var(--gy)); transition: transform 300ms var(--ease-out); }
+.face .lid { transform-origin: center; transform: scaleY(1); }
+.face.is-down { --gx: 6px; --gy: 7px; }
+.face .star { transform-origin: 206px -2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .face .lid { animation: blink 5200ms ease-in-out infinite; }
+  .js .face .lid.b { animation-delay: 120ms; }
+  .js .face .star { animation: twinkle 2600ms ease-in-out infinite; }
+}
+@keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 95.5%, 97.5% { transform: scaleY(0.08); } }
+@keyframes twinkle { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.18) rotate(18deg); } }
+
+/* ---------- showcase: the headline you can type ---------- */
+.demo { min-height: 88svh; display: grid; align-content: start; row-gap: 2.5rem; }
+.demo__ask { position: relative; }
+.demo__input { width: 100%; background: none; border: 0; padding: 0; margin: 0; font-family: var(--font-display); font-weight: 600; font-size: var(--step-display); line-height: 1.05; letter-spacing: -0.04em; color: var(--ink); outline: none; white-space: nowrap; overflow-x: auto; caret-color: var(--forest); }
+.demo__input::placeholder { color: var(--muted); opacity: 1; }
+.demo__ask:focus-within .demo__hint { color: var(--forest); }
+.demo__hint { margin-top: 0.75rem; font-size: var(--step-body); color: var(--muted); transition: color var(--t-hover) ease; }
+.demo__answer { max-width: 560px; }
+.demo__examples { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.demo__examples span { font-size: var(--step-body); color: var(--muted); margin-right: 0.25rem; }
+.chip { min-height: 2.75rem; padding: 0 1.1rem; background: var(--surface); color: var(--ink); border-radius: var(--radius); font-size: var(--step-body); font-weight: 500; display: inline-flex; align-items: center; transition: background-color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
+.chip:hover { background: var(--sage); }
+.chip:active { transform: scale(0.97); }
+@media (max-width: 760px) { .demo { min-height: 0; row-gap: 1.75rem; } .demo__input { font-size: 11vw; } }
+
+/* the product's own interface, at true size: its borders and radii are its own */
+[data-ui].chat { font-family: var(--font-text); font-size: 15px; line-height: 1.45; color: #0f172a; display: grid; gap: 12px; }
+[data-ui] .msg { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; }
+[data-ui] .msg img { width: 28px; height: 28px; border-radius: 50%; }
+[data-ui] .bubble { background: #eef2f5; border-radius: 16px; padding: 12px 16px; max-width: 420px; }
+[data-ui] .bubble.you { background: #e8f0eb; justify-self: end; margin-left: 38px; }
+[data-ui] .cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-left: 38px; }
+[data-ui] .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+[data-ui] .card img { width: 100%; aspect-ratio: 290 / 260; object-fit: cover; }
+[data-ui] .card__body { padding: 12px 14px 14px; display: grid; gap: 6px; }
+[data-ui] .card__name { font-weight: 500; }
+[data-ui] .card__price { font-size: 17px; font-variant-numeric: tabular-nums; }
+[data-ui] .card__meta { font-size: 13.5px; color: #475569; }
+[data-ui] .card__btn { margin-top: 4px; min-height: 40px; border-radius: 8px; background: #2a573f; color: #fff; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; }
+[data-ui] .source { margin-left: 38px; font-size: 13.5px; color: #475569; }
+[data-ui] .source a { color: #2a573f; }
+[data-ui] .line { margin-left: 38px; font-size: 13px; color: #58656f; }
+[data-ui] .nudge { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 999px; background: #2a573f; color: #fff; font-weight: 500; margin-left: 38px; }
+[data-ui] .policy { display: grid; gap: 4px; }
+
+/* ---------- mosaic: three real screens, uneven, with captions ---------- */
+.mosaic { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 3rem; }
+.mosaic__head { grid-column: 1 / span 12; display: grid; grid-template-columns: 7fr 5fr; column-gap: var(--gutter); align-items: end; margin-bottom: 1rem; }
+.mosaic__head p { max-width: 36ch; }
+.tile { margin: 0; }
+.tile img { width: 100%; height: auto; }
+.tile--a { grid-column: 1 / span 4; }
+.tile--b { grid-column: 6 / span 5; margin-top: 11rem; }
+.tile--c { grid-column: 8 / span 5; }
+.tile--d { grid-column: 1 / span 5; margin-top: -14rem; align-self: end; }
+@media (max-width: 900px) {
+  .mosaic { row-gap: 2.5rem; }
+  .mosaic__head { grid-template-columns: 1fr; row-gap: 1rem; }
+  .tile--a { grid-column: 1 / span 9; }
+  .tile--b { grid-column: 4 / span 9; margin-top: 0; }
+  .tile--c { grid-column: 1 / span 12; }
+  .tile--d { grid-column: 2 / span 10; margin-top: 0; }
+}
+
+/* ---------- hand-over: a split, the whole admin screen uncropped on the right ---------- */
+.handover { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 3rem; align-items: start; }
+.handover__text { grid-column: 1 / span 5; display: grid; gap: 1.5rem; }
+.handover__text p { max-width: 42ch; }
+.handover__shopper { grid-column: 1 / span 4; margin: 0; }
+.handover__shopper img { width: 100%; height: auto; }
+.handover__admin { grid-column: 6 / span 7; margin: 0 calc(var(--margin) * -1) 0 0; grid-row: 1; }
+.handover__shopper { grid-row: 2 / span 2; }
+.handover__admin img { width: 100%; height: auto; aspect-ratio: 5 / 4; object-fit: cover; object-position: right top; }
+.handover__staff { grid-column: 6 / span 7; margin: 0 calc(var(--margin) * -1) 0 0; }
+.handover__staff img { width: 100%; height: auto; }
+.handover__staff figcaption { margin-top: 0.9rem; padding-right: var(--margin); font-size: var(--step-body); max-width: 40ch; }
+.handover__admin figcaption { margin-top: 0.9rem; padding-right: var(--margin); font-size: var(--step-body); }
+@media (max-width: 900px) {
+  .handover__text, .handover__shopper, .handover__admin, .handover__staff { grid-column: 1 / span 12; grid-row: auto; }
+  .handover__admin, .handover__staff { margin: 0 calc(var(--margin) * -1); }
+  .handover__admin figcaption, .handover__staff figcaption { padding-inline: var(--margin); }
+  .handover__admin img { aspect-ratio: 4 / 5; }
+  .handover__shopper { grid-column: 2 / span 8; }
+}
+
+/* ---------- stages as one bar ---------- */
+.stages { display: grid; gap: 4rem; }
+.bar { display: flex; gap: 6px; height: 22vh; min-height: 150px; }
+.seg { display: flex; flex-direction: column; justify-content: space-between; padding: 20px; min-width: 12%; }
+.seg b { font-weight: 600; font-size: var(--step-lead); line-height: 1.1; letter-spacing: -0.02em; }
+.seg--1 { flex: 2 1 0; background: var(--surface); }
+.seg--2 { flex: 3 1 0; background: var(--sage); }
+.seg--3 { flex: 4 1 0; background: var(--forest); color: #fff; }
+.seg--4 { flex: 5 1 0; background: var(--deep); color: #fff; }
+.clauses { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.clauses li { padding: 0; min-width: 12%; font-size: var(--step-body); line-height: 1.45; }
+.clauses li:nth-child(1) { flex: 2 1 0; } .clauses li:nth-child(2) { flex: 3 1 0; } .clauses li:nth-child(3) { flex: 4 1 0; } .clauses li:nth-child(4) { flex: 5 1 0; }
+.clauses li p { max-width: 24ch; }
+.clauses li strong { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+@media (max-width: 900px) {
+  .stages { gap: 2.5rem; }
+  .bar { flex-direction: column; height: auto; }
+  .seg { min-height: 72px; flex-basis: auto; min-width: 0; }
+  .seg--1 { flex: 2 0 72px; } .seg--2 { flex: 3 0 84px; } .seg--3 { flex: 4 0 108px; } .seg--4 { flex: 5 0 140px; }
+  .clauses { flex-direction: column; gap: 1.25rem; }
+  .clauses li { flex: none !important; min-width: 0; }
+  .clauses li p { max-width: 40ch; }
+}
+
+/* ---------- claims on colour fields, each with its proof beside it ---------- */
+.claims { display: grid; }
+.claim { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 2.5rem; align-items: center; padding: clamp(4rem, 8vw, 7rem) var(--margin); }
+.claim__text { grid-column: 1 / span 5; display: grid; gap: 1.25rem; }
+.claim h2, .claim h3 { font-size: var(--step-head); line-height: 1; letter-spacing: -0.03em; font-weight: 700; max-width: 12ch; text-wrap: balance; }
+.claim p { font-size: var(--step-body); line-height: 1.5; max-width: 36ch; }
+.claim__pic { grid-column: 7 / span 6; margin: 0; }
+.claim__pic img { width: 100%; height: auto; }
+.claim__ui { grid-column: 7 / span 6; background: #fff; border-radius: 16px; padding: 18px; }
+.claim--mirror .claim__text { grid-column: 8 / span 5; }
+.claim--mirror .claim__pic, .claim--mirror .claim__ui { grid-column: 1 / span 6; grid-row: 1; }
+.claim--deep { background: var(--deep); color: #fff; }
+.claim--deep p { color: #d9e6dd; }
+.claim--mist { background: var(--surface); color: var(--ink); }
+.claim--sage { background: var(--sage); color: var(--ink); }
+.claim--forest { background: var(--forest); color: #fff; }
+.claim--forest p { color: #d9e6dd; }
+@media (max-width: 900px) {
+  .claim { padding: 3.5rem var(--margin); row-gap: 1.75rem; }
+  .claim__text, .claim__pic, .claim__ui, .claim--mirror .claim__text, .claim--mirror .claim__pic, .claim--mirror .claim__ui { grid-column: 1 / span 12; grid-row: auto; }
+  .claim--mirror .claim__pic, .claim--mirror .claim__ui { grid-row: 2; }
+}
+
+/* ---------- insights: heading and line on a baseline, then the band ---------- */
+.insights__head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end; margin-bottom: 2.5rem; }
+.insights__head h2 { grid-column: 1 / span 6; }
+.insights__head p { grid-column: 8 / span 5; max-width: 38ch; }
+.band { margin: 0 calc(var(--margin) * -1); height: min(78svh, 760px); overflow: clip; background: #f6f6f6; }
+.band img { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+@media (max-width: 900px) {
+  .insights__head { grid-template-columns: 1fr; row-gap: 1rem; }
+  .insights__head h2, .insights__head p { grid-column: 1; }
+  .band { height: 52svh; }
+  .band img { object-position: 12% top; }
+}
+
+/* ---------- pricing: plan names, one live figure ---------- */
+.plans { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 2rem; align-items: start; }
+.plans__index { grid-column: 1 / span 6; display: grid; gap: 0.1em; }
+.plans__index h2 { font-size: var(--step-head); line-height: 1.1; letter-spacing: -0.03em; color: var(--muted); font-weight: 600; margin-bottom: 0.2em; }
+.plan-name { display: flex; align-items: center; gap: 0.28em; text-align: left; font-family: var(--font-display); font-weight: 600; font-size: var(--step-head); line-height: 1.1; letter-spacing: -0.03em; color: var(--muted); transition: color var(--t-hover) ease; }
+.plan-name::before { content: ""; width: 0.3em; height: 0.3em; border-radius: 50%; background: currentColor; opacity: 0; transition: opacity var(--t-hover) ease; }
+.plan-name:hover { color: var(--ink); }
+.plan-name[aria-selected="true"] { color: var(--ink); }
+.plan-name[aria-selected="true"]::before { opacity: 1; background: var(--forest); }
+.plans__stage { grid-column: 8 / span 5; display: grid; gap: 1.5rem; position: relative; }
+.plans__price { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+.plans__price strong { font-size: var(--step-display); line-height: 0.95; letter-spacing: -0.05em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.plans__price span { font-size: var(--step-lead); }
+.plans__panel { display: grid; gap: 1.5rem; transition: opacity 200ms ease; }
+.plans__panel[hidden] { display: none; }
+.plans__panel.is-fading { opacity: 0; }
+.plans__panel p { max-width: 40ch; }
+.plans__note { grid-column: 1 / span 6; max-width: 46ch; color: var(--muted); font-size: var(--step-body); margin-top: 1rem; }
+@media (max-width: 760px) {
+  .plans__index, .plans__stage, .plans__note { grid-column: 1 / span 12; }
+  .plans__index { gap: 0; }
+  .plans__index h2, .plan-name { font-size: 10vw; }
+  .plans__stage { padding-top: 1rem; }
+  .plans__stage .button { width: 100%; }
+}
+
+/* ---------- questions: large questions, answers beside ---------- */
+.faq { display: grid; row-gap: clamp(3.5rem, 6vw, 5.5rem); }
+.faq__row { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: baseline; }
+.faq__row h2, .faq__row h3 { grid-column: 1 / span 6; font-size: var(--step-lead); line-height: 1.1; letter-spacing: -0.02em; font-weight: 500; max-width: 22ch; }
+.faq__row h2 { color: var(--muted); }
+.faq__row p { grid-column: 8 / span 5; font-size: var(--step-body); line-height: 1.55; max-width: 42ch; }
+@media (max-width: 760px) {
+  .faq { row-gap: 3.5rem; }
+  .faq__row { grid-template-columns: 1fr; row-gap: 0.75rem; }
+  .faq__row h2, .faq__row h3, .faq__row p { grid-column: 1; }
+}
+
+/* ---------- the close and the footer, inverted ---------- */
+.close { background: var(--deep); color: #fff; }
+.cta { min-height: var(--cta-h, 90svh); display: grid; grid-template-rows: 1fr auto; padding-block: clamp(3rem, 8vh, 6rem) 2.5rem; }
+.cta h2 { font-size: var(--step-display); line-height: 0.92; letter-spacing: -0.045em; font-weight: 700; max-width: 14ch; align-self: start; }
+.cta__foot { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end; }
+.cta__foot p { grid-column: 1 / span 5; font-size: var(--step-lead); line-height: 1.35; max-width: 30ch; color: #d9e6dd; }
+.cta__foot .button { grid-column: 10 / span 3; justify-self: end; min-height: 3.5rem; }
+.footer { position: relative; overflow: clip; padding-top: clamp(6rem, 12vh, 10rem); }
+.footer__top { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; }
+.footer__invite { grid-column: 1 / span 7; display: grid; gap: 1.5rem; }
+.footer__invite h2 { font-size: var(--step-head); line-height: 1.02; letter-spacing: -0.03em; max-width: 14ch; }
+.footer__links { grid-column: 10 / span 3; display: grid; gap: 0.6rem; font-size: var(--step-body); }
+.footer__links a { text-decoration: none; color: #fff; }
+.footer__legal { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: var(--step-small); color: #d3e0d7; margin-top: 3rem; position: relative; z-index: 2; }
+.footer__legal a { color: #fff; }
+.footer__mark { position: relative; height: 20vw; margin-top: 0.5rem; }
+.footer__mark svg { position: absolute; left: 0; bottom: 0; width: 76vw; height: auto; transform: translateY(32%); }
+.footer__peek { position: absolute; right: var(--margin); bottom: -14%; width: clamp(200px, 22vw, 360px); margin: 0; z-index: 1; }
+.footer__peek img { width: 100%; height: auto; }
+@media (max-width: 760px) {
+  .cta { min-height: 76svh; padding-block: 2.5rem 1.25rem; }
+  .cta h2 { font-size: 13vw; }
+  .cta__foot { grid-template-columns: 1fr; row-gap: 1.5rem; }
+  .cta__foot p, .cta__foot .button { grid-column: 1; }
+  .cta__foot .button { justify-self: stretch; }
+  .footer__top { grid-template-columns: 1fr; row-gap: 2rem; }
+  .footer__invite, .footer__links { grid-column: 1; }
+  .footer__invite .button { width: 100%; }
+  .footer__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+  .footer__mark { height: 30vw; }
+  .footer__mark svg { width: 110vw; transform: translateY(32%); }
+  .footer__peek { width: 40vw; right: 2%; bottom: -10%; }
+}
+
+/* ---------- motion: load sequence, entrances per section, feedback, one moving picture ---------- */
+.lines .line { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.lines [data-line] { display: block; }
+[data-lines] .line { display: block; overflow: clip; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+[data-lines] .line > span { display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  /* hero: lines rise, the face opens, the sentence and the button arrive, the mascot settles */
+  .js .hero [data-line] { transform: translateY(105%); animation: load-line 900ms var(--ease-expo) forwards; animation-delay: calc(100ms + var(--i) * 110ms); }
+  .js .hero .slot { clip-path: inset(0 100% 0 0 round 0.5em); animation: load-slot 900ms var(--ease-in-out) 420ms forwards; }
+  .js .hero [data-load] { opacity: 0; transform: translateY(14px); animation: load-rise 600ms var(--ease-out) forwards; animation-delay: var(--d, 500ms); }
+  .js .hero__mascot { opacity: 0; transform: translateY(5%) scale(1.04); animation: load-settle 1200ms var(--ease-expo) 350ms forwards; }
+  .js .hero__mascot img { animation: idle 5200ms ease-in-out 1600ms infinite; }
+  /* section entrances: the parts arrive in reading order, once */
+  .js [data-stagger] > * { opacity: 0; transform: translateY(22px); transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out); }
+  .js [data-stagger].is-in > * { opacity: 1; transform: none; }
+  .js [data-stagger].is-in > :nth-child(1) { transition-delay: 0ms; }
+  .js [data-stagger].is-in > :nth-child(2) { transition-delay: 80ms; }
+  .js [data-stagger].is-in > :nth-child(3) { transition-delay: 160ms; }
+  .js [data-stagger].is-in > :nth-child(4) { transition-delay: 240ms; }
+  .js [data-stagger].is-in > :nth-child(5) { transition-delay: 320ms; }
+  .js [data-stagger].is-in > :nth-child(6) { transition-delay: 400ms; }
+  .js [data-stagger].is-in > :nth-child(7) { transition-delay: 480ms; }
+  /* rows of text wipe up from their own baseline; the text keeps its box, so the page is never measured as empty */
+  .js [data-wipe] { clip-path: inset(0 0 98% 0); transform: translateY(18px); transition: clip-path 900ms var(--ease-expo), transform 900ms var(--ease-expo); }
+  .js [data-wipe].is-in { clip-path: inset(0); transform: none; }
+  /* heading lines that rise on scroll */
+  .is-split .line > span { transform: translateY(110%); }
+  .is-split.is-in .line > span { transform: none; transition: transform 900ms var(--ease-expo) calc(var(--i) * var(--stagger-line)); }
+  /* the signature move: the admin screen opens like a shutter from the left */
+  .js .shutter[data-reveal] { opacity: 1; transform: none; clip-path: inset(0 99.5% 0 0); transition: clip-path 1100ms var(--ease-in-out); }  /* not fully clipped: a clipped box never intersects */
+  .js .shutter[data-reveal] img { transform: scale(1.1); transition: transform 1500ms var(--ease-soft); }
+  .js .shutter[data-reveal].is-in { clip-path: inset(0); }
+  .js .shutter[data-reveal].is-in img { transform: none; }
+  /* the bar grows in segment by segment */
+  .js .bar .seg { transform: scaleX(0); transform-origin: left center; transition: transform 900ms var(--ease-expo); }
+  .js .bar.is-in .seg { transform: none; }
+  .js .bar.is-in .seg--2 { transition-delay: 90ms; } .js .bar.is-in .seg--3 { transition-delay: 180ms; } .js .bar.is-in .seg--4 { transition-delay: 270ms; }
+  /* the one moving picture: the dashboard band drifts a few percent as it passes */
+  @supports (animation-timeline: view()) {
+    .band img { animation: drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+    .hero__mascot { animation-name: load-settle; }
+  }
+  .js .footer__peek { transform: translateY(70%); transition: transform 1100ms var(--ease-expo) 200ms; }
+  .js .footer__top.is-in ~ .footer__peek { transform: none; }   /* the footer, not the clipped figure, is what enters the screen */
+}
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) { .js .bar .seg { transform: scaleY(0); transform-origin: top center; } }
+@keyframes load-line { to { transform: none; } }
+@keyframes load-slot { to { clip-path: inset(-60% -4% -40% -4% round 0.5em); } }
+@keyframes load-rise { to { opacity: 1; transform: none; } }
+@keyframes load-settle { to { opacity: 1; transform: none; } }
+@keyframes idle { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-1.6%) rotate(-1.2deg); } }
+@keyframes drift { from { transform: translateY(-4%) scale(1.08); } to { transform: translateY(4%) scale(1.08); } }
+.button, .chip, .plan-name, .nav__links a { transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease, color var(--t-hover) ease; }
+.nav__links a { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 0.25em; text-decoration-thickness: 0.09em; }
+@media (hover: hover) and (pointer: fine) { .nav__links a:hover { text-decoration-color: currentColor; } .tile img, .handover__shopper img { transition: transform 400ms var(--ease-out); } .tile:hover img { transform: translateY(-4px); } }
+</style>
+</head>
+<body>
+
+<header class="hero wrap" id="top">
+  <nav class="nav" aria-label="Site">
+    <a class="nav__logo" href="#top" aria-label="Aliox AI, home">
+      <svg viewBox="0 0 512 128" width="150" height="38" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#2a573f"/><g transform="translate(0 -4)"><path d="M44 30 H84 A20 20 0 0 1 104 50 V74 A20 20 0 0 1 84 94 H56 L37 107 Q32 110.5 33 105 L35 92.5 A20 20 0 0 1 24 74 V50 A20 20 0 0 1 44 30 Z" fill="#ffffff"/><path d="M0 -1 Q0.22 -0.22 1 0 Q0.22 0.22 0 1 Q-0.22 0.22 -1 0 Q-0.22 -0.22 0 -1 Z" transform="translate(64 62) scale(19)" fill="#8dc63f"/></g><g transform="translate(160 18) scale(0.92)"><g fill="none" stroke-width="14" stroke-linecap="round"><g stroke="#16261d"><circle cx="28" cy="72" r="21"/><path d="M49 51 V93"/><path d="M81 23 V93"/><path d="M113 51 V93"/><circle cx="166" cy="72" r="21"/><path d="M219 51 L253 93 M253 51 L219 93"/></g><g stroke="#2a573f"><circle cx="318" cy="72" r="21"/><path d="M339 51 V93"/><path d="M371 51 V93"/></g></g><path d="M0 -1 Q0.22 -0.22 1 0 Q0.22 0.22 0 1 Q-0.22 0.22 -1 0 Q-0.22 -0.22 0 -1 Z" transform="translate(113 25) scale(14)" fill="#8dc63f"/><circle cx="371" cy="25" r="8.5" fill="#2a573f"/></g></svg>
+    </a>
+    <div class="nav__links">
+      <a href="#demo">Try it</a>
+      <a href="#handover">Your team</a>
+      <a href="#plans">Plans</a>
+      <a href="#questions">Questions</a>
+    </div>
+    <a class="button nav__action" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&body=Please%20write%20to%20me%20when%20Aliox%20AI%20opens%20to%20WooCommerce%20stores.%0A%0AMy%20store%3A%20">Join the launch list</a>
+  </nav>
+
+  <div class="hero__title">
+    <h1 class="display lines">
+      <span class="line"><span data-line style="--i:0">Shoppers ask,</span></span>
+      <span class="line"><span data-line style="--i:1"><span class="slot" aria-hidden="true">
+        <svg class="face" viewBox="0 0 240 100" aria-hidden="true">
+          <rect x="0" y="0" width="240" height="92" rx="32" fill="#2a573f"/>
+          <path d="M32 9 H208 A22 22 0 0 1 230 31 V61 A22 22 0 0 1 208 83 H62 L40 98 Q33 102 35 95 L37 83 A22 22 0 0 1 10 61 V31 A22 22 0 0 1 32 9 Z" fill="#ffffff"/>
+          <rect x="22" y="17" width="196" height="58" rx="16" fill="#1c3528"/>
+          <g fill="#9ee25a">
+            <g class="eye"><g class="lid"><circle cx="86" cy="36" r="4.2"/><circle cx="97" cy="36" r="4.2"/><circle cx="86" cy="46" r="4.2"/><circle cx="97" cy="46" r="4.2"/><circle cx="86" cy="56" r="4.2"/><circle cx="97" cy="56" r="4.2"/></g></g>
+            <g class="eye"><g class="lid b"><circle cx="143" cy="36" r="4.2"/><circle cx="154" cy="36" r="4.2"/><circle cx="143" cy="46" r="4.2"/><circle cx="154" cy="46" r="4.2"/><circle cx="143" cy="56" r="4.2"/><circle cx="154" cy="56" r="4.2"/></g></g>
+            <circle cx="113" cy="63" r="3.2"/><circle cx="120" cy="66" r="3.2"/><circle cx="127" cy="63" r="3.2"/>
+          </g>
+          <path d="M206 -2 V10" stroke="#9fb3a8" stroke-width="3" stroke-linecap="round"/><path class="star" d="M206 -16 Q208.5 -4.5 220 -2 Q208.5 0.5 206 12 Q203.5 0.5 192 -2 Q203.5 -4.5 206 -16 Z" fill="#8dc63f"/>
+        </svg>
+      </span><span class="sr-only">Aliox</span> answers.</span></span>
+    </h1>
+  </div>
+
+  <div class="hero__foot">
+    <div class="hero__copy">
+      <p class="lead" data-load style="--d:520ms">An AI shopping-assistant chat for your WooCommerce store. It answers from your real catalogue, puts the right size in the shopper’s own cart, and calls your team when a shopper wants a person.</p>
+      <div class="hero__actions" data-load style="--d:640ms">
+        <a class="button" href="#demo">See it answer</a>
+        <a class="link" href="#plans">Plans from $29 a month</a>
+      </div>
+    </div>
+    <figure class="hero__shot">
+      <img src="../../assets/screens/chat-desktop.webp" width="2000" height="1250" fetchpriority="high" decoding="async" alt="The Loom & Line product page for the Everyday Linen Shirt with the Aliox chat open on the right: the assistant has found the shirt and shows it as a card with its price and a Select options button">
+      <figure class="hero__mascot">
+        <img src="../../assets/aliox-mascot.webp" width="1600" height="894" fetchpriority="high" decoding="async" alt="Aliox, the mascot: a forest-green robot whose head is a speech bubble, with pixel eyes, a lime star antenna and one hand raised in a wave" sizes="(max-width: 900px) 46vw, 30vw" srcset="../../assets/aliox-mascot-800.webp 800w, ../../assets/aliox-mascot.webp 1600w">
+      </figure>
+    </figure>
+  </div>
+</header>
+
+<main>
+
+<section class="section wrap" id="demo" aria-labelledby="demo-title">
+  <div class="demo" data-stagger>
+    <h2 id="demo-title" class="head" data-lines>Ask it what a shopper would</h2>
+    <div class="demo__ask">
+      <label class="sr-only" for="ask">Ask the Loom &amp; Line shelf</label>
+      <input class="demo__input" id="ask" type="text" value="linen shirt in M" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" placeholder="linen shirt in M">
+      <p class="demo__hint">Type anything. This is the Loom &amp; Line test store, with its real shelf and its real prices.</p>
+    </div>
+    <div class="demo__answer chat" data-ui id="answer" aria-live="polite">
+      <div class="msg"><img src="../../aliox-mascot-head.webp" width="28" height="28" alt=""><div class="bubble">Here’s what I found. Everyday Linen Shirt comes in M, in beige or black.</div></div>
+      <div class="cards">
+        <div class="card"><img src="../../assets/screens/shirt.webp" width="580" height="518" alt="Everyday Linen Shirt on a wooden hanger" loading="lazy"><div class="card__body"><div class="card__name">Everyday Linen Shirt</div><div class="card__price">৳ 1,890 – ৳ 1,990</div><div class="card__meta">Size M · Beige or Black · in stock</div><span class="card__btn">Select options</span></div></div>
+      </div>
+      <p class="line">AI assistant · Responses may be imperfect</p>
+    </div>
+    <div class="demo__examples">
+      <span>Or try</span>
+      <button class="chip" type="button" data-ask="under ৳2,000">under ৳2,000</button>
+      <button class="chip" type="button" data-ask="black kurta">black kurta</button>
+      <button class="chip" type="button" data-ask="do you deliver outside Dhaka?">do you deliver outside Dhaka?</button>
+      <button class="chip" type="button" data-ask="can I return it?">can I return it?</button>
+    </div>
+  </div>
+</section>
+
+<section class="section wrap" id="sale" aria-labelledby="sale-title">
+  <div class="mosaic">
+    <div class="mosaic__head" data-stagger>
+      <h2 id="sale-title" class="head" data-lines>From a question to the cart</h2>
+      <p>Every screen here is Aliox on the Loom &amp; Line test store, as shoppers see it. Nothing is drawn.</p>
+    </div>
+    <figure class="tile tile--a" data-reveal>
+      <img src="../../assets/screens/panel-answer.webp" width="1200" height="1860" loading="lazy" decoding="async" alt="The Aliox chat panel: the assistant says what it found and shows the Everyday Linen Shirt as a product card with its price and a Select options button">
+      <figcaption class="caption">The card is the real product, with its real price, inside the chat.</figcaption>
+    </figure>
+    <figure class="tile tile--b" data-reveal>
+      <img src="../../assets/screens/sheet.webp" width="1194" height="1194" loading="lazy" decoding="async" alt="The variation sheet: colour Black and size M chosen, a line saying Black / M is available, a quantity of one and an Add to cart button">
+      <figcaption class="caption">The shopper picks colour and size. Stock is checked again before anything is added.</figcaption>
+    </figure>
+    <figure class="tile tile--c" data-reveal>
+      <img src="../../assets/screens/panel-added.webp" width="1200" height="1860" loading="lazy" decoding="async" alt="The chat panel after adding: a green Added to your cart notice with the Everyday Linen Shirt in Black, M, the subtotal, and Continue shopping and Checkout buttons">
+      <figcaption class="caption">“Added” shows only once WooCommerce confirms. Checkout and payment stay in your store.</figcaption>
+    </figure>
+    <figure class="tile tile--d" data-reveal>
+      <img src="../../assets/screens/nudge.webp" width="939" height="492" loading="lazy" decoding="async" alt="The launcher in the corner of a store page: a small note saying Looking for something? I can help, above a green Ask our assistant button">
+      <figcaption class="caption">Between questions it waits in the corner with a nudge of your choosing, up to sixty characters.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section wrap" id="handover" aria-labelledby="handover-title">
+  <div class="handover">
+    <div class="handover__text" data-stagger>
+      <h2 id="handover-title" class="head">Your team joins the same chat</h2>
+      <p>When a shopper asks for a person, the chat shows up in WordPress under Aliox AI → Conversations. Someone from your store takes it over, replies under their own name, and hands it back to Aliox when they’re done.</p>
+      <p>Shoppers see “Talk to a person” only while a manager is set to Available. If nobody picks up within three minutes, Aliox carries on and shows your contact link. Live chat is a per-store setting and starts off.</p>
+    </div>
+    <figure class="handover__admin shutter" data-reveal>
+      <img src="../../assets/screens/takeover-admin.webp" width="2000" height="1250" loading="lazy" decoding="async" alt="WordPress admin, Aliox AI Conversations: a list of live chats on the left and an open thread on the right where Sara has taken over and replied that the shirt runs true to size">
+      <figcaption>Sara, a shop manager, answering a sizing question from wp-admin. The thread is marked “With you” until she hands it back.</figcaption>
+    </figure>
+    <figure class="handover__staff" data-reveal>
+      <img src="../../assets/screens/switches.webp" width="1580" height="120" loading="lazy" decoding="async" alt="The two switches at the top of Conversations: Live chat on, Available for chats off with 0 available, and Your name in chats: Sara">
+      <figcaption class="caption">Two switches in wp-admin: live chat for the store, and whether you are available right now.</figcaption>
+    </figure>
+    <figure class="handover__shopper" data-reveal>
+      <img src="../../assets/screens/panel-takeover.webp" width="1200" height="1860" loading="lazy" decoding="async" alt="The shopper's chat panel after hand-over: the header reads Sara, Person from Loom & Line, a line says Sara joined, and her reply appears under her name">
+      <figcaption class="caption">What the shopper sees: a person, named and labelled as staff, never passed off as the AI.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section wrap" id="setup" aria-labelledby="setup-title">
+  <div class="stages">
+    <h2 id="setup-title" class="head" data-lines>Live on your store in an afternoon</h2>
+    <div class="bar" data-ui data-reveal aria-hidden="true">
+      <div class="seg seg--1"><b>Ten minutes</b></div>
+      <div class="seg seg--2"><b>Half an hour</b></div>
+      <div class="seg seg--3"><b>An afternoon</b></div>
+      <div class="seg seg--4"><b>Every hour after</b></div>
+    </div>
+    <ol class="clauses" data-stagger>
+      <li><strong>First, install the plugin.</strong><p>Added to WordPress like any other. It checks that your site and WooCommerce are ready.</p></li>
+      <li><strong>Then connect your store.</strong><p>Products, variations and policy pages sync, and stay in sync as you edit them.</p></li>
+      <li><strong>Next, make it yours.</strong><p>Name, greeting, tone, colour and avatar. Preview it in wp-admin, then switch it on.</p></li>
+      <li><strong>From then on, it sells.</strong><p>On every page, at any hour, in the shopper’s language, with your team one click away.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="claims" id="rules" aria-labelledby="rules-title">
+  <div class="claim claim--deep" data-stagger>
+    <div class="claim__text">
+      <h2 id="rules-title">Never makes things up</h2>
+      <p>Prices, stock and policies come from your store, never from a guess. Policy answers link to the page they came from, and when something isn’t on the shelf, it says so.</p>
+    </div>
+    <div class="claim__ui chat" data-ui>
+      <div class="bubble you">Is the kurta available in XL?</div>
+      <div class="msg"><img src="../../aliox-mascot-head.webp" width="28" height="28" alt=""><div class="bubble">No. The Breezy Linen Kurta comes in S, M and L only. The Everyday Linen Shirt goes up to XL, if that helps.</div></div>
+      <div class="bubble you">Do you deliver to Sylhet?</div>
+      <div class="msg"><img src="../../aliox-mascot-head.webp" width="28" height="28" alt=""><div class="bubble">Yes. Outside Dhaka, delivery takes three to five days and costs ৳120.</div></div>
+      <p class="source">From the store’s <a href="#demo">Shipping Policy</a> page.</p>
+    </div>
+  </div>
+  <div class="claim claim--mist claim--mirror" data-stagger>
+    <div class="claim__text">
+      <h3>Into their own cart</h3>
+      <p>The exact variation goes into the shopper’s own WooCommerce cart, and “added” shows only once WooCommerce confirms. A checkout click is never counted as an order.</p>
+    </div>
+    <figure class="claim__pic">
+      <img src="../../assets/screens/added.webp" width="990" height="660" loading="lazy" decoding="async" alt="Added to your cart: Everyday Linen Shirt, Black, M, quantity one, subtotal 1,890 taka, with Continue shopping and Checkout buttons">
+    </figure>
+  </div>
+  <div class="claim claim--sage" data-stagger>
+    <div class="claim__text">
+      <h3>Speaks their language</h3>
+      <p>It replies in the language the shopper writes in. The pilot runs in English and Bangla, and Banglish is being tested with real stores.</p>
+    </div>
+    <div class="claim__ui chat" data-ui lang="bn">
+      <div class="bubble you">এই লিনেন শার্টটা M সাইজে আছে?</div>
+      <div class="msg"><img src="../../aliox-mascot-head.webp" width="28" height="28" alt=""><div class="bubble">হ্যাঁ, Everyday Linen Shirt M সাইজে স্টকে আছে, বেইজ আর কালো দুই রঙেই। দাম ৳ ১,৮৯০।</div></div>
+      <div class="bubble you">কালোটা কার্টে দাও</div>
+      <div class="msg"><img src="../../aliox-mascot-head.webp" width="28" height="28" alt=""><div class="bubble">কালো / M কার্টে যোগ হয়েছে। চেকআউটে যেতে চাইলে বলুন।</div></div>
+      <p class="line" lang="en">AI assistant · Responses may be imperfect</p>
+    </div>
+  </div>
+  <div class="claim claim--forest claim--mirror" data-stagger>
+    <div class="claim__text">
+      <h3>Your store keeps selling</h3>
+      <p>If Aliox is ever down, browsing, cart and checkout work exactly as before. Shoppers stay anonymous, typed emails and card numbers are hidden, and each store’s data is kept apart.</p>
+    </div>
+    <figure class="claim__pic">
+      <img src="../../assets/screens/anonymous.webp" width="900" height="210" loading="lazy" decoding="async" alt="The Conversations page in wp-admin: what shoppers asked your assistant and how it answered; shoppers stay anonymous; emails, phone and card numbers they typed are hidden">
+    </figure>
+  </div>
+</section>
+
+<section class="section wrap" id="insights" aria-labelledby="insights-title">
+  <div class="insights__head" data-wipe>
+    <h2 id="insights-title" class="head" data-lines>See what it sold</h2>
+    <p>Conversations started, product pages opened, cart adds and checkout clicks, in wp-admin and in the Aliox dashboard. Full transcripts, and the searches that found nothing, so you know what to stock next.</p>
+  </div>
+  <figure class="band" data-wipe>
+    <img src="../../assets/screens/dashboard.webp" width="2000" height="1250" loading="lazy" decoding="async" alt="The Aliox AI overview inside WordPress admin: the assistant is live on Loom & Line, with the last thirty days showing 122 conversations started, 59 added to cart and 8 checkout clicks, recent conversations and catalogue health">
+  </figure>
+</section>
+
+<section class="section wrap" id="plans" aria-labelledby="plans-title">
+  <div class="plans">
+    <div class="plans__index" role="tablist" aria-label="Plans">
+      <h2 id="plans-title">Plans</h2>
+      <button class="plan-name" type="button" role="tab" id="tab-starter" aria-selected="false" aria-controls="panel-starter">Starter</button>
+      <button class="plan-name" type="button" role="tab" id="tab-growth" aria-selected="true" aria-controls="panel-growth">Growth</button>
+      <button class="plan-name" type="button" role="tab" id="tab-pro" aria-selected="false" aria-controls="panel-pro">Pro</button>
+    </div>
+    <div class="plans__stage">
+      <div class="plans__panel" id="panel-starter" role="tabpanel" aria-labelledby="tab-starter" hidden>
+        <div class="plans__price"><strong>$29</strong><span>a month</span></div>
+        <p>500 conversations a month, about 16 a day, and a catalogue of up to 500 products. For new and small shops getting their first shoppers talking.</p>
+        <p>Every feature on every plan: the assistant, your brand, the shopper’s cart, hand-over to your team and the insights. No add-ons and no feature tiers.</p>
+        <div><a class="button" href="mailto:hello@alioxai.com?subject=Starter%20plan">Start on Starter</a></div>
+      </div>
+      <div class="plans__panel" id="panel-growth" role="tabpanel" aria-labelledby="tab-growth">
+        <div class="plans__price"><strong>$79</strong><span>a month</span></div>
+        <p>2,000 conversations a month, about 66 a day, and a catalogue of up to 2,000 products. For established stores with a full catalogue and steady daily traffic.</p>
+        <p>Every feature on every plan: the assistant, your brand, the shopper’s cart, hand-over to your team and the insights. No add-ons and no feature tiers.</p>
+        <div><a class="button" href="mailto:hello@alioxai.com?subject=Growth%20plan">Start on Growth</a></div>
+      </div>
+      <div class="plans__panel" id="panel-pro" role="tabpanel" aria-labelledby="tab-pro" hidden>
+        <div class="plans__price"><strong>$199</strong><span>a month</span></div>
+        <p>6,000 conversations a month, about 200 a day, and a catalogue of up to 10,000 products. For busy stores with large catalogues and shoppers at every hour.</p>
+        <p>Every feature on every plan: the assistant, your brand, the shopper’s cart, hand-over to your team and the insights. No add-ons and no feature tiers.</p>
+        <div><a class="button" href="mailto:hello@alioxai.com?subject=Pro%20plan">Start on Pro</a></div>
+      </div>
+    </div>
+    <p class="plans__note">At your monthly limit, new chats pause until the next period and your store keeps selling. Change plans any time. Launch pricing in US dollars, billed monthly; plans and prices may change before launch.</p>
+  </div>
+</section>
+
+<section class="section wrap" id="questions" aria-labelledby="questions-title">
+  <div class="faq">
+    <div class="faq__row"><h2 id="questions-title">Questions</h2></div>
+    <div class="faq__row" data-wipe><h3>Will it work with my theme?</h3><p>It’s an ordinary WordPress plugin and a chat widget on your pages. Simple and variable products are supported today; bundles, subscriptions, gift cards and add-ons aren’t yet, and we don’t promise every theme or plugin.</p></div>
+    <div class="faq__row" data-wipe><h3>Can it take orders or payment?</h3><p>No. It adds the exact variation to the shopper’s own cart, and checkout and payment stay in WooCommerce. It can’t look up orders or issue refunds, and it never reports a checkout click as a sale.</p></div>
+    <div class="faq__row" data-wipe><h3>What does it know about my policies?</h3><p>Only the pages you approve: shipping, returns, exchanges, payments, the size guide, product care. Each answer links to its source. If a policy is missing, the shopper is sent to you instead of a guess.</p></div>
+    <div class="faq__row" data-wipe><h3>How does hand-over to my team work?</h3><p>Turn on live chat for your store; it starts off. Shoppers see “Talk to a person” only while a manager is marked Available. Your team replies from wp-admin under their own names, and if nobody picks up within three minutes, Aliox carries on.</p></div>
+    <div class="faq__row" data-wipe><h3>What happens at my monthly limit?</h3><p>New chats pause until the next period. Browsing, cart and checkout carry on as before, so your store never stops. You can move to a bigger plan at any time.</p></div>
+    <div class="faq__row" data-wipe><h3>Where do shoppers’ details go?</h3><p>Shoppers stay anonymous. Emails, phone and card numbers they type are hidden from transcripts, and each store’s data is kept separate from every other store’s.</p></div>
+    <div class="faq__row" data-wipe><h3>When can I install it?</h3><p>Soon. The pilot runs with a few WooCommerce stores now, and the plugin and plans open after it. Join the launch list and we’ll write when they do.</p></div>
+  </div>
+</section>
+
+</main>
+
+<div class="close">
+  <section class="cta wrap" id="launch" aria-labelledby="launch-title">
+    <h2 id="launch-title" class="lines" data-lines>Your shoppers are asking.</h2>
+    <div class="cta__foot" data-wipe>
+      <p>Aliox AI opens to WooCommerce stores soon. Leave your email and we’ll write when the plugin and the plans are ready.</p>
+      <a class="button button--light" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list&body=Please%20write%20to%20me%20when%20Aliox%20AI%20opens%20to%20WooCommerce%20stores.%0A%0AMy%20store%3A%20">Join the launch list</a>
+    </div>
+  </section>
+
+  <footer class="footer wrap">
+    <div class="footer__top" data-wipe>
+      <div class="footer__invite">
+        <h2>Bring Aliox to your store</h2>
+        <div><a class="button button--light" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">Join the launch list</a></div>
+      </div>
+      <div class="footer__links">
+        <a href="mailto:hello@alioxai.com">hello@alioxai.com</a>
+        <a href="https://trinomiallabs.com">Trinomial Labs</a>
+        <a href="#demo">Try it</a>
+        <a href="#plans">Plans</a>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <span>© 2026 <a href="https://trinomiallabs.com">Trinomial Labs</a>. Aliox AI is a product of Trinomial Labs.</span>
+      <span>Screens are from the Loom &amp; Line test store. Prices in taka are that store’s.</span>
+    </div>
+    <div class="footer__mark" aria-hidden="true">
+      <svg viewBox="0 0 268 108" preserveAspectRatio="xMinYMax meet"><g transform="translate(6 10)"><g fill="none" stroke-width="14" stroke-linecap="round"><g stroke="#ffffff"><circle cx="28" cy="72" r="21"/><path d="M49 51 V93"/><path d="M81 23 V93"/><path d="M113 51 V93"/><circle cx="166" cy="72" r="21"/><path d="M219 51 L253 93 M253 51 L219 93"/></g></g><path d="M0 -1 Q0.22 -0.22 1 0 Q0.22 0.22 0 1 Q-0.22 0.22 -1 0 Q-0.22 -0.22 0 -1 Z" transform="translate(113 25) scale(14)" fill="#8dc63f"/></g></svg>
+    </div>
+    <figure class="footer__peek">
+      <img src="../../assets/aliox-mascot-800.webp" width="800" height="447" loading="lazy" decoding="async" alt="">
+    </figure>
+  </footer>
+</div>
+
+<script>
+/* ---------- reveal once, never replay, never leave content hidden ---------- */
+(() => {
+  const targets = document.querySelectorAll('[data-reveal], [data-stagger], [data-wipe]');
+  if (!targets.length) return;
+  if (!('IntersectionObserver' in window)) { targets.forEach((el) => el.classList.add('is-in')); return; }
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) { if (!e.isIntersecting) continue; e.target.classList.add('is-in'); io.unobserve(e.target); }
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
+  targets.forEach((el) => io.observe(el));
+  addEventListener('load', () => setTimeout(() => {
+    targets.forEach((el) => { const r = el.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) el.classList.add('is-in'); });
+  }, 2500));
+})();
+
+/* ---------- heading lines that rise on scroll, then plain text again ---------- */
+(() => {
+  const els = [...document.querySelectorAll('[data-lines]')].filter((el) => !el.closest('.hero'));
+  if (!els.length || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const restore = (el) => { el.textContent = el.dataset.text; el.classList.remove('is-split', 'is-in'); };
+  const split = (el) => {
+    const text = el.textContent.trim().replace(/\s+/g, ' ');
+    el.dataset.text = text; el.textContent = '';
+    const words = text.split(' ').map((word) => { const s = document.createElement('span'); s.style.display = 'inline-block'; s.textContent = word; el.append(s, ' '); return s; });
+    const lines = [];
+    for (const w of words) { const last = lines.at(-1); if (last && Math.abs(last.top - w.offsetTop) < 4) last.words.push(w.textContent); else lines.push({ top: w.offsetTop, words: [w.textContent] }); }
+    el.textContent = '';
+    lines.forEach((line, i) => { const mask = document.createElement('span'); const inner = document.createElement('span'); mask.className = 'line'; inner.style.setProperty('--i', i); inner.textContent = line.words.join(' '); mask.append(inner); el.append(mask, ' '); });
+    el.classList.add('is-split');
+  };
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) { if (!e.isIntersecting) continue; io.unobserve(e.target); e.target.classList.add('is-in'); e.target.querySelector('.line:last-of-type > span').addEventListener('transitionend', () => restore(e.target), { once: true }); }
+  }, { rootMargin: '0px 0px -12% 0px' });
+  document.fonts.ready.then(() => els.forEach((el) => { split(el); io.observe(el); }));
+  let width = innerWidth;
+  addEventListener('resize', () => { if (innerWidth === width) return; width = innerWidth; els.filter((el) => el.matches('.is-split:not(.is-in)')).forEach((el) => { io.unobserve(el); restore(el); }); });
+})();
+
+/* ---------- the face: it glances toward the pointer and looks down at the demo while you type ---------- */
+(() => {
+  const face = document.querySelector('.face');
+  if (!face) return;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  let raf = 0;
+  const look = (x, y) => {
+    const r = face.getBoundingClientRect();
+    const dx = (x - (r.left + r.width / 2)) / innerWidth, dy = (y - (r.top + r.height / 2)) / innerHeight;
+    face.style.setProperty('--gx', `${(Math.max(-1, Math.min(1, dx * 2)) * 7).toFixed(1)}px`);
+    face.style.setProperty('--gy', `${(Math.max(-1, Math.min(1, dy * 2)) * 6).toFixed(1)}px`);
+  };
+  addEventListener('pointermove', (e) => {
+    if (!fine.matches || calm.matches || face.classList.contains('is-down')) return;
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(() => look(e.clientX, e.clientY));
+  }, { passive: true });
+  const ask = document.getElementById('ask');
+  if (ask) {
+    ask.addEventListener('focus', () => { face.classList.add('is-down'); face.style.removeProperty('--gx'); face.style.removeProperty('--gy'); });
+    ask.addEventListener('blur', () => face.classList.remove('is-down'));
+  }
+})();
+
+/* ---------- the live thing: the Loom & Line shelf answers what you type ---------- */
+(() => {
+  const ask = document.getElementById('ask');
+  const out = document.getElementById('answer');
+  if (!ask || !out) return;
+  const shelf = [
+    { name: 'Everyday Linen Shirt', img: '../../assets/screens/shirt.webp', alt: 'Everyday Linen Shirt on a wooden hanger', low: 1890, high: 1990, colours: ['Beige', 'Black'], sizes: ['L', 'M', 'XL'], words: ['shirt', 'linen', 'everyday', 'top', 'summer', 'warm'] },
+    { name: 'Breezy Linen Kurta', img: '../../assets/screens/kurta.webp', alt: 'Breezy Linen Kurta on a wooden hanger', low: 2200, high: 2200, colours: ['Sand'], sizes: ['S', 'M', 'L'], words: ['kurta', 'linen', 'breezy', 'top', 'summer', 'eid'] },
+  ];
+  const policies = [
+    { words: ['deliver', 'delivery', 'ship', 'shipping', 'courier', 'dhaka', 'outside', 'sylhet', 'chittagong', 'how long', 'days'], text: 'Yes. Inside Dhaka, delivery takes one to two days for ৳60; everywhere else in Bangladesh, three to five days for ৳120. Orders over ৳3,000 ship free.', page: 'Shipping Policy' },
+    { words: ['return', 'returns', 'exchange', 'refund', 'send back', 'wrong size', 'doesn’t fit', "doesn't fit"], text: 'You can return or exchange within 7 days of delivery, unworn and with the tags on. Exchanges for another size are free; refunds go back the way you paid.', page: 'Returns & Exchanges' },
+    { words: ['size guide', 'measure', 'chest', 'fit', 'true to size', 'what size'], text: 'The size guide says M fits a 38–40 inch chest and L fits 40–42. If you’re between sizes, the shirts run true to size.', page: 'Size Guide' },
+  ];
+  const money = (n) => '৳ ' + n.toLocaleString('en-US');
+  const card = (p, size, colour) => {
+    const meta = [size ? `Size ${size}` : `${p.sizes.join(', ')}`, colour || p.colours.join(' or '), 'in stock'].join(' · ');
+    const price = p.low === p.high ? money(p.low) : `${money(p.low)} – ${money(p.high)}`;
+    return `<div class="card"><img src="${p.img}" width="580" height="518" alt="${p.alt}" loading="lazy"><div class="card__body"><div class="card__name">${p.name}</div><div class="card__price">${price}</div><div class="card__meta">${meta}</div><span class="card__btn">${size && colour ? 'Add to cart' : 'Select options'}</span></div></div>`;
+  };
+  const avatar = `<img src="../../aliox-mascot-head.webp" width="28" height="28" alt="">`;
+  const foot = `<p class="line">AI assistant · Responses may be imperfect</p>`;
+  const answer = (q) => {
+    const t = q.toLowerCase().trim();
+    if (!t) return `<div class="msg">${avatar}<div class="bubble">Ask about products, sizes, or store policy.</div></div>${foot}`;
+    const policy = policies.find((p) => p.words.some((w) => t.includes(w)));
+    if (policy) return `<div class="msg">${avatar}<div class="bubble policy"><span>${policy.text}</span></div></div><p class="source">From the store’s <a href="#demo">${policy.page}</a> page.</p>${foot}`;
+    if (/(person|human|someone|staff|talk to)/.test(t)) return `<div class="msg">${avatar}<div class="bubble">I’ll ask someone from the store team to join. Sara is available now.</div></div><span class="nudge">Talk to a person</span>${foot}`;
+    const under = t.match(/(?:under|below|less than|max|upto|up to)\s*৳?\s*([\d,]+)/);
+    const cap = under ? parseInt(under[1].replace(/,/g, ''), 10) : (/(cheap|cheapest|budget)/.test(t) ? 1900 : null);
+    const size = (t.match(/\b(xs|s|m|l|xl|xxl)\b/) || [])[1];
+    const colour = ['black', 'beige', 'sand', 'white', 'olive', 'blue'].find((c) => t.includes(c));
+    let hits = shelf.filter((p) => p.words.some((w) => t.includes(w)));
+    if (!hits.length && colour) hits = shelf.filter((p) => p.colours.some((c) => c.toLowerCase() === colour));
+    if (cap) hits = (hits.length ? hits : shelf).filter((p) => p.low <= cap);
+    if (!hits.length && (cap || colour || size)) hits = shelf.filter((p) => (!cap || p.low <= cap) && (!size || p.sizes.includes(size.toUpperCase())));
+    if (!hits.length) return `<div class="msg">${avatar}<div class="bubble">I couldn’t find that on the Loom &amp; Line shelf. Here’s what the store has in linen.</div></div><div class="cards">${shelf.map((p) => card(p)).join('')}</div>${foot}`;
+    const sz = size ? size.toUpperCase() : null;
+    const fits = hits.filter((p) => !sz || p.sizes.includes(sz));
+    const show = fits.length ? fits : hits;
+    const want = colour ? colour[0].toUpperCase() + colour.slice(1) : null;
+    const first = show[0];
+    const col = want && first.colours.includes(want) ? want : null;
+    let line;
+    if (show.length === 1) line = `Here’s what I found. ${first.name} comes in ${sz && first.sizes.includes(sz) ? sz : first.sizes.join(', ')}, in ${first.colours.map((c) => c.toLowerCase()).join(' or ')}.`;
+    else line = `Here’s what I found. ${show.length} things${cap ? ' under ' + money(cap) : ''}, shown below.`;
+    if (want && !col) line = `I don’t have that in ${colour}. The closest is below.`;
+    if (sz && !fits.length) line = `Nothing in ${sz} right now, but here’s the closest.`;
+    return `<div class="msg">${avatar}<div class="bubble">${line}</div></div><div class="cards">${show.map((p) => card(p, sz && p.sizes.includes(sz) ? sz : null, col)).join('')}</div>${foot}`;
+  };
+  let timer = 0;
+  const run = () => out.innerHTML = answer(ask.value);
+  ask.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(run, 220); });
+  ask.addEventListener('keydown', (e) => { if (e.key === 'Enter') { clearTimeout(timer); run(); } });
+  document.querySelectorAll('[data-ask]').forEach((b) => b.addEventListener('click', () => { ask.value = b.dataset.ask; run(); ask.focus({ preventScroll: true }); }));
+})();
+
+/* ---------- plans: the names are tabs; the figure stays in place while its text changes ---------- */
+(() => {
+  const tabs = [...document.querySelectorAll('.plan-name')];
+  if (!tabs.length) return;
+  const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  const select = (i) => {
+    tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+    const from = panels.find((p) => !p.hidden), to = panels[i];
+    if (from === to) return;
+    const swap = () => { from.hidden = true; to.hidden = false; to.classList.add('is-fading'); requestAnimationFrame(() => requestAnimationFrame(() => to.classList.remove('is-fading'))); };
+    if (calm.matches) { from.hidden = true; to.hidden = false; return; }
+    from.classList.add('is-fading'); setTimeout(swap, 180);
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(i));
+    t.addEventListener('focus', () => select(i));
+    t.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); tabs[(i + 1) % tabs.length].focus(); }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); tabs[(i - 1 + tabs.length) % tabs.length].focus(); }
+    });
+  });
+  select(1);
+})();
+</script>
+</body>
+</html>
