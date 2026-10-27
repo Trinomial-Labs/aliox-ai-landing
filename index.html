@@ -905,30 +905,36 @@ p { margin: 0; }
   @keyframes floatB { from { translate: 0 -40px; } to { translate: 0 90px; } }
 }
 
-/* See it at work: real screenshots of the chat and wp-admin, one step at a time. */
+/* See it at work: cut-outs of the real chat and wp-admin, layered on a flat field, one step at a time. */
 .show { display: grid; gap: 28px; align-items: start; }
-@media (min-width: 1000px) { .show { grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 40px; } }
-.show-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
-.show-steps button { display: flex; gap: 14px; width: 100%; padding: 12px 14px; border: 1px solid transparent; border-radius: 14px; background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: background-color 200ms var(--ease), border-color 200ms var(--ease); }
-.show-steps button:hover { background: var(--border-muted); }
-.show-steps button[aria-selected="true"] { background: var(--surface); border-color: var(--border); box-shadow: var(--shadow-bubble, 0 6px 20px rgba(15, 23, 42, 0.08)); }
-.show-n { flex: none; font-size: 12px; font-weight: 700; color: var(--muted); padding-top: 3px; font-variant-numeric: tabular-nums; }
-.show-steps button[aria-selected="true"] .show-n { color: var(--forest-text); }
-.show-t { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.show-t strong { font-size: 16px; font-weight: 600; }
-.show-t span { font-size: 14px; line-height: 1.5; color: var(--muted); display: none; }
-.show-steps button[aria-selected="true"] .show-t span { display: block; }
-.show-frame { margin: 0; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface); box-shadow: var(--shadow-panel); }
-.show-bar { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border-bottom: 1px solid var(--border); background: var(--border-muted); }
-.show-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
-.show-url { flex: 1; min-width: 0; margin-left: 12px; padding: 4px 12px; border-radius: 8px; background: var(--surface); color: var(--muted); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.show-view { position: relative; aspect-ratio: 16 / 10; background: #ffffff; }
-.show-view img { display: block; width: 100%; height: 100%; object-fit: contain; transition: opacity 260ms var(--ease); }
-.show-view img.fading { opacity: 0; }
-.show-frame[data-kind="phone"] .show-bar { visibility: hidden; }
-.show-frame[data-kind="phone"] .show-view { background: var(--mist); padding: 18px 0; }
-.show-frame[data-kind="phone"] .show-view img { width: auto; height: 100%; margin-inline: auto; border: 8px solid #0f172a; border-radius: 30px; box-shadow: var(--shadow-panel); background: #ffffff; }
+@media (min-width: 1000px) { .show { grid-template-columns: minmax(0, 330px) minmax(0, 1fr); gap: 48px; align-items: center; } }
+.show-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.show-steps button { display: flex; flex-direction: column; gap: 6px; width: 100%; padding: 14px 18px; border: 0; border-radius: 14px; background: none; color: var(--muted); font: inherit; text-align: left; cursor: pointer; transition: background-color 200ms var(--ease), color 200ms var(--ease); }
+.show-steps button:hover { color: var(--text); }
+.show-steps button[aria-selected="true"] { background: var(--mist); color: var(--text); }
+.show-steps strong { font-size: 17px; font-weight: 600; }
+.show-steps span { display: none; font-size: 15px; line-height: 1.5; color: var(--text); }
+.show-steps button[aria-selected="true"] span { display: block; }
+.show-stage { position: relative; aspect-ratio: 4 / 3; border-radius: 20px; overflow: hidden; }
+.stage { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 320ms var(--ease), visibility 0s 320ms; }
+.stage.is-on { opacity: 1; visibility: visible; transition: opacity 320ms var(--ease); }
+.stage--mist { background: #e3ede6; }
+.stage--sage { background: #d6e9c4; }
+.stage--paper { background: #eef2f6; }
+.stage--forest { background: #2a573f; }
+.layer { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: auto; rotate: var(--r); filter: drop-shadow(0 18px 34px rgba(15, 23, 42, 0.18)) drop-shadow(0 2px 6px rgba(15, 23, 42, 0.08)); opacity: 0; translate: 0 26px; transition: opacity 420ms var(--ease-out), translate 560ms var(--ease-out); }
+.stage.is-on .layer { opacity: 1; translate: 0 0; }
+.stage.is-on .layer:nth-child(2) { transition-delay: 110ms; }
+.stage.is-on .layer:nth-child(3) { transition-delay: 220ms; }
+.layer.card { filter: none; border-radius: 16px; background: #ffffff; box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16), 0 2px 6px rgba(15, 23, 42, 0.06); }
+.layer.flat { filter: none; border-radius: 12px; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16); }
+.layer.phone { border: 8px solid #0f172a; border-radius: 30px; background: #ffffff; filter: none; box-shadow: 0 24px 50px rgba(15, 23, 42, 0.24); }
+:root[data-theme="dark"] .stage--paper, :root[data-theme="dark"] .stage--mist { background: #1b2b24; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .stage--paper, :root:not([data-theme="light"]) .stage--mist { background: #1b2b24; } :root:not([data-theme="light"]) .stage--sage { background: #233a2b; } }
+:root[data-theme="dark"] .stage--sage { background: #233a2b; }
 @media (max-width: 999px) {
+  .show-stage { aspect-ratio: 4 / 5; }
+  .layer { left: var(--mx); top: var(--my); width: var(--mw); }
   .show-steps { flex-direction: row; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); padding-bottom: 6px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
   .show-steps li { flex: none; scroll-snap-align: start; width: min(260px, 72vw); }
   .show-steps button { height: 100%; }
@@ -938,6 +944,7 @@ p { margin: 0; }
    walking between the margins and saying what each section is about. Decorative: hidden from assistive technology. */
 .buddy { --bw: 230px; position: fixed; left: 0; top: 0; z-index: 30; width: var(--bw); pointer-events: none; transform-origin: 0 0; will-change: transform; opacity: 0; transition: opacity 500ms var(--ease); }
 .buddy.on { opacity: 1; }
+.buddy.on.away { opacity: 0; }
 .buddy-fig { position: relative; transform-origin: 50% 100%; }
 .buddy-fig img { display: block; width: 100%; height: auto; filter: drop-shadow(0 14px 18px rgba(15, 23, 42, 0.18)); }
 .buddy.idle .buddy-fig { animation: buddyBob 3.4s ease-in-out infinite; }
@@ -1283,24 +1290,49 @@ p { margin: 0; }
   <section class="section showcase" id="showcase" aria-labelledby="showcase-title">
     <div class="wrap">
       <div class="section-head sr">
-        <span class="eyebrow">See it at work</span>
         <h2 id="showcase-title">Aliox on a real WooCommerce store</h2>
         <p>Real screens from a test store: what the shopper sees in the chat, and what you see in wp-admin.</p>
       </div>
       <div class="show sr">
         <ol class="show-steps" role="tablist" aria-label="Screens" aria-orientation="vertical">
-          <li><button type="button" role="tab" id="show-tab-0" aria-controls="show-panel" aria-selected="true" data-src="/screens/chat-desktop.webp" data-url="loomandline.shop/product/everyday-linen-shirt" data-alt="A WooCommerce product page with the Aliox chat open: the shopper asked for a linen shirt and Aliox shows the Everyday Linen Shirt with its photo, price range and a Select options button."><span class="show-n">01</span><span class="show-t"><strong>A shopper asks</strong><span>Aliox searches the store's catalogue and answers with real products, prices and stock.</span></span></button></li>
-          <li><button type="button" role="tab" id="show-tab-1" aria-controls="show-panel" aria-selected="false" tabindex="-1" data-src="/screens/variant-sheet.webp" data-url="loomandline.shop/product/everyday-linen-shirt" data-alt="The variation sheet inside the chat: colour Black and size M selected, with the note that Black / M is available and an Add to cart button."><span class="show-n">02</span><span class="show-t"><strong>They pick the exact variation</strong><span>Colour and size are checked live, so only what is in stock can be chosen.</span></span></button></li>
-          <li><button type="button" role="tab" id="show-tab-2" aria-controls="show-panel" aria-selected="false" tabindex="-1" data-src="/screens/added-to-cart.webp" data-url="loomandline.shop/product/everyday-linen-shirt" data-alt="The chat shows Added to your cart: Everyday Linen Shirt, Black / M, quantity 1, with Continue shopping and Checkout buttons; the store header cart shows 1."><span class="show-n">03</span><span class="show-t"><strong>It lands in their own cart</strong><span>WooCommerce confirms the item before Aliox says so. Checkout is one tap away.</span></span></button></li>
-          <li><button type="button" role="tab" id="show-tab-3" aria-controls="show-panel" aria-selected="false" tabindex="-1" data-src="/screens/takeover-shopper.webp" data-url="loomandline.shop/product/everyday-linen-shirt" data-alt="The shopper's chat after Sara from Loom & Line joined: the shopper asked whether the shirt runs true to size and Sara answered that M will fit well."><span class="show-n">04</span><span class="show-t"><strong>Your team can step in</strong><span>When a shopper needs a person, someone from your store takes over the same chat.</span></span></button></li>
-          <li><button type="button" role="tab" id="show-tab-4" aria-controls="show-panel" aria-selected="false" tabindex="-1" data-src="/screens/takeover-admin.webp" data-url="loomandline.shop/wp-admin/admin.php?page=aliox-ai-conversations" data-alt="The Conversations screen in wp-admin: a list of live chats on the left and the open chat on the right, with Sara's reply, a With you badge and a Hand back to assistant button."><span class="show-n">05</span><span class="show-t"><strong>Right from wp-admin</strong><span>Live chats show up in WordPress. Take one over, reply, then hand it back to Aliox.</span></span></button></li>
-          <li><button type="button" role="tab" id="show-tab-5" aria-controls="show-panel" aria-selected="false" tabindex="-1" data-src="/screens/dashboard.webp" data-url="loomandline.shop/wp-admin/admin.php?page=aliox-ai" data-alt="The Aliox AI overview in wp-admin: Good afternoon, Sara; cards for conversations started, product pages opened, added to cart and checkout clicks; recent conversations and the catalogue status."><span class="show-n">06</span><span class="show-t"><strong>See what it sells</strong><span>Conversations, add-to-carts and checkout clicks, with the latest chats and your catalogue's health.</span></span></button></li>
-          <li><button type="button" role="tab" id="show-tab-6" aria-controls="show-panel" aria-selected="false" tabindex="-1" data-src="/screens/chat-phone.webp" data-url="" data-alt="The Aliox chat full screen on a phone: the shopper asked for a linen kurta and Aliox shows the Breezy Linen Kurta with its photo, price and an Add to cart button." data-kind="phone"><span class="show-n">07</span><span class="show-t"><strong>Made for phones</strong><span>On a phone the chat opens full screen, with big tap targets and the keyboard in mind.</span></span></button></li>
+          <li><button type="button" role="tab" id="show-tab-0" aria-controls="show-panel" aria-selected="true"><strong>A shopper asks</strong><span>Aliox waits in the corner of every page, then answers with real products, prices and stock from the catalogue.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-1" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>They pick the exact variation</strong><span>Colour and size are checked live, so only what is in stock can be chosen.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-2" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>It lands in their own cart</strong><span>WooCommerce confirms the item before Aliox says so. Checkout is one tap away.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-3" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>Your team can step in</strong><span>When a shopper needs a person, someone from your store joins the same chat.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-4" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>Right from wp-admin</strong><span>Live chats show up in WordPress. Take one over, reply, then hand it back to Aliox.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-5" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>See what it sells</strong><span>Conversations, add-to-carts and checkout clicks, counted for you in wp-admin.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-6" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>Made for phones</strong><span>On a phone the chat opens full screen, with big tap targets and the keyboard in mind.</span></button></li>
         </ol>
-        <figure class="show-frame" id="show-panel" role="tabpanel" aria-labelledby="show-tab-0">
-          <div class="show-bar" aria-hidden="true"><i></i><i></i><i></i><span class="show-url" id="showUrl">loomandline.shop/product/everyday-linen-shirt</span></div>
-          <div class="show-view"><img id="showImg" src="/screens/chat-desktop.webp" width="1600" height="1000" alt="A WooCommerce product page with the Aliox chat open: the shopper asked for a linen shirt and Aliox shows the Everyday Linen Shirt with its photo, price range and a Select options button." loading="lazy" decoding="async"></div>
-        </figure>
+        <div class="show-stage" id="show-panel" role="tabpanel" aria-labelledby="show-tab-0">
+          <div class="stage stage--mist is-on" data-stage="0">
+            <img class="layer" src="/screens/panel-answer.webp" alt="The Aliox chat answering a request for a linen shirt with the Everyday Linen Shirt: photo, price range and a Select options button." loading="lazy" decoding="async" style="--x:50%;--y:5%;--w:44%;--mx:34%;--my:3%;--mw:62%;--r:0deg">
+            <img class="layer" src="/screens/nudge.webp" alt="" loading="lazy" decoding="async" style="--x:4%;--y:60%;--w:46%;--mx:3%;--my:74%;--mw:70%;--r:-2deg">
+          </div>
+          <div class="stage stage--mist" data-stage="1" aria-hidden="true">
+            <img class="layer" src="/screens/panel-answer.webp" alt="" loading="lazy" decoding="async" style="--x:6%;--y:5%;--w:44%;--mx:3%;--my:3%;--mw:58%;--r:0deg">
+            <img class="layer" src="/screens/sheet.webp" alt="The variation sheet: colour Black and size M chosen, with the note that Black / M is available and an Add to cart button." loading="lazy" decoding="async" style="--x:44%;--y:18%;--w:52%;--mx:30%;--my:42%;--mw:67%;--r:1.5deg">
+          </div>
+          <div class="stage stage--sage" data-stage="2" aria-hidden="true">
+            <img class="layer" src="/screens/panel-added.webp" alt="" loading="lazy" decoding="async" style="--x:52%;--y:5%;--w:44%;--mx:36%;--my:3%;--mw:60%;--r:0deg">
+            <img class="layer" src="/screens/added.webp" alt="Added to your cart: Everyday Linen Shirt, Black / M, quantity 1, with Continue shopping and Checkout buttons." loading="lazy" decoding="async" style="--x:3%;--y:34%;--w:58%;--mx:3%;--my:58%;--mw:82%;--r:-1.5deg">
+          </div>
+          <div class="stage stage--mist" data-stage="3" aria-hidden="true">
+            <img class="layer" src="/screens/panel-takeover.webp" alt="The shopper's chat with Sara from Loom &amp; Line, who answers that the shirt runs true to size." loading="lazy" decoding="async" style="--x:54%;--y:5%;--w:44%;--mx:40%;--my:3%;--mw:57%;--r:0deg">
+            <img class="layer card" src="/screens/joined.webp" alt="" loading="lazy" decoding="async" style="--x:5%;--y:28%;--w:36%;--mx:3%;--my:50%;--mw:58%;--r:0deg">
+            <img class="layer card" src="/screens/staff.webp" alt="" loading="lazy" decoding="async" style="--x:2%;--y:44%;--w:64%;--mx:3%;--my:62%;--mw:90%;--r:-1deg">
+          </div>
+          <div class="stage stage--paper" data-stage="4" aria-hidden="true">
+            <img class="layer flat" src="/screens/admin-thread.webp" alt="The live chat in wp-admin: the shopper's question, Sara's reply, a With you badge and a Hand back to assistant button." loading="lazy" decoding="async" style="--x:3%;--y:6%;--w:70%;--mx:3%;--my:4%;--mw:94%;--r:0deg">
+            <img class="layer" src="/screens/panel-takeover.webp" alt="" loading="lazy" decoding="async" style="--x:62%;--y:22%;--w:36%;--mx:50%;--my:42%;--mw:46%;--r:1deg">
+          </div>
+          <div class="stage stage--forest" data-stage="5" aria-hidden="true">
+            <img class="layer" src="/screens/kpi-chats.webp" alt="A wp-admin card: 127 conversations started." loading="lazy" decoding="async" style="--x:6%;--y:12%;--w:56%;--mx:4%;--my:10%;--mw:88%;--r:0deg">
+            <img class="layer" src="/screens/kpi-cart.webp" alt="A wp-admin card: 60 items added to cart from the chat." loading="lazy" decoding="async" style="--x:38%;--y:46%;--w:56%;--mx:8%;--my:50%;--mw:88%;--r:1.5deg">
+          </div>
+          <div class="stage stage--mist" data-stage="6" aria-hidden="true">
+            <img class="layer phone" src="/screens/chat-phone.webp" alt="The Aliox chat full screen on a phone: the shopper asked for a linen kurta and Aliox shows the Breezy Linen Kurta." loading="lazy" decoding="async" style="--x:34.4%;--y:5%;--w:31.2%;--mx:29%;--my:4%;--mw:42%;--r:0deg">
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1933,37 +1965,27 @@ p { margin: 0; }
   finder.addEventListener('change', matchPlan);
   matchPlan();
 
-  // See it at work: one screenshot per step. It advances by itself while in view, until the visitor picks a step.
+  // See it at work: one layered scene per step. It advances by itself while in view, until the visitor picks a step.
   const show = document.querySelector('.show');
   if (show) {
     const tabs = [...show.querySelectorAll('[role="tab"]')];
-    const frame = document.getElementById('show-panel');
-    const img = document.getElementById('showImg');
-    const url = document.getElementById('showUrl');
+    const stages = [...show.querySelectorAll('.stage')];
+    const panel = document.getElementById('show-panel');
     let current = 0;
     let auto = !reduce;
     let timer = 0;
     const select = (i, focus) => {
       current = (i + tabs.length) % tabs.length;
       tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === current)); t.tabIndex = k === current ? 0 : -1; });
-      const t = tabs[current];
-      frame.setAttribute('aria-labelledby', t.id);
-      frame.dataset.kind = t.dataset.kind || 'browser';
-      url.textContent = t.dataset.url;
-      // The next picture is decoded before the old one fades, so the frame never shows empty.
-      const next = new Image();
-      next.src = t.dataset.src;
-      const swap = () => { if (tabs[current] !== t) return; img.src = t.dataset.src; img.alt = t.dataset.alt; img.classList.remove('fading'); };
-      next.decode().catch(() => {}).then(() => {
-        if (reduce) swap(); else { img.classList.add('fading'); setTimeout(swap, 200); }
-      });
-      if (focus) { t.focus(); t.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
+      stages.forEach((st, k) => { st.classList.toggle('is-on', k === current); st.toggleAttribute('aria-hidden', k !== current); });
+      panel.setAttribute('aria-labelledby', tabs[current].id);
+      if (focus) { tabs[current].focus(); tabs[current].scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
     };
     const stop = () => { auto = false; clearInterval(timer); };
     tabs.forEach((t, i) => t.addEventListener('click', () => { stop(); select(i, false); }));
     show.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
-      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
       if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); stop(); select(e.key === 'Home' ? 0 : tabs.length - 1, true); return; }
+      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
       if (!step) return;
       e.preventDefault(); stop(); select(current + step, true);
     });
@@ -1985,7 +2007,7 @@ p { margin: 0; }
     [document.getElementById('how'), 'right', 'Install, connect, switch on. Done in an afternoon.'],
     [document.getElementById('greet'), 'right', 'I wait right here in the corner until a shopper needs me.'],
     [document.getElementById('features'), 'left', 'Real products and real prices, straight from your catalogue.'],
-    [document.getElementById('showcase'), 'left', "That's me at work on a real store."],
+    [document.getElementById('showcase'), 'right', ''],
     [document.getElementById('customise'), 'right', "Give me your name, greeting and colours. I'll fit right in."],
     [document.querySelector('.truth'), 'left', "If your store doesn't say, I won't guess."],
     [document.getElementById('plans'), 'right', 'Every plan gets all of me.'],
@@ -2052,7 +2074,9 @@ p { margin: 0; }
       active = hit;
       const [, where, line] = stops.find(([el]) => el === hit);
       if (where !== 'hero') side = where;
-      say(line, where === 'hero' && heroMode());
+      // The screenshots fill a phone's width: there the mascot steps out while they are on screen.
+      buddy.classList.toggle('away', line === '' && innerWidth < 1000);
+      if (line === '') { clearTimeout(sayTimer); buddy.classList.remove('saying'); } else say(line, where === 'hero' && heroMode());
       schedule();
     }, { rootMargin: '-50% 0px -50% 0px' });
     stops.forEach(([el]) => io.observe(el));
