@@ -846,9 +846,6 @@ p { margin: 0; }
 .preview[data-view="closed"] .pv-panel { opacity: 0; transform: translateY(14px) scale(0.95); pointer-events: none; }
 .pv-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--wb); }
 .pv-av { width: 36px; height: 36px; flex: none; border-radius: 999px; display: grid; place-items: center; background: var(--p); color: #ffffff; font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; }
-.pv-tag { display: none; width: 18px; height: 18px; }
-.preview[data-avatar="tag"] .pv-mono { display: none; }
-.preview[data-avatar="tag"] .pv-tag { display: block; }
 .pv-title { display: flex; flex-direction: column; min-width: 0; }
 .pv-title strong { font-size: 14.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pv-title span { font-size: 12px; color: var(--wm); }
@@ -907,6 +904,69 @@ p { margin: 0; }
   @keyframes floatA { from { translate: 0 120px; } to { translate: 0 -60px; } }
   @keyframes floatB { from { translate: 0 -40px; } to { translate: 0 90px; } }
 }
+
+/* See it at work: cut-outs of the real chat and wp-admin, layered on a flat field, one step at a time. */
+.show { display: grid; gap: 28px; align-items: start; }
+@media (min-width: 1000px) { .show { grid-template-columns: minmax(0, 330px) minmax(0, 1fr); gap: 48px; align-items: center; } }
+.show-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.show-steps button { display: flex; flex-direction: column; gap: 6px; width: 100%; padding: 14px 18px; border: 0; border-radius: 14px; background: none; color: var(--muted); font: inherit; text-align: left; cursor: pointer; transition: background-color 200ms var(--ease), color 200ms var(--ease); }
+.show-steps button:hover { color: var(--text); }
+.show-steps button[aria-selected="true"] { background: var(--mist); color: var(--text); }
+.show-steps strong { font-size: 17px; font-weight: 600; }
+.show-steps span { display: none; font-size: 15px; line-height: 1.5; color: var(--text); }
+.show-steps button[aria-selected="true"] span { display: block; }
+.show-stage { position: relative; aspect-ratio: 4 / 3; border-radius: 20px; overflow: hidden; }
+.stage { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 320ms var(--ease), visibility 0s 320ms; }
+.stage.is-on { opacity: 1; visibility: visible; transition: opacity 320ms var(--ease); }
+.stage--mist { background: #e3ede6; }
+.stage--sage { background: #d6e9c4; }
+.stage--paper { background: #eef2f6; }
+.stage--forest { background: #2a573f; }
+.layer { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: auto; rotate: var(--r); filter: drop-shadow(0 18px 34px rgba(15, 23, 42, 0.18)) drop-shadow(0 2px 6px rgba(15, 23, 42, 0.08)); opacity: 0; translate: 0 26px; transition: opacity 420ms var(--ease-out), translate 560ms var(--ease-out); }
+.stage.is-on .layer { opacity: 1; translate: 0 0; }
+.stage.is-on .layer:nth-child(2) { transition-delay: 110ms; }
+.stage.is-on .layer:nth-child(3) { transition-delay: 220ms; }
+.layer.card { filter: none; border-radius: 16px; background: #ffffff; box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16), 0 2px 6px rgba(15, 23, 42, 0.06); }
+.layer.flat { filter: none; border-radius: 12px; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16); }
+.layer.phone { border: 8px solid #0f172a; border-radius: 30px; background: #ffffff; filter: none; box-shadow: 0 24px 50px rgba(15, 23, 42, 0.24); }
+:root[data-theme="dark"] .stage--paper, :root[data-theme="dark"] .stage--mist { background: #1b2b24; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .stage--paper, :root:not([data-theme="light"]) .stage--mist { background: #1b2b24; } :root:not([data-theme="light"]) .stage--sage { background: #233a2b; } }
+:root[data-theme="dark"] .stage--sage { background: #233a2b; }
+@media (max-width: 999px) {
+  .show-stage { aspect-ratio: 4 / 5; }
+  .layer { left: var(--mx); top: var(--my); width: var(--mw); }
+  .show-steps { flex-direction: row; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); padding-bottom: 6px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+  .show-steps li { flex: none; scroll-snap-align: start; width: min(260px, 72vw); }
+  .show-steps button { height: 100%; }
+}
+
+/* Aliox, the mascot: one companion that greets beside the hero's chat, then follows the reader down the page,
+   walking between the margins and saying what each section is about. Decorative: hidden from assistive technology. */
+.buddy { --bw: 230px; position: fixed; left: 0; top: 0; z-index: 30; width: var(--bw); pointer-events: none; transform-origin: 0 0; will-change: transform; opacity: 0; transition: opacity 500ms var(--ease); }
+.buddy.on { opacity: 1; }
+.buddy.on.away { opacity: 0; }
+.buddy-fig { position: relative; transform-origin: 50% 100%; }
+.buddy-fig img { display: block; width: 100%; height: auto; filter: drop-shadow(0 14px 18px rgba(15, 23, 42, 0.18)); }
+.buddy.idle .buddy-fig { animation: buddyBob 3.4s ease-in-out infinite; }
+.buddy.walking .buddy-fig { animation: buddyWaddle 380ms ease-in-out infinite; }
+.buddy.hop .buddy-fig { animation: buddyHop 640ms var(--ease-out); }
+@keyframes buddyBob { 50% { transform: translateY(-4%); } }
+@keyframes buddyWaddle { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg) translateY(-5%); } }
+@keyframes buddyHop { 30% { transform: translateY(-16%) scale(0.96, 1.04); } 62% { transform: none; } 78% { transform: scale(1.05, 0.95); } }
+.buddy-spark { position: absolute; left: 51.5%; top: 5%; width: 26%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(circle, rgba(214, 255, 150, 0.9), rgba(141, 198, 63, 0) 62%); animation: buddySpark 2.6s ease-in-out infinite; }
+@keyframes buddySpark { 0%, 100% { opacity: 0.15; scale: 0.6; } 50% { opacity: 0.95; scale: 1.15; } }
+.buddy-say { position: absolute; bottom: 86%; width: max-content; max-width: 240px; margin: 0; padding: 10px 14px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text); box-shadow: var(--shadow-panel); font-size: 14px; font-weight: 500; line-height: 1.4; opacity: 0; transform: translateY(8px) scale(0.9); transition: opacity 220ms var(--ease), transform 340ms var(--ease-out); }
+.buddy[data-side="right"] .buddy-say { right: 62%; border-bottom-right-radius: 4px; transform-origin: bottom right; }
+.buddy[data-side="hero"] .buddy-say { left: 34%; bottom: 92%; max-width: 200px; border-bottom-left-radius: 4px; transform-origin: bottom left; }
+.buddy[data-side="left"] .buddy-say { left: 62%; border-bottom-left-radius: 4px; transform-origin: bottom left; }
+.buddy.saying .buddy-say { opacity: 1; transform: none; }
+.buddy-say { scale: var(--say-scale, 1); }
+@media (max-width: 719px) { .buddy-say { max-width: 190px; font-size: 13px; padding: 8px 12px; } }
+.w-avatar-img { width: 36px; height: 36px; flex: none; display: block; border-radius: 999px; background: #e8f0eb; object-fit: cover; }
+.pv-mascot { display: none; width: 100%; height: 100%; border-radius: 999px; background: #e8f0eb; object-fit: cover; }
+.preview[data-avatar="mascot"] .pv-mono { display: none; }
+.preview[data-avatar="mascot"] .pv-mascot { display: block; }
+.preview[data-avatar="mascot"] .pv-av { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -1005,8 +1065,8 @@ p { margin: 0; }
 
             <div class="w-panel" aria-hidden="true">
               <div class="w-head">
-                <svg class="w-avatar" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#2a573f"/><g transform="translate(0 -4)"><use href="#bubble" fill="#ffffff"/><use href="#star" fill="#8dc63f" transform="translate(64 62) scale(19)"/></g></svg>
-                <span class="w-head-text"><strong>Loom &amp; Line</strong><span>AI Shopping Assistant</span></span>
+                <img class="w-avatar-img" src="/aliox-mascot-head.webp" width="36" height="36" alt="">
+                <span class="w-head-text"><strong>Aliox</strong><span>AI Shopping Assistant</span></span>
                 <span class="w-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span>
               </div>
               <div class="w-body" id="wBody">
@@ -1162,8 +1222,8 @@ p { margin: 0; }
 
         <div class="mini" aria-hidden="true">
           <div class="w-head">
-            <svg class="w-avatar" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#2a573f"/><g transform="translate(0 -4)"><use href="#bubble" fill="#ffffff"/><use href="#star" fill="#8dc63f" transform="translate(64 62) scale(19)"/></g></svg>
-            <span class="w-head-text"><strong>Loom &amp; Line</strong><span>AI Shopping Assistant</span></span>
+            <img class="w-avatar-img" src="/aliox-mascot-head.webp" width="36" height="36" alt="" loading="lazy">
+            <span class="w-head-text"><strong>Aliox</strong><span>AI Shopping Assistant</span></span>
             <span class="w-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span>
           </div>
           <div class="mini-home">
@@ -1227,6 +1287,56 @@ p { margin: 0; }
     </div>
   </section>
 
+  <section class="section showcase" id="showcase" aria-labelledby="showcase-title">
+    <div class="wrap">
+      <div class="section-head sr">
+        <h2 id="showcase-title">Aliox on a real WooCommerce store</h2>
+        <p>Real screens from a test store: what the shopper sees in the chat, and what you see in wp-admin.</p>
+      </div>
+      <div class="show sr">
+        <ol class="show-steps" role="tablist" aria-label="Screens" aria-orientation="vertical">
+          <li><button type="button" role="tab" id="show-tab-0" aria-controls="show-panel" aria-selected="true"><strong>A shopper asks</strong><span>Aliox waits in the corner of every page, then answers with real products, prices and stock from the catalogue.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-1" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>They pick the exact variation</strong><span>Colour and size are checked live, so only what is in stock can be chosen.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-2" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>It lands in their own cart</strong><span>WooCommerce confirms the item before Aliox says so. Checkout is one tap away.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-3" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>Your team can step in</strong><span>When a shopper needs a person, someone from your store joins the same chat.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-4" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>Right from wp-admin</strong><span>Live chats show up in WordPress. Take one over, reply, then hand it back to Aliox.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-5" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>See what it sells</strong><span>Conversations, add-to-carts and checkout clicks, counted for you in wp-admin.</span></button></li>
+          <li><button type="button" role="tab" id="show-tab-6" aria-controls="show-panel" aria-selected="false" tabindex="-1"><strong>Made for phones</strong><span>On a phone the chat opens full screen, with big tap targets and the keyboard in mind.</span></button></li>
+        </ol>
+        <div class="show-stage" id="show-panel" role="tabpanel" aria-labelledby="show-tab-0">
+          <div class="stage stage--mist is-on" data-stage="0">
+            <img class="layer" src="/screens/panel-answer.webp" alt="The Aliox chat answering a request for a linen shirt with the Everyday Linen Shirt: photo, price range and a Select options button." loading="lazy" decoding="async" style="--x:50%;--y:5%;--w:44%;--mx:34%;--my:3%;--mw:62%;--r:0deg">
+            <img class="layer" src="/screens/nudge.webp" alt="" loading="lazy" decoding="async" style="--x:4%;--y:60%;--w:46%;--mx:3%;--my:74%;--mw:70%;--r:-2deg">
+          </div>
+          <div class="stage stage--mist" data-stage="1" aria-hidden="true">
+            <img class="layer" src="/screens/panel-answer.webp" alt="" loading="lazy" decoding="async" style="--x:6%;--y:5%;--w:44%;--mx:3%;--my:3%;--mw:58%;--r:0deg">
+            <img class="layer" src="/screens/sheet.webp" alt="The variation sheet: colour Black and size M chosen, with the note that Black / M is available and an Add to cart button." loading="lazy" decoding="async" style="--x:44%;--y:18%;--w:52%;--mx:30%;--my:42%;--mw:67%;--r:1.5deg">
+          </div>
+          <div class="stage stage--sage" data-stage="2" aria-hidden="true">
+            <img class="layer" src="/screens/panel-added.webp" alt="" loading="lazy" decoding="async" style="--x:52%;--y:5%;--w:44%;--mx:36%;--my:3%;--mw:60%;--r:0deg">
+            <img class="layer" src="/screens/added.webp" alt="Added to your cart: Everyday Linen Shirt, Black / M, quantity 1, with Continue shopping and Checkout buttons." loading="lazy" decoding="async" style="--x:3%;--y:34%;--w:58%;--mx:3%;--my:58%;--mw:82%;--r:-1.5deg">
+          </div>
+          <div class="stage stage--mist" data-stage="3" aria-hidden="true">
+            <img class="layer" src="/screens/panel-takeover.webp" alt="The shopper's chat with Sara from Loom &amp; Line, who answers that the shirt runs true to size." loading="lazy" decoding="async" style="--x:54%;--y:5%;--w:44%;--mx:40%;--my:3%;--mw:57%;--r:0deg">
+            <img class="layer card" src="/screens/joined.webp" alt="" loading="lazy" decoding="async" style="--x:5%;--y:28%;--w:36%;--mx:3%;--my:50%;--mw:58%;--r:0deg">
+            <img class="layer card" src="/screens/staff.webp" alt="" loading="lazy" decoding="async" style="--x:2%;--y:44%;--w:64%;--mx:3%;--my:62%;--mw:90%;--r:-1deg">
+          </div>
+          <div class="stage stage--paper" data-stage="4" aria-hidden="true">
+            <img class="layer flat" src="/screens/admin-thread.webp" alt="The live chat in wp-admin: the shopper's question, Sara's reply, a With you badge and a Hand back to assistant button." loading="lazy" decoding="async" style="--x:3%;--y:6%;--w:70%;--mx:3%;--my:4%;--mw:94%;--r:0deg">
+            <img class="layer" src="/screens/panel-takeover.webp" alt="" loading="lazy" decoding="async" style="--x:62%;--y:22%;--w:36%;--mx:50%;--my:42%;--mw:46%;--r:1deg">
+          </div>
+          <div class="stage stage--forest" data-stage="5" aria-hidden="true">
+            <img class="layer" src="/screens/kpi-chats.webp" alt="A wp-admin card: 127 conversations started." loading="lazy" decoding="async" style="--x:6%;--y:12%;--w:56%;--mx:4%;--my:10%;--mw:88%;--r:0deg">
+            <img class="layer" src="/screens/kpi-cart.webp" alt="A wp-admin card: 60 items added to cart from the chat." loading="lazy" decoding="async" style="--x:38%;--y:46%;--w:56%;--mx:8%;--my:50%;--mw:88%;--r:1.5deg">
+          </div>
+          <div class="stage stage--mist" data-stage="6" aria-hidden="true">
+            <img class="layer phone" src="/screens/chat-phone.webp" alt="The Aliox chat full screen on a phone: the shopper asked for a linen kurta and Aliox shows the Breezy Linen Kurta." loading="lazy" decoding="async" style="--x:34.4%;--y:5%;--w:31.2%;--mx:29%;--my:4%;--mw:42%;--r:0deg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section custom" id="customise" aria-labelledby="custom-title">
     <div class="wrap">
       <div class="section-head sr">
@@ -1248,7 +1358,7 @@ p { margin: 0; }
           <div class="pane" id="pane-behavior" role="tabpanel" aria-labelledby="tab-behavior">
             <div class="field">
               <label for="s-name">Assistant name</label>
-              <input type="text" id="s-name" maxlength="60" value="Loom &amp; Line" data-view="open" autocomplete="off">
+              <input type="text" id="s-name" maxlength="60" value="Aliox" data-view="open" autocomplete="off">
             </div>
             <div class="field">
               <label for="s-greeting">Greeting</label>
@@ -1303,7 +1413,7 @@ p { margin: 0; }
               <legend class="flabel">Avatar</legend>
               <div class="seg">
                 <label><input type="radio" name="avatar" id="av-logo" value="logo" checked><span>Your logo</span></label>
-                <label><input type="radio" name="avatar" id="av-tag" value="tag"><span>Tag icon</span></label>
+                <label><input type="radio" name="avatar" id="av-mascot" value="mascot"><span>Aliox mascot</span></label>
               </div>
             </fieldset>
           </div>
@@ -1323,8 +1433,8 @@ p { margin: 0; }
 
             <div class="pv-panel">
               <div class="pv-head">
-                <span class="pv-av"><span class="pv-mono">L&amp;L</span><svg class="pv-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg></span>
-                <span class="pv-title"><strong id="pv-name">Loom &amp; Line</strong><span>AI Shopping Assistant</span></span>
+                <span class="pv-av"><span class="pv-mono">L&amp;L</span><img class="pv-mascot" src="/aliox-mascot-head.webp" width="36" height="36" alt="" loading="lazy"></span>
+                <span class="pv-title"><strong id="pv-name">Aliox</strong><span>AI Shopping Assistant</span></span>
                 <svg class="pv-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
               </div>
               <div class="pv-body">
@@ -1538,6 +1648,11 @@ p { margin: 0; }
     </div>
   </section>
 </main>
+
+<div class="buddy" id="buddy" data-side="hero" aria-hidden="true">
+  <p class="buddy-say" id="buddySay"></p>
+  <div class="buddy-fig"><img src="/aliox-mascot.webp" width="520" height="607" alt="" decoding="async" fetchpriority="low"><span class="buddy-spark"></span></div>
+</div>
 
 <footer class="site-foot">
   <div class="wrap">
@@ -1770,7 +1885,7 @@ p { margin: 0; }
 
   studio.addEventListener('submit', (e) => e.preventDefault());
   studio.addEventListener('focusin', (e) => { if (e.target.dataset.view) showView(e.target.dataset.view); });
-  field('s-name').addEventListener('input', (e) => { field('pv-name').textContent = e.target.value.trim() || 'Shopping Assistant'; });
+  field('s-name').addEventListener('input', (e) => { field('pv-name').textContent = e.target.value.trim() || 'Aliox'; });
   field('s-greeting').addEventListener('input', (e) => { field('pv-greeting').textContent = e.target.value.trim() || 'Hi there! What can I help you find?'; });
   field('s-nudge').addEventListener('input', (e) => { field('pv-nudge').textContent = e.target.value.trim() || 'Ask our assistant'; });
   studio.addEventListener('change', (e) => {
@@ -1849,6 +1964,127 @@ p { margin: 0; }
   finder.addEventListener('submit', (e) => e.preventDefault());
   finder.addEventListener('change', matchPlan);
   matchPlan();
+
+  // See it at work: one layered scene per step. It advances by itself while in view, until the visitor picks a step.
+  const show = document.querySelector('.show');
+  if (show) {
+    const tabs = [...show.querySelectorAll('[role="tab"]')];
+    const stages = [...show.querySelectorAll('.stage')];
+    const panel = document.getElementById('show-panel');
+    let current = 0;
+    let auto = !reduce;
+    let timer = 0;
+    const select = (i, focus) => {
+      current = (i + tabs.length) % tabs.length;
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === current)); t.tabIndex = k === current ? 0 : -1; });
+      stages.forEach((st, k) => { st.classList.toggle('is-on', k === current); st.toggleAttribute('aria-hidden', k !== current); });
+      panel.setAttribute('aria-labelledby', tabs[current].id);
+      if (focus) { tabs[current].focus(); tabs[current].scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
+    };
+    const stop = () => { auto = false; clearInterval(timer); };
+    tabs.forEach((t, i) => t.addEventListener('click', () => { stop(); select(i, false); }));
+    show.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
+      if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); stop(); select(e.key === 'Home' ? 0 : tabs.length - 1, true); return; }
+      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+      if (!step) return;
+      e.preventDefault(); stop(); select(current + step, true);
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        clearInterval(timer);
+        if (auto && entries[0].isIntersecting) timer = setInterval(() => select(current + 1, false), 5200);
+      }, { threshold: 0.45 }).observe(show);
+    }
+  }
+
+  // Aliox, the mascot: stands beside the hero's chat, flies to a margin as the page scrolls, then walks between the
+  // margins and says what each section is about. Under reduced motion it waits in its margin, still.
+  const buddy = document.getElementById('buddy');
+  const buddySay = document.getElementById('buddySay');
+  const hero = document.querySelector('.hero');
+  const stops = [
+    [hero, 'hero', "Hi, I'm Aliox, your store's new shop assistant."],
+    [document.getElementById('how'), 'right', 'Install, connect, switch on. Done in an afternoon.'],
+    [document.getElementById('greet'), 'right', 'I wait right here in the corner until a shopper needs me.'],
+    [document.getElementById('features'), 'left', 'Real products and real prices, straight from your catalogue.'],
+    [document.getElementById('showcase'), 'right', ''],
+    [document.getElementById('customise'), 'right', "Give me your name, greeting and colours. I'll fit right in."],
+    [document.querySelector('.truth'), 'left', "If your store doesn't say, I won't guess."],
+    [document.getElementById('plans'), 'right', 'Every plan gets all of me.'],
+    [document.querySelector('.soon'), 'left', 'See you at launch!'],
+  ].filter(([el]) => el);
+  if (buddy && hero && 'IntersectionObserver' in window) {
+    const HERO_W = 230;
+    const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+    const lerp = (a, b, t) => a + (b - a) * t;
+    let side = 'right';
+    let cur = null;
+    let raf = 0;
+    let sayTimer = 0;
+    const dockW = () => (innerWidth >= 1280 ? 124 : innerWidth >= 900 ? 100 : 78);
+    const heroMode = () => !reduce && innerWidth >= 1000;
+    const dock = (where) => {
+      const w = dockW();
+      const h = w * (607 / 520);
+      const gutter = (innerWidth - Math.min(innerWidth, 1180)) / 2;
+      const inset = gutter >= w + 24 ? (gutter - w) / 2 : 12;
+      return { x: where === 'left' ? inset : innerWidth - w - inset, y: innerHeight - h - 14, s: w / HERO_W };
+    };
+    const heroSpot = () => {
+      const r = stage.getBoundingClientRect();
+      return { x: r.left - HERO_W * 0.5, y: r.bottom - HERO_W * (607 / 520) * 0.86, s: 1 };
+    };
+    const target = () => {
+      if (!heroMode()) return dock(side);
+      const p = Math.min(1, Math.max(0, scrollY / (hero.offsetHeight * 0.6)));
+      if (p >= 1) return dock(side);
+      const from = heroSpot();
+      const to = dock('right');
+      const e = ease(p);
+      return { x: lerp(from.x, to.x, e), y: lerp(from.y, to.y, e) - Math.sin(Math.PI * e) * 90, s: lerp(1, to.s, e), flying: true };
+    };
+    const draw = () => {
+      raf = 0;
+      const t = target();
+      if (!cur || t.flying || reduce) cur = { ...t };
+      else for (const k of ['x', 'y', 's']) cur[k] += (t[k] - cur[k]) * 0.09;
+      const moving = Math.abs(t.x - cur.x) > 3 && !t.flying;
+      buddy.classList.toggle('walking', moving);
+      buddy.classList.toggle('idle', !moving);
+      buddy.style.transform = `translate3d(${cur.x.toFixed(1)}px, ${cur.y.toFixed(1)}px, 0) scale(${cur.s.toFixed(4)})`;
+      // The bubble keeps its size as the mascot shrinks.
+      buddy.style.setProperty('--say-scale', (1 / cur.s).toFixed(4));
+      buddy.dataset.side = t.flying || (heroMode() && scrollY < 2) ? 'hero' : side;
+      if (moving || (t.flying && !raf)) raf = requestAnimationFrame(draw);
+    };
+    const schedule = () => { if (!raf) raf = requestAnimationFrame(draw); };
+    const say = (text, stay) => {
+      clearTimeout(sayTimer);
+      buddy.classList.remove('saying');
+      buddySay.textContent = text;
+      void buddySay.offsetWidth;
+      buddy.classList.add('saying');
+      if (!stay) sayTimer = setTimeout(() => buddy.classList.remove('saying'), 5200);
+      if (!reduce) { buddy.classList.remove('hop'); void buddy.offsetWidth; buddy.classList.add('hop'); }
+    };
+    let active = null;
+    const io = new IntersectionObserver((entries) => {
+      const hit = entries.filter((e) => e.isIntersecting).map((e) => e.target)[0];
+      if (!hit || hit === active) return;
+      active = hit;
+      const [, where, line] = stops.find(([el]) => el === hit);
+      if (where !== 'hero') side = where;
+      // The screenshots fill a phone's width: there the mascot steps out while they are on screen.
+      buddy.classList.toggle('away', line === '' && innerWidth < 1000);
+      if (line === '') { clearTimeout(sayTimer); buddy.classList.remove('saying'); } else say(line, where === 'hero' && heroMode());
+      schedule();
+    }, { rootMargin: '-50% 0px -50% 0px' });
+    stops.forEach(([el]) => io.observe(el));
+    addEventListener('scroll', schedule, { passive: true });
+    addEventListener('resize', schedule);
+    draw();
+    setTimeout(() => buddy.classList.add('on'), reduce ? 0 : 900);
+  }
 
   // The logo reveal plays once when the closing band comes into view; at rest it shows the finished logo.
   const reveal = document.getElementById('reveal');
