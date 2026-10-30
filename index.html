@@ -17,9 +17,9 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600&display=swap">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 <script>document.documentElement.classList.add('js')</script>
 <style>
 :root {
@@ -55,7 +55,7 @@
   --t-ui: 240ms;
   --t-reveal: 800ms;
 
-  --font: "Inter", "Noto Sans Bengali", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -341,7 +341,6 @@ p { text-wrap: pretty; }
 .try:hover { text-decoration-color: currentColor; }
 .try:active { transform: translateX(3px); }
 .try[aria-current="true"] { color: var(--ink); }
-.try .bn { font-family: "Noto Sans Bengali", var(--font); }
 
 [data-ui].read { background: #fff; border-radius: 16px; overflow: hidden; font-size: 14.5px; color: #1b2430; border: 1px solid #dfe6e1; }
 [data-ui].read .read__top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 14px 16px; background: #f6f8f7; border-bottom: 1px solid #e6ece8; }
@@ -677,7 +676,7 @@ p { text-wrap: pretty; }
             <div class="store__photo"><img id="store-img" src="assets/live-demo/everyday-linen-shirt.webp" width="427" height="640" alt="The Everyday Linen Shirt in beige, hanging from a branch" fetchpriority="high"></div>
             <div class="store__info">
               <p class="store__title" id="store-title">Everyday Linen Shirt</p>
-              <p class="store__price num" id="store-price">৳1,890 – ৳1,990</p>
+              <p class="store__price num" id="store-price">$49 – $52</p>
               <p class="store__desc" id="store-desc">Relaxed linen-blend shirt for warm days.</p>
               <div class="store__sel" id="store-sel1"><span>Color</span><span class="sel">Choose an option</span></div>
               <div class="store__sel" id="store-sel2"><span>Size</span><span class="sel">Choose an option</span></div>
@@ -700,9 +699,9 @@ p { text-wrap: pretty; }
             <div class="m m--bot"><img class="m__av" src="aliox-mascot-head.webp" width="128" height="128" alt=""><div class="m__body"><p class="bubble">Hi! What are you shopping for today?</p></div></div>
             <div class="m m--me"><p class="bubble">linen shirt in M?</p><span class="meta">Sent</span></div>
             <div class="m m--bot"><img class="m__av" src="aliox-mascot-head.webp" width="128" height="128" alt=""><div class="m__body"><p class="bubble">Here’s what I found. The Everyday Linen Shirt comes in M in Beige and Black.</p>
-              <div class="card"><div class="card__img"><img src="assets/live-demo/everyday-linen-shirt.webp" width="427" height="640" alt="Everyday Linen Shirt"></div><div class="card__body"><p class="card__name">Everyday Linen Shirt</p><p class="card__price num">৳1,890 – ৳1,990</p><p class="card__state is-in">In stock in M</p><button class="ui-btn" type="button">Select options</button></div></div></div></div>
+              <div class="card"><div class="card__img"><img src="assets/live-demo/everyday-linen-shirt.webp" width="427" height="640" alt="Everyday Linen Shirt"></div><div class="card__body"><p class="card__name">Everyday Linen Shirt</p><p class="card__price num">$49 – $52</p><p class="card__state is-in">In stock in M</p><button class="ui-btn" type="button">Select options</button></div></div></div></div>
             <div class="m m--bot"><img class="m__av" src="aliox-mascot-head.webp" width="128" height="128" alt=""><div class="m__body">
-              <div class="added"><div class="added__head"><span class="added__tick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Added to your cart!</div><div class="added__row"><img src="assets/live-demo/everyday-linen-shirt.webp" width="427" height="640" alt=""><div><p>Everyday Linen Shirt</p><p class="added__var">Black / M · Qty 1</p><p class="num">৳1,890</p></div></div><p class="added__sum num">1 item in your cart · Subtotal ৳1,890</p><div class="added__btns"><button class="ui-btn ui-btn--ghost" type="button">Continue shopping</button><button class="ui-btn" type="button">Checkout</button></div></div></div></div>
+              <div class="added"><div class="added__head"><span class="added__tick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Added to your cart!</div><div class="added__row"><img src="assets/live-demo/everyday-linen-shirt.webp" width="427" height="640" alt=""><div><p>Everyday Linen Shirt</p><p class="added__var">Black / M · Qty 1</p><p class="num">$49</p></div></div><p class="added__sum num">1 item in your cart · Subtotal $49</p><div class="added__btns"><button class="ui-btn ui-btn--ghost" type="button">Continue shopping</button><button class="ui-btn" type="button">Checkout</button></div></div></div></div>
           </div>
           <div class="chat__foot">
             <form class="composer" id="composer" autocomplete="off">
@@ -748,17 +747,17 @@ p { text-wrap: pretty; }
     <div class="ask__answer" data-rv style="--rd:200ms">
       <div class="read" data-ui id="ask-read" aria-live="polite">
         <div class="read__top"><span class="read__label">Read as</span><span class="tag">Product <b>Shirt</b></span><span class="tag">Colour <b>Black</b></span><span class="tag">Size <b>M</b></span></div>
-        <div class="rows"><div class="row"><img src="assets/live-demo/everyday-linen-shirt.webp" width="427" height="640" alt=""><div><p>Everyday Linen Shirt</p><p class="row__var">Black / M</p></div><span class="row__price">৳1,890</span><span class="state state--in">In stock</span></div></div>
-        <div class="say"><img src="aliox-mascot-head.webp" width="128" height="128" alt=""><p>Black / M is in stock at ৳1,890. Want me to add it to your cart?</p></div>
+        <div class="rows"><div class="row"><img src="assets/live-demo/everyday-linen-shirt.webp" width="427" height="640" alt=""><div><p>Everyday Linen Shirt</p><p class="row__var">Black / M</p></div><span class="row__price">$49</span><span class="state state--in">In stock</span></div></div>
+        <div class="say"><img src="aliox-mascot-head.webp" width="128" height="128" alt=""><p>Black / M is in stock at $49. Want me to add it to your cart?</p></div>
       </div>
     </div>
     <div class="ask__try" data-rv style="--rd:260ms">
       <h3>Or try one of these</h3>
       <ul>
-        <li><button class="try" type="button">kurta under ৳2,500</button></li>
+        <li><button class="try" type="button">kurta under $60</button></li>
         <li><button class="try" type="button">beige shirt in XL</button></li>
         <li><button class="try" type="button">can I exchange it?</button></li>
-        <li><button class="try" type="button" lang="bn"><span class="bn">কালো শার্ট আছে?</span></button></li>
+        <li><button class="try" type="button" lang="de">Gibt es das Hemd in Schwarz?</button></li>
         <li><button class="try" type="button">gift card</button></li>
       </ul>
     </div>
@@ -833,7 +832,7 @@ p { text-wrap: pretty; }
   </div>
   <div class="band is-on" style="--on:var(--sage)" data-band>
     <h3 data-rv>Answer in the shopper’s language</h3>
-    <div class="band__more"><div><p>English and Bangla in the pilot. Banglish is being tested.</p></div></div>
+    <div class="band__more"><div><p>It replies in the language the shopper writes in.</p></div></div>
     <div class="switch-cell"><button class="switch" data-ui type="button" role="switch" aria-checked="true" aria-label="Answer in the shopper’s language"></button></div>
   </div>
   <div class="band band--dark is-on" style="--on:var(--forest)" data-band>
@@ -887,7 +886,7 @@ p { text-wrap: pretty; }
         <div class="chat tpanel" data-ui>
           <div class="chat__head"><div class="chat__who"><img class="chat__avatar" src="aliox-mascot-head.webp" width="128" height="128" alt=""><div><p class="chat__name">Aliox</p><p class="chat__role">AI Shopping Assistant</p></div></div></div>
           <div class="chat__log">
-            <div class="m m--bot"><img class="m__av" src="aliox-mascot-head.webp" width="128" height="128" alt=""><div class="m__body"><div class="card" style="width:200px"><div class="card__img"><img src="assets/live-demo/everyday-linen-shirt.webp" width="427" height="640" alt=""></div><div class="card__body"><p class="card__name">Everyday Linen Shirt</p><p class="card__price num">৳1,890 – ৳1,990</p></div></div></div></div>
+            <div class="m m--bot"><img class="m__av" src="aliox-mascot-head.webp" width="128" height="128" alt=""><div class="m__body"><div class="card" style="width:200px"><div class="card__img"><img src="assets/live-demo/everyday-linen-shirt.webp" width="427" height="640" alt=""></div><div class="card__body"><p class="card__name">Everyday Linen Shirt</p><p class="card__price num">$49 – $52</p></div></div></div></div>
             <div class="m m--me"><p class="bubble">Does it run true to size? I usually wear M.</p><span class="meta">Sent · 6:10 PM</span></div>
             <div class="m m--bot"><img class="m__av" src="aliox-mascot-head.webp" width="128" height="128" alt=""><div class="m__body"><p class="bubble">The size guide gives M a 40-inch chest. Someone from the store can tell you how it fits.</p><div class="chips"><span class="chip">Talk to a person</span></div></div></div>
           </div>
@@ -991,7 +990,7 @@ p { text-wrap: pretty; }
       <details class="tile" name="faq" data-rv style="--rd:100ms"><summary>Does it take payment in the chat?<span class="pm" aria-hidden="true"></span></summary><p>No. It puts the exact variation in the shopper’s own WooCommerce cart, and “added” only shows once WooCommerce confirms it. Checkout and payment stay in WooCommerce.</p></details>
       <details class="tile" name="faq" data-rv style="--rd:150ms"><summary>Will it make things up?<span class="pm" aria-hidden="true"></span></summary><p>It answers only from your catalogue and the policy pages you approve, links to its source, and says plainly when nothing matches. Every reply is footed “AI assistant · Responses may be imperfect”.</p></details>
       <details class="tile" name="faq" data-rv style="--rd:200ms"><summary>What happens to shoppers’ details?<span class="pm" aria-hidden="true"></span></summary><p>Shoppers stay anonymous. Emails, phone and card numbers they type are hidden, and each store’s data is kept separate from every other store’s.</p></details>
-      <details class="tile" name="faq" data-rv style="--rd:250ms"><summary>Which languages does it speak?<span class="pm" aria-hidden="true"></span></summary><p>It replies in the shopper’s language. In the pilot that is English and Bangla; Banglish is being tested.</p></details>
+      <details class="tile" name="faq" data-rv style="--rd:250ms"><summary>Which languages does it speak?<span class="pm" aria-hidden="true"></span></summary><p>It replies in the language the shopper writes in.</p></details>
       <details class="tile" name="faq" data-rv style="--rd:300ms"><summary>What can’t it do yet?<span class="pm" aria-hidden="true"></span></summary><p>Bundles, subscriptions, gift cards, add-ons, order lookup, refunds and payment in the chat are not supported. When a shopper asks, it says so and points them to your store.</p></details>
       <details class="tile" name="faq" data-rv style="--rd:350ms"><summary>What if Aliox is down?<span class="pm" aria-hidden="true"></span></summary><p>Your store carries on. Browsing, cart and checkout never depend on the chat.</p></details>
       <details class="tile" name="faq" data-rv style="--rd:400ms"><summary>What happens at the monthly limit?<span class="pm" aria-hidden="true"></span></summary><p>New chats pause until the next period and the store keeps selling as usual. You can change plans any time.</p></details>
@@ -1025,7 +1024,7 @@ p { text-wrap: pretty; }
         <p class="dlg__label" id="join-lang">Your shoppers mostly write in</p>
         <div class="seg2" role="group" aria-labelledby="join-lang">
           <button type="button" aria-pressed="true" data-lang="English">English</button>
-          <button type="button" aria-pressed="false" data-lang="Bangla">Bangla</button>
+          <button type="button" aria-pressed="false" data-lang="German">German</button>
         </div>
         <a class="ui-btn" id="join-go" href="mailto:hello@alioxai.com?subject=Aliox%20AI%20launch%20list">Join the launch list</a>
         <p class="dlg__foot">Opens an email to hello@alioxai.com with these details.</p>
@@ -1055,7 +1054,7 @@ p { text-wrap: pretty; }
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const HEAD = 'aliox-mascot-head.webp';
   const MAIL = 'hello@alioxai.com';
-  const fmt = (n) => '৳' + n.toLocaleString('en-US');
+  const fmt = (n) => '$' + n.toLocaleString('en-US');
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const now = () => new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   const ICON = {
@@ -1066,44 +1065,44 @@ p { text-wrap: pretty; }
   };
 
   /* ---------------- the demo shelf (Loom & Line test store) ---------------- */
-  const SHIRT = { id: 'shirt', name: 'Everyday Linen Shirt', bn: 'এভরিডে লিনেন শার্ট', img: 'assets/live-demo/everyday-linen-shirt.webp', cat: 'Shirts', variable: true, colors: ['Beige', 'Black'], sizes: ['M', 'L', 'XL'], price: 1890, range: '৳1,890 – ৳1,990', desc: 'Relaxed linen-blend shirt for warm days.' };
-  const KURTA = { id: 'kurta', name: 'Breezy Linen Kurta', bn: 'ব্রিজি লিনেন কুর্তা', img: 'assets/live-demo/breezy-linen-kurta.webp', cat: 'Panjabi', variable: false, price: 2200, range: '৳2,200', desc: 'Light linen kurta for summer.' };
+  const SHIRT = { id: 'shirt', name: 'Everyday Linen Shirt', img: 'assets/live-demo/everyday-linen-shirt.webp', cat: 'Shirts', variable: true, colors: ['Beige', 'Black'], sizes: ['M', 'L', 'XL'], price: 49, range: '$49 – $52', desc: 'Relaxed linen-blend shirt for warm days.' };
+  const KURTA = { id: 'kurta', name: 'Breezy Linen Kurta', img: 'assets/live-demo/breezy-linen-kurta.webp', cat: 'Kurtas', variable: false, price: 58, range: '$58', desc: 'Light linen kurta for summer.' };
   const SHELF = [SHIRT, KURTA];
   const offered = (c, s) => !(c === 'Beige' && s === 'XL');
-  const vprice = (c, s) => (c === 'Black' && s === 'XL' ? 1990 : 1890);
+  const vprice = (c, s) => (c === 'Black' && s === 'XL' ? 52 : 49);
   const POLICY = {
-    shipping: { title: 'Shipping Policy', text: 'Inside Dhaka, delivery is ৳80 and takes 1–2 days. Outside Dhaka it’s ৳150 and 3–5 days. Orders over ৳5,000 ship free.', bn: 'ঢাকার ভেতরে ডেলিভারি চার্জ ৳80, সময় লাগে ১–২ দিন। ঢাকার বাইরে ৳150, ৩–৫ দিন। ৳5,000-এর বেশি অর্ডারে ডেলিভারি ফ্রি।' },
-    returns: { title: 'Returns & Exchanges', text: 'Unworn items with their tags can be exchanged within 7 days of delivery. Sale items can be exchanged for a different size only. The store doesn’t offer refunds.', bn: 'ডেলিভারির ৭ দিনের মধ্যে ট্যাগসহ না-পরা পণ্য বদলানো যাবে। সেলের পণ্য শুধু সাইজ বদলানো যাবে। টাকা ফেরত দেওয়া হয় না।' },
-    size: { title: 'Size Guide', text: 'Shirt chest in inches: S 38, M 40, L 42, XL 44. Panjabi length: S 40, M 42, L 44, XL 46.', bn: 'শার্টের বুকের মাপ (ইঞ্চি): S 38, M 40, L 42, XL 44।' }
+    shipping: { title: 'Shipping Policy', text: 'Within the US, delivery takes 2–4 working days and costs $6. Orders to Europe take 4–7 working days and cost $12. Orders over $75 ship free.', de: 'Innerhalb der USA dauert die Lieferung 2–4 Werktage und kostet $6. Nach Europa dauert sie 4–7 Werktage und kostet $12. Ab $75 ist der Versand kostenlos.' },
+    returns: { title: 'Returns & Exchanges', text: 'Unworn items with their tags can be exchanged within 7 days of delivery. Sale items can be exchanged for a different size only. The store doesn’t offer refunds.', de: 'Ungetragene Artikel mit Etikett können innerhalb von 7 Tagen nach Lieferung umgetauscht werden. Sale-Artikel nur gegen eine andere Größe. Eine Rückerstattung gibt es nicht.' },
+    size: { title: 'Size Guide', text: 'Shirt chest in inches: S 38, M 40, L 42, XL 44. Kurta length: S 40, M 42, L 44, XL 46.', de: 'Brustumfang des Hemdes in Zoll: S 38, M 40, L 42, XL 44.' }
   };
 
   /* ---------------- reading a shopper's question ---------------- */
   function parse(raw) {
     const t = ' ' + raw.toLowerCase().replace(/[?!.,]/g, ' ').replace(/\s+/g, ' ') + ' ';
-    const bn = /[ঀ-৿]/.test(raw);
+    const de = /[äöüß]|hallo|danke|\bhaben\b|\bgibt\b|hemd|leinen|schwarz|lieferung|liefern|versand|rückgabe|umtausch|\bpreis|\bunter\b|\bbitte\b/i.test(raw);
     const has = (re) => re.test(t);
-    const q = { raw, bn, product: null, color: null, size: null, budget: null, intent: 'unknown', topic: null, wrongColor: null };
-    if (has(/ (hi|hello|hey|salam|assalamu ?alaikum|হাই|হ্যালো) /)) q.intent = 'hello';
-    if (has(/thank|ধন্যবাদ/)) q.intent = 'thanks';
+    const q = { raw, de, product: null, color: null, size: null, budget: null, intent: 'unknown', topic: null, wrongColor: null };
+    if (has(/ (hi|hello|hey|hallo|moin) /)) q.intent = 'hello';
+    if (has(/thank|danke/)) q.intent = 'thanks';
     if (has(/gift ?card|voucher|subscription|bundle|add-on|addon/)) { q.intent = 'unsupported'; q.topic = has(/gift ?card|voucher/) ? 'gift cards' : has(/subscription/) ? 'subscriptions' : has(/bundle/) ? 'bundles' : 'add-ons'; }
-    if (has(/where is my order|track|order status|my order|order number|অর্ডার/)) { q.intent = 'unsupported'; q.topic = 'order lookup'; }
-    if (has(/pay|bkash|nagad|cash on delivery| cod |card payment|পেমেন্ট|বিকাশ/)) { q.intent = 'missing'; q.topic = 'payment'; }
+    if (has(/where is my order|track|order status|my order|order number|bestellung/)) { q.intent = 'unsupported'; q.topic = 'order lookup'; }
+    if (has(/pay|paypal|klarna|cash on delivery| cod |card payment|zahlung|bezahl/)) { q.intent = 'missing'; q.topic = 'payment'; }
     if (has(/wash|iron|care|clean|dry/)) { q.intent = 'missing'; q.topic = 'care'; }
-    if (has(/ship|deliver|courier|dhaka|chattogram|chittagong|sylhet|outside|ডেলিভারি|শিপিং/)) { q.intent = 'policy'; q.topic = 'shipping'; }
-    if (has(/return|exchange|refund|swap|change size|বদল|রিটার্ন|ফেরত/)) { q.intent = 'policy'; q.topic = 'returns'; }
-    if (has(/size guide|size chart|true to size|fit |fits|measure|chest|সাইজ চার্ট|মাপ/)) { q.intent = 'policy'; q.topic = 'size'; }
+    if (has(/ship|deliver|courier|europe|international|abroad|outside|overseas|liefer|versand|europa/)) { q.intent = 'policy'; q.topic = 'shipping'; }
+    if (has(/return|exchange|refund|swap|change size|rückgabe|umtausch|erstattung/)) { q.intent = 'policy'; q.topic = 'returns'; }
+    if (has(/size guide|size chart|true to size|fit |fits|measure|chest|größentabelle|passform/)) { q.intent = 'policy'; q.topic = 'size'; }
 
-    if (has(/shirt|শার্ট|sart/)) q.product = 'shirt';
-    if (has(/kurta|kurti|panjabi|punjabi|কুর্তা|পাঞ্জাবি|eid|ঈদ/)) q.product = q.product === 'shirt' ? 'both' : 'kurta';
-    if (!q.product && has(/linen|লিনেন|summer|গরম/)) q.product = 'both';
-    const colorMap = [[/black|কালো|kalo/, 'Black'], [/beige|বেইজ|cream|off ?white/, 'Beige'], [/ (white|red|blue|navy|green|pink|yellow|grey|gray|brown|maroon|সাদা|লাল|নীল|সবুজ) /, 'other']];
+    if (has(/shirt|hemd|sart/)) q.product = 'shirt';
+    if (has(/kurta|kurti|tunika|tunic/)) q.product = q.product === 'shirt' ? 'both' : 'kurta';
+    if (!q.product && has(/linen|leinen|summer|sommer/)) q.product = 'both';
+    const colorMap = [[/black|schwarz/, 'Black'], [/beige|cream|off ?white/, 'Beige'], [/ (white|red|blue|navy|green|pink|yellow|grey|gray|brown|maroon|weiss|weiß|rot|blau|grün|gelb|grau|braun) /, 'other']];
     for (const [re, c] of colorMap) if (re.test(t)) { if (c === 'other') q.wrongColor = (t.match(re) || [])[1]; else q.color = c; break; }
-    const sz = t.match(/ (?:size |in |সাইজ )?(xxl|xl|xs|s|m|l)(?: size| সাইজ)? /) || t.match(/ (medium|large|small) /);
+    const sz = t.match(/ (?:size |in |größe )?(xxl|xl|xs|s|m|l)(?: size)? /) || t.match(/ (medium|large|small) /);
     if (sz) q.size = { medium: 'M', large: 'L', small: 'S' }[sz[1]] || sz[1].toUpperCase();
     if (q.size === 'S' && !has(/ s size| size s| in s | small /)) q.size = null;
-    const b = t.match(/(?:under|below|less than|within|max|up to|budget|এর মধ্যে|নিচে)\s*৳?\s*(\d[\d,]*)(k)?/) || t.match(/৳\s*(\d[\d,]*)(k)?\s*(?:er niche|এর নিচে|এর মধ্যে)/);
+    const b = t.match(/(?:under|below|less than|within|max|up to|budget|unter|bis)\s*[$€]?\s*(\d[\d,]*)(k)?/) || t.match(/[$€]\s*(\d[\d,]*)(k)?\s*(?:or less|or under)/);
     if (b) q.budget = parseInt(b[1].replace(/,/g, ''), 10) * (b[2] ? 1000 : 1);
-    if (q.intent === 'unknown' && (q.product || q.color || q.size || q.budget || q.wrongColor || has(/ (ache|ase|achhe|আছে|stock|available|show|find|looking|need|want|dam|koto|price|দাম) /))) q.intent = 'product';
+    if (q.intent === 'unknown' && (q.product || q.color || q.size || q.budget || q.wrongColor || has(/ (stock|available|show|find|looking|need|want|price|gibt|haben|preis|zeig) /))) q.intent = 'product';
     if (q.intent === 'product' && !q.product) q.product = q.size || q.color ? 'shirt' : 'both';
     return q;
   }
@@ -1129,23 +1128,24 @@ p { text-wrap: pretty; }
     return { rows, note, items };
   }
 
-  /* the assistant's words for a question (English or Bangla) */
+  /* the assistant's words for a question (English or German) */
+  const deColor = (c) => (c === 'Black' ? 'Schwarz' : 'Beige');
   function answer(q) {
     const r = { text: '', link: null, cards: [], chips: [], kind: q.intent, rows: [], tags: [] };
     const P = (k) => POLICY[k];
-    if (q.intent === 'hello') { r.text = q.bn ? 'হাই! শার্ট বা কুর্তা খুঁজতে, সাইজ আর স্টক দেখতে, বা ডেলিভারি আর এক্সচেঞ্জ নিয়ে প্রশ্নে সাহায্য করতে পারি।' : 'Hi! I can find a shirt or a kurta, check sizes and stock, or answer questions about delivery and exchanges.'; r.chips = ['linen shirt in M', 'Delivery outside Dhaka']; return r; }
-    if (q.intent === 'thanks') { r.text = q.bn ? 'আপনাকেও ধন্যবাদ! আর কিছু লাগলে জানাবেন।' : 'You’re welcome! I’m here if you need anything else.'; return r; }
+    if (q.intent === 'hello') { r.text = q.de ? 'Hallo! Ich kann ein Hemd oder eine Kurta finden, Größen und Verfügbarkeit prüfen oder Fragen zu Lieferung und Umtausch beantworten.' : 'Hi! I can find a shirt or a kurta, check sizes and stock, or answer questions about delivery and exchanges.'; r.chips = ['linen shirt in M', 'Delivery to Europe']; return r; }
+    if (q.intent === 'thanks') { r.text = q.de ? 'Gern geschehen! Sagen Sie Bescheid, wenn Sie noch etwas brauchen.' : 'You’re welcome! I’m here if you need anything else.'; return r; }
     if (q.intent === 'unsupported') {
       r.tags = [['Asked for', q.topic]];
       r.text = q.topic === 'order lookup' ? 'I can’t look up orders yet. The Loom & Line team can help with that.' : 'I can’t help with ' + q.topic + ' here. The Loom & Line team can tell you more.';
-      if (q.bn) r.text = 'এটা আমি এখানে করতে পারি না। Loom & Line টিম সাহায্য করতে পারবে।';
+      if (q.de) r.text = 'Das kann ich hier nicht. Das Team von Loom & Line hilft Ihnen gern weiter.';
       r.link = { label: 'Contact the store', href: '#join' };
       r.rows = [{ page: 'Not supported', sub: 'Says so and points the shopper to the store', state: 'no' }];
       return r;
     }
     if (q.intent === 'missing') {
       r.tags = [['Policy', q.topic]];
-      r.text = q.bn ? 'এ বিষয়ে স্টোর কোনো পেজ দেয়নি, তাই আমি অনুমান করব না। স্টোর টিমকে জিজ্ঞেস করুন।' : 'Loom & Line hasn’t published a ' + q.topic + ' page I can answer from, so I won’t guess. The store team can tell you.';
+      r.text = q.de ? 'Dazu hat Loom & Line keine Seite veröffentlicht, aus der ich antworten könnte, also rate ich nicht. Fragen Sie am besten das Team.' : 'Loom & Line hasn’t published a ' + q.topic + ' page I can answer from, so I won’t guess. The store team can tell you.';
       r.link = { label: 'Contact the store', href: '#join' };
       r.rows = [{ page: 'No ' + q.topic + ' page', sub: 'Sends the shopper to the store instead of guessing', state: 'no' }];
       return r;
@@ -1154,10 +1154,10 @@ p { text-wrap: pretty; }
       const p = P(q.topic);
       r.tags = [['Policy', p.title]];
       if (q.topic === 'size' && /true to size|fit/.test(q.raw.toLowerCase())) r.text = 'The size guide doesn’t say how it fits, only the measurements: S 38, M 40, L 42 and XL 44 inches at the chest.';
-      else r.text = q.bn ? p.bn : p.text;
+      else r.text = q.de ? p.de : p.text;
       r.link = { label: p.title, href: '#ask' };
       r.rows = [{ page: p.title, sub: 'Approved page, linked in the answer', state: 'page' }];
-      r.chips = q.topic === 'returns' ? ['Delivery outside Dhaka', 'linen shirt in M'] : ['Exchange policy', 'kurta under ৳2,500'];
+      r.chips = q.topic === 'returns' ? ['Delivery to Europe', 'linen shirt in M'] : ['Exchange policy', 'kurta under $60'];
       return r;
     }
     if (q.intent === 'product') {
@@ -1171,32 +1171,32 @@ p { text-wrap: pretty; }
       const okRows = s.rows.filter((x) => x.ok);
       if (!okRows.length) {
         r.kind = 'none';
-        if (q.budget && !s.items.length) r.text = q.bn ? 'এই বাজেটে কিছু পাইনি। সবচেয়ে কম দাম ' + fmt(1890) + ', Everyday Linen Shirt।' : 'Nothing on the shelf is under ' + fmt(q.budget) + '. The lowest price here is ' + fmt(1890) + ' for the Everyday Linen Shirt.';
-        else if (s.note === 'wrong-color' || s.note === 'color-kurta') r.text = q.bn ? 'এই রঙে কিছু পাইনি। Everyday Linen Shirt বেইজ আর কালো রঙে আছে।' : 'I couldn’t find that colour. The Everyday Linen Shirt comes in Beige and Black, and the kurta in one colour.';
-        else if (s.note === 'no-size') r.text = q.bn ? 'এই সাইজ নেই। Everyday Linen Shirt M, L আর XL সাইজে আছে।' : 'That size isn’t offered. The Everyday Linen Shirt comes in M, L and XL.';
-        else if (q.color === 'Beige' && q.size === 'XL') r.text = q.bn ? 'বেইজ রঙে XL সাইজ নেই। কালো XL আছে, দাম ৳1,990।' : 'Beige isn’t offered in XL. Black / XL is in stock at ৳1,990.';
+        if (q.budget && !s.items.length) r.text = q.de ? 'Dafür habe ich nichts gefunden. Der niedrigste Preis ist ' + fmt(49) + ' für das Everyday Linen Shirt.' : 'Nothing on the shelf is under ' + fmt(q.budget) + '. The lowest price here is ' + fmt(49) + ' for the Everyday Linen Shirt.';
+        else if (s.note === 'wrong-color' || s.note === 'color-kurta') r.text = q.de ? 'Diese Farbe habe ich nicht gefunden. Das Everyday Linen Shirt gibt es in Beige und Schwarz.' : 'I couldn’t find that colour. The Everyday Linen Shirt comes in Beige and Black, and the kurta in one colour.';
+        else if (s.note === 'no-size') r.text = q.de ? 'Diese Größe gibt es nicht. Das Everyday Linen Shirt gibt es in M, L und XL.' : 'That size isn’t offered. The Everyday Linen Shirt comes in M, L and XL.';
+        else if (q.color === 'Beige' && q.size === 'XL') r.text = q.de ? 'Beige gibt es nicht in XL. Schwarz in XL ist verfügbar für ' + fmt(52) + '.' : 'Beige isn’t offered in XL. Black / XL is in stock at ' + fmt(52) + '.';
         else r.text = 'I couldn’t find anything that matches. Try a shirt or a kurta, a colour or a size.';
         if (q.color === 'Beige' && q.size === 'XL') { r.cards = [{ p: SHIRT, c: 'Black', s: 'XL' }]; r.chips = ['beige shirt in L']; }
-        else r.chips = ['linen shirt in M', 'kurta under ৳2,500'];
+        else r.chips = ['linen shirt in M', 'kurta under $60'];
         return r;
       }
       const prods = [...new Set(okRows.map((x) => x.p))];
       r.cards = prods.map((p) => ({ p, c: q.color, s: q.size }));
       if (prods.length === 1 && prods[0] === SHIRT && q.color && q.size) {
         const pr = vprice(q.color, q.size);
-        r.text = q.bn ? SHIRT.name + ' ' + (q.color === 'Black' ? 'কালো' : 'বেইজ') + ' রঙে ' + q.size + ' সাইজে আছে, দাম ' + fmt(pr) + '। কার্টে যোগ করব?' : q.color + ' / ' + q.size + ' is in stock at ' + fmt(pr) + '. Want me to add it to your cart?';
+        r.text = q.de ? SHIRT.name + ' in ' + deColor(q.color) + ', Größe ' + q.size + ', ist verfügbar für ' + fmt(pr) + '. Soll ich es in den Warenkorb legen?' : q.color + ' / ' + q.size + ' is in stock at ' + fmt(pr) + '. Want me to add it to your cart?';
       } else if (prods.length === 1 && prods[0] === SHIRT && q.color) {
-        r.text = q.bn ? SHIRT.name + ' ' + (q.color === 'Black' ? 'কালো' : 'বেইজ') + ' রঙে আছে, সাইজ ' + (q.color === 'Beige' ? 'M আর L।' : 'M, L আর XL।') : 'Here’s what I found. The Everyday Linen Shirt comes in ' + q.color + ' in ' + (q.color === 'Beige' ? 'M and L.' : 'M, L and XL.');
+        r.text = q.de ? 'Das habe ich gefunden. Das Everyday Linen Shirt gibt es in ' + deColor(q.color) + ' in den Größen ' + (q.color === 'Beige' ? 'M und L.' : 'M, L und XL.') : 'Here’s what I found. The Everyday Linen Shirt comes in ' + q.color + ' in ' + (q.color === 'Beige' ? 'M and L.' : 'M, L and XL.');
       } else if (prods.length === 1 && prods[0] === SHIRT && q.size) {
-        r.text = q.bn ? SHIRT.name + ' ' + q.size + ' সাইজে বেইজ আর কালো দুই রঙেই আছে।' : 'Here’s what I found. The Everyday Linen Shirt comes in ' + q.size + ' in ' + (q.size === 'XL' ? 'Black only.' : 'Beige and Black.');
+        r.text = q.de ? 'Das habe ich gefunden. Das Everyday Linen Shirt gibt es in Größe ' + q.size + ' in ' + (q.size === 'XL' ? 'Schwarz.' : 'Beige und Schwarz.') : 'Here’s what I found. The Everyday Linen Shirt comes in ' + q.size + ' in ' + (q.size === 'XL' ? 'Black only.' : 'Beige and Black.');
       } else if (prods.length === 1 && prods[0] === KURTA) {
-        r.text = q.bn ? 'এই যে পেয়েছি: ' + KURTA.name + ', দাম ৳2,200।' : 'Here’s what I found' + (q.budget ? ' under ' + fmt(q.budget) : '') + '. The Breezy Linen Kurta is ৳2,200.';
+        r.text = q.de ? 'Das habe ich gefunden' + (q.budget ? ' unter ' + fmt(q.budget) : '') + ': ' + KURTA.name + ', ' + fmt(KURTA.price) + '.' : 'Here’s what I found' + (q.budget ? ' under ' + fmt(q.budget) : '') + '. The Breezy Linen Kurta is ' + fmt(KURTA.price) + '.';
       } else {
-        r.text = q.bn ? 'এই যে পেয়েছি।' : 'Here’s what I found' + (q.budget ? ' under ' + fmt(q.budget) : '') + '.';
+        r.text = q.de ? 'Das habe ich gefunden' + (q.budget ? ' unter ' + fmt(q.budget) : '') + '.' : 'Here’s what I found' + (q.budget ? ' under ' + fmt(q.budget) : '') + '.';
       }
       return r;
     }
-    r.text = q.bn ? 'আমি Loom & Line-এর পণ্য, সাইজ, রং আর স্টোরের নিয়ম নিয়ে সাহায্য করতে পারি।' : 'I can help with Loom & Line’s products, sizes, colours and store policies.';
+    r.text = q.de ? 'Ich helfe Ihnen bei den Produkten, Größen, Farben und Richtlinien von Loom & Line.' : 'I can help with Loom & Line’s products, sizes, colours and store policies.';
     r.chips = ['black shirt in L', 'Exchange policy'];
     r.kind = 'fallback';
     return r;
@@ -1334,7 +1334,7 @@ p { text-wrap: pretty; }
     bot('<p class="bubble">Hi! What are you shopping for today?</p>');
     me('linen shirt in M?');
     reply(parse('linen shirt in M'));
-    const item = { p: SHIRT, c: 'Black', s: 'M', qty: 1, price: 1890 };
+    const item = { p: SHIRT, c: 'Black', s: 'M', qty: 1, price: 49 };
     cart.push(item);
     bot(addedHtml(item));
     bot('<p class="bubble">Anything else? Ask me about sizes, delivery or exchanges.</p>' + chipsHtml(['Does it run true to size?', 'Exchange policy', 'Show me the kurta']));
@@ -1355,7 +1355,7 @@ p { text-wrap: pretty; }
     closeSheet();
     setStore(SHIRT);
     await sleep(120); if (!alive()) return;
-    bot('<p class="bubble">Hi! What are you shopping for today?</p>' + chipsHtml(['Linen shirt in M', 'Kurta under ৳2,500', 'Exchange policy', 'Delivery outside Dhaka']));
+    bot('<p class="bubble">Hi! What are you shopping for today?</p>' + chipsHtml(['Linen shirt in M', 'Kurta under $60', 'Exchange policy', 'Delivery to Europe']));
     await sleep(600); if (!alive()) return;
     lookEl(mh, input);
     const words = 'linen shirt in M?';
@@ -1403,7 +1403,7 @@ p { text-wrap: pretty; }
     else if (b.dataset.select) openSheet(b.dataset.c, b.dataset.s);
     else if (b.dataset.add) { const p = SHELF.find((x) => x.id === b.dataset.add); b.disabled = true; b.innerHTML = '<span class="spin" aria-hidden="true"></span>Adding…'; setTimeout(() => { b.disabled = false; b.textContent = 'Add to cart'; confirmAdd({ p, qty: 1, price: p.price }); }, reduce ? 0 : 650); }
     else if (b.dataset.view) { const p = SHELF.find((x) => x.id === b.dataset.view); setStore(p); sys('Opened the ' + p.name + ' page'); }
-    else if (b.hasAttribute('data-continue')) bot('<p class="bubble">Sure. What else are you looking for?</p>' + chipsHtml(['Show me the kurta', 'Delivery outside Dhaka']));
+    else if (b.hasAttribute('data-continue')) bot('<p class="bubble">Sure. What else are you looking for?</p>' + chipsHtml(['Show me the kurta', 'Delivery to Europe']));
     else if (b.hasAttribute('data-checkout')) sys('On a real store this opens WooCommerce checkout. Payment never happens in the chat.');
   });
   sheet.addEventListener('click', (e) => {
@@ -1470,7 +1470,7 @@ p { text-wrap: pretty; }
     const rows = a.rows.map((r) => r.page
       ? '<div class="row"><span></span><div><p>' + esc(r.page) + '</p><p class="row__var">' + esc(r.sub) + '</p></div><span class="row__price"></span><span class="state state--' + r.state + '">' + (r.state === 'page' ? 'Linked' : 'To the store') + '</span></div>'
       : '<div class="row"><img src="' + r.img + '" width="427" height="640" alt=""><div><p>' + esc(r.name) + '</p><p class="row__var">' + esc(r.sub) + '</p></div><span class="row__price num">' + fmt(r.price) + '</span><span class="state state--' + (r.state === 'in' ? 'in">In stock' : 'no">Not offered') + '</span></div>').join('');
-    read.innerHTML = '<div class="read__top"><span class="read__label">Read as</span>' + tags + '</div>' + (rows ? '<div class="rows">' + rows + '</div>' : '') + '<div class="say"><img src="' + HEAD + '" width="128" height="128" alt=""><p' + (q.bn ? ' lang="bn"' : '') + '>' + esc(a.text) + (a.link ? ' <a href="' + a.link.href + '">' + esc(a.link.label) + '</a>' : '') + '</p></div>';
+    read.innerHTML = '<div class="read__top"><span class="read__label">Read as</span>' + tags + '</div>' + (rows ? '<div class="rows">' + rows + '</div>' : '') + '<div class="say"><img src="' + HEAD + '" width="128" height="128" alt=""><p' + (q.de ? ' lang="de"' : '') + '>' + esc(a.text) + (a.link ? ' <a href="' + a.link.href + '">' + esc(a.link.label) + '</a>' : '') + '</p></div>';
   }
   let deb = 0;
   askInput.addEventListener('input', () => { placeCaret(); clearTimeout(deb); deb = setTimeout(renderRead, 140); $$('.try').forEach((b) => b.removeAttribute('aria-current')); });
