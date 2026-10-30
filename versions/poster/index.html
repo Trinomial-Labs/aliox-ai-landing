@@ -8,7 +8,7 @@
 <link rel="icon" href="../../assets/aliox-icon-light.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+Bengali:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap">
 <script>document.documentElement.classList.add('js')</script>
 <style>
 :root {
@@ -21,7 +21,7 @@
   --ink: #16261d;
   --white: #ffffff;
 
-  --font: 'Inter', 'Noto Sans Bengali', system-ui, sans-serif;
+  --font: 'Inter', system-ui, sans-serif;
   --t-display: clamp(48px, 9.6vw, 186px);
   --t-big: clamp(36px, 5.4vw, 88px);
   --t-mid: clamp(22px, 2vw, 30px);
@@ -249,7 +249,7 @@ section, header, footer { scroll-margin-top: 0; }
 .foot__last { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 56px; font-size: var(--t-small); }
 
 /* ───────── interface fragments (the widget's own look) ───────── */
-[data-ui] { font-family: 'Inter', 'Noto Sans Bengali', system-ui, sans-serif; color: #1b2733; font-size: 15px; line-height: 1.45; letter-spacing: 0; text-align: left; }
+[data-ui] { font-family: 'Inter', system-ui, sans-serif; color: #1b2733; font-size: 15px; line-height: 1.45; letter-spacing: 0; text-align: left; }
 [data-ui].panel { background: #fff; border-radius: 16px; border: 1px solid #dfe5ea; overflow: hidden; position: relative; z-index: 1; }
 [data-ui] .panel__top { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #edf1f4; }
 [data-ui] .panel__top img { width: 40px; height: 40px; border-radius: 50%; background: #f1f4f2; }
@@ -523,8 +523,8 @@ section, header, footer { scroll-margin-top: 0; }
           <div class="me">does it come in black?</div>
           <div class="ai"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt="">
             <div class="ai__stack">
-              <div class="bubble">Yes. The Everyday Linen Shirt comes in Black and Beige, in sizes L, M and XL. Black is ৳1,890.</div>
-              <div class="cards"><div class="card"><img src="../../assets/screens/shirt.webp" width="580" height="518" alt="Everyday Linen Shirt on a hanger" loading="lazy"><div class="card__b"><div>Everyday Linen Shirt</div><div class="card__price">৳1,890 – ৳1,990</div><div class="card__hint">Select size</div><button class="ubtn" type="button" data-act="options">Select options</button></div></div></div>
+              <div class="bubble">Yes. The Everyday Linen Shirt comes in Black and Beige, in sizes L, M and XL. Black is $49.</div>
+              <div class="cards"><div class="card"><img src="../../assets/screens/shirt.webp" width="580" height="518" alt="Everyday Linen Shirt on a hanger" loading="lazy"><div class="card__b"><div>Everyday Linen Shirt</div><div class="card__price">$49 – $52</div><div class="card__hint">Select size</div><button class="ubtn" type="button" data-act="options">Select options</button></div></div></div>
             </div>
           </div>
         </div>
@@ -535,10 +535,10 @@ section, header, footer { scroll-margin-top: 0; }
       <h3>Or tap one</h3>
       <button class="chip" type="button">got this in M?</button>
       <button class="chip" type="button">something for a wedding</button>
-      <button class="chip" type="button">anything under ৳2,000?</button>
+      <button class="chip" type="button">anything under $50?</button>
       <button class="chip" type="button">can I return it?</button>
       <button class="chip" type="button">how long is delivery?</button>
-      <button class="chip" type="button" lang="bn">শার্টটা কি M সাইজে আছে?</button>
+      <button class="chip" type="button" lang="de">Ist das Hemd in M verfügbar?</button>
       <button class="chip" type="button">can I talk to a person?</button>
       <button class="chip" type="button">where's my order?</button>
     </div>
@@ -555,7 +555,7 @@ section, header, footer { scroll-margin-top: 0; }
     <img src="../../assets/screens/chat-desktop.webp" width="2000" height="1250" loading="lazy" alt="The Loom &amp; Line product page for the Everyday Linen Shirt with the Aliox chat open beside it, showing the shirt as a card with Select options">
   </div>
   <div class="store__bar">
-    <div class="store__phone is-wait"><img src="../../assets/screens/chat-phone.webp" width="780" height="1688" loading="lazy" alt="Aliox full screen on a phone: the Breezy Linen Kurta at ৳2,200 with Add to cart"></div>
+    <div class="store__phone is-wait"><img src="../../assets/screens/chat-phone.webp" width="780" height="1688" loading="lazy" alt="Aliox full screen on a phone: the Breezy Linen Kurta at $58 with Add to cart"></div>
     <div class="grid">
       <div>
         <div><h3>A button in the corner</h3><p>With a nudge of up to 60 characters, like “Looking for something? I can help.”, and up to four suggested questions.</p></div>
@@ -570,13 +570,13 @@ section, header, footer { scroll-margin-top: 0; }
     <h2 class="big lines" id="what-h" data-rise><span class="line"><span>what does it do?</span></span></h2>
     <div class="what__find">
       <label class="sr-only" for="find">Filter what Aliox does</label>
-      <input id="find" type="search" placeholder="find: cart, Bangla, Sara…" autocomplete="off">
+      <input id="find" type="search" placeholder="find: cart, German, Sara…" autocomplete="off">
     </div>
   </div>
   <ul class="rows is-in-wait" id="rows">
     <li class="row is-open" style="--i:0" data-k="find search catalogue colour size fit material price occasion nothing match">
       <h3><button class="row__btn" type="button" aria-expanded="true" aria-controls="r1">finds the right thing</button></h3>
-      <div class="row__more" id="r1"><p>Shoppers ask in their own words: colour, size, fit, material, price, occasion. Aliox searches your real catalogue and says plainly when nothing matches.</p><div class="row__pic"><img src="../../assets/screens/card.webp" width="624" height="1083" loading="lazy" alt="A product card in the chat: Everyday Linen Shirt, ৳1,890 – ৳1,990, Select options"></div></div>
+      <div class="row__more" id="r1"><p>Shoppers ask in their own words: colour, size, fit, material, price, occasion. Aliox searches your real catalogue and says plainly when nothing matches.</p><div class="row__pic"><img src="../../assets/screens/card.webp" width="624" height="1083" loading="lazy" alt="A product card in the chat: Everyday Linen Shirt, $49 – $52, Select options"></div></div>
     </li>
     <li class="row" style="--i:1" data-k="size stock colour variation check available">
       <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r2">checks size and stock</button></h3>
@@ -584,17 +584,17 @@ section, header, footer { scroll-margin-top: 0; }
     </li>
     <li class="row" style="--i:2" data-k="cart add checkout woocommerce buy">
       <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r3">fills their own cart</button></h3>
-      <div class="row__more" id="r3"><p>The exact variation goes into the shopper's own WooCommerce cart. Stock is checked again, and “Added” only shows once WooCommerce confirms it. Checkout and payment stay in WooCommerce.</p><div class="row__pic"><img src="../../assets/screens/added.webp" width="990" height="660" loading="lazy" alt="Added to your cart: Everyday Linen Shirt, Black / M, Qty 1, ৳1,890, with Continue shopping and Checkout"></div></div>
+      <div class="row__more" id="r3"><p>The exact variation goes into the shopper's own WooCommerce cart. Stock is checked again, and “Added” only shows once WooCommerce confirms it. Checkout and payment stay in WooCommerce.</p><div class="row__pic"><img src="../../assets/screens/added.webp" width="990" height="660" loading="lazy" alt="Added to your cart: Everyday Linen Shirt, Black / M, Qty 1, $49, with Continue shopping and Checkout"></div></div>
     </li>
     <li class="row" style="--i:3" data-k="policy policies shipping returns exchange payment size guide care link source">
       <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r4">quotes your policies</button></h3>
       <div class="row__more" id="r4"><p>Shipping, returns, exchanges, payments, the size guide and product care, answered from the pages you approve, with a link to the page. If a policy is missing, it sends the shopper to you.</p>
         <div class="row__pic"><div class="mini" data-ui><div class="me">can I exchange it if M is too big?</div><div class="ai"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt=""><div class="ai__stack"><div class="bubble">Yes. Unworn items can be exchanged within 7 days of delivery.<br><span class="src">Source: <a href="#what">Returns &amp; Exchanges</a></span></div></div></div></div></div></div>
     </li>
-    <li class="row" style="--i:4" data-k="bangla language english banglish">
-      <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r5">answers in Bangla</button></h3>
-      <div class="row__more" id="r5"><p>It replies in the shopper's language. The pilot runs in English and Bangla, and Banglish is being tested.</p>
-        <div class="row__pic"><div class="mini" data-ui lang="bn"><div class="me">রিটার্ন করা যাবে?</div><div class="ai"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt=""><div class="ai__stack"><div class="bubble">জি, ডেলিভারির ৭ দিনের মধ্যে না-পরা পণ্য রিটার্ন বা এক্সচেঞ্জ করা যাবে।<br><span class="src"><a href="#what" lang="en">Returns &amp; Exchanges</a></span></div></div></div></div></div></div>
+    <li class="row" style="--i:4" data-k="german language english">
+      <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r5">answers in German</button></h3>
+      <div class="row__more" id="r5"><p>It replies in the language the shopper writes in.</p>
+        <div class="row__pic"><div class="mini" data-ui lang="de"><div class="me">Kann ich etwas zurückgeben?</div><div class="ai"><img src="../../aliox-mascot-head.webp" width="128" height="128" alt=""><div class="ai__stack"><div class="bubble">Ja, ungetragene Artikel können Sie innerhalb von 7 Tagen nach der Lieferung zurückgeben oder umtauschen.<br><span class="src"><a href="#what" lang="en">Returns &amp; Exchanges</a></span></div></div></div></div></div></div>
     </li>
     <li class="row" style="--i:5" data-k="sara team person human staff live chat takeover hand back conversations">
       <h3><button class="row__btn" type="button" aria-expanded="false" aria-controls="r6">lets Sara step in</button></h3>
@@ -689,7 +689,7 @@ section, header, footer { scroll-margin-top: 0; }
       <details class="qa" name="faq" style="--i:5"><summary>What happens at my monthly limit?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>New chats pause until the next period starts. Your store keeps selling as usual, and you can change plans any time.</p></div></details>
       <details class="qa" name="faq" style="--i:6"><summary>What about shoppers' privacy?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>Shoppers stay anonymous: emails, phone and card numbers they type are hidden. Each store's data is kept separate.</p></div></details>
       <details class="qa" name="faq" style="--i:7"><summary>What if Aliox is down?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>Your store carries on without it. Browsing, the cart and checkout still work.</p></div></details>
-      <details class="qa" name="faq" style="--i:8"><summary>Which languages does it speak?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>It replies in the shopper's language. The pilot runs in English and Bangla, and Banglish is being tested.</p></div></details>
+      <details class="qa" name="faq" style="--i:8"><summary>Which languages does it speak?<span class="plus" aria-hidden="true"></span></summary><div class="qa__a"><p>It replies in the language the shopper writes in.</p></div></details>
     </div>
   </div>
 </section>
@@ -819,28 +819,28 @@ section, header, footer { scroll-margin-top: 0; }
   const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const ai = (inner) => `<div class="ai chat-in"><img src="${A}" width="128" height="128" alt=""><div class="ai__stack">${inner}</div></div>`;
   const bub = (t) => `<div class="bubble">${t}</div>`;
-  const shirtCard = `<div class="card"><img src="${S}shirt.webp" width="580" height="518" alt="Everyday Linen Shirt on a hanger"><div class="card__b"><div>Everyday Linen Shirt</div><div class="card__price">৳1,890 – ৳1,990</div><div class="card__hint">Select size</div><button class="ubtn" type="button" data-act="options">Select options</button></div></div>`;
-  const kurtaCard = `<div class="card"><img src="${S}kurta.webp" width="580" height="532" alt="Breezy Linen Kurta on a hanger"><div class="card__b"><div>Breezy Linen Kurta</div><div class="card__price">৳2,200</div><button class="ubtn" type="button" data-act="add-kurta">Add to cart</button></div></div>`;
-  const sheet = (c = 'Black', s = 'M') => `<div class="opts"><div class="opts__label">Everyday Linen Shirt · ৳${c === 'Black' ? '1,890' : '1,990'}</div><div class="opts__label">Colour · ${c}</div><div class="pills">${['Beige', 'Black'].map((x) => `<button type="button" class="pill${x === c ? ' is-on' : ''}" data-act="c:${x}"><i style="background:${x === 'Black' ? '#111' : '#f3f0dc'}"></i>${x}</button>`).join('')}</div><div class="opts__label">Size · ${s}</div><div class="pills">${['L', 'M', 'XL'].map((x) => `<button type="button" class="pill pill--size${x === s ? ' is-on' : ''}" data-act="s:${x}">${x}</button>`).join('')}</div><div class="ok">${c} / ${s} is available</div><button class="ubtn" type="button" data-act="add:${c}:${s}">Add to cart</button></div>`;
+  const shirtCard = `<div class="card"><img src="${S}shirt.webp" width="580" height="518" alt="Everyday Linen Shirt on a hanger"><div class="card__b"><div>Everyday Linen Shirt</div><div class="card__price">$49 – $52</div><div class="card__hint">Select size</div><button class="ubtn" type="button" data-act="options">Select options</button></div></div>`;
+  const kurtaCard = `<div class="card"><img src="${S}kurta.webp" width="580" height="532" alt="Breezy Linen Kurta on a hanger"><div class="card__b"><div>Breezy Linen Kurta</div><div class="card__price">$58</div><button class="ubtn" type="button" data-act="add-kurta">Add to cart</button></div></div>`;
+  const sheet = (c = 'Black', s = 'M') => `<div class="opts"><div class="opts__label">Everyday Linen Shirt · $${c === 'Black' ? '49' : '52'}</div><div class="opts__label">Colour · ${c}</div><div class="pills">${['Beige', 'Black'].map((x) => `<button type="button" class="pill${x === c ? ' is-on' : ''}" data-act="c:${x}"><i style="background:${x === 'Black' ? '#111' : '#f3f0dc'}"></i>${x}</button>`).join('')}</div><div class="opts__label">Size · ${s}</div><div class="pills">${['L', 'M', 'XL'].map((x) => `<button type="button" class="pill pill--size${x === s ? ' is-on' : ''}" data-act="s:${x}">${x}</button>`).join('')}</div><div class="ok">${c} / ${s} is available</div><button class="ubtn" type="button" data-act="add:${c}:${s}">Add to cart</button></div>`;
   const added = (name, meta, price, img) => `<div class="added"><div class="added__top">Added to your cart!</div><div class="added__item"><img src="${S}${img}" width="580" height="518" alt=""><div><div>${name}</div><div class="added__meta">${meta}</div><div class="card__price">${price}</div></div></div><div class="added__sub">1 item in your cart · Subtotal ${price}</div><div class="added__go"><button type="button" class="ubtn ubtn--ghost" data-act="more">Continue shopping</button><button type="button" class="ubtn" data-act="checkout">Checkout →</button></div></div>`;
   const src = (page) => `<br><span class="src">Source: <a href="#try">${page}</a></span>`;
 
   const reply = (raw) => {
     const q = raw.toLowerCase();
-    if (/[অ-হা-ৌ]/.test(raw)) return bub('জি, আছে! Everyday Linen Shirt কালো রঙে M সাইজে স্টকে আছে, দাম ৳১,৮৯০।') + `<div class="cards">${shirtCard}</div>`;
+    if (/[äöüß]|\b(hallo|danke|haben|gibt|hemd|schwarz|größe|verfügbar|lieferung|versand|preis|unter|bitte)\b/i.test(raw)) return bub('Ja! Das Everyday Linen Shirt ist in Schwarz, Größe M, auf Lager. Preis: $49.') + `<div class="cards">${shirtCard}</div>`;
     if (/\b(person|human|someone|staff|agent|real people|team)\b/.test(q)) return bub('I can bring in someone from the Loom &amp; Line team.') + '<button class="ubtn ubtn--ghost" type="button" data-act="person" style="align-self:flex-start">Talk to a person</button>';
     const nope = q.match(/gift ?card|subscription|bundle|add-?on|my order|order status|track|where.?s my|refund|pay (here|in chat|now)/);
     if (nope) return bub(`That's not something I can do in the chat${/refund/.test(nope[0]) ? '. Refunds are handled by the store' : ''}. The Loom &amp; Line team can help with it.<br><span class="src"><a href="#try">Contact the store</a></span>`);
     if (/return|exchange/.test(q)) return bub('Yes. Unworn items can be returned or exchanged within 7 days of delivery.' + src('Returns &amp; Exchanges'));
-    if (/ship|deliver|how long|arrive/.test(q)) return bub('Inside Dhaka it takes 1–2 days (৳80). Outside Dhaka, 3–5 days (৳150).' + src('Shipping Policy'));
+    if (/ship|deliver|how long|arrive|europe|international|abroad|overseas/.test(q)) return bub('Within the US, delivery takes 2–4 working days and costs $6. Orders to Europe take 4–7 working days and cost $12. Orders over $75 ship free.' + src('Shipping Policy'));
     if (/fit|true to size|run(s)? (small|big|large)|size guide|measure/.test(q)) return bub('The Everyday Linen Shirt has a relaxed cut and runs true to size. The size guide has the chest width for L, M and XL.' + src('Size Guide'));
-    if (/\b(add|cart|buy|take it|i.?ll have)\b/.test(q)) return bub('Done.') + added('Everyday Linen Shirt', 'Black / M · Qty 1', '৳1,890', 'shirt.webp');
-    if (/kurta|wedding|eid|party|occasion|festive|dinner|event/.test(q)) return bub('For an occasion, the Breezy Linen Kurta is our dressiest piece, in soft linen.') + `<div class="cards">${kurtaCard}</div>`;
-    const n = q.replace(/,/g, '').match(/(\d{3,6})/);
+    if (/\b(add|cart|buy|take it|i.?ll have)\b/.test(q)) return bub('Done.') + added('Everyday Linen Shirt', 'Black / M · Qty 1', '$49', 'shirt.webp');
+    if (/kurta|wedding|party|occasion|festive|dinner|event/.test(q)) return bub('For an occasion, the Breezy Linen Kurta is our dressiest piece, in soft linen.') + `<div class="cards">${kurtaCard}</div>`;
+    const n = q.replace(/,/g, '').match(/\$\s*(\d{2,4})|(\d{2,4})\s*(?:usd|dollars?|euros?|eur|€)|(?:under|below|less than|max|within|up to)\D{0,6}(\d{2,4})/);
     if (/under|cheap|less than|below|budget|max/.test(q) || n) {
-      const max = n ? +n[1] : 2000;
-      if (max < 1890) return bub(`Nothing at Loom &amp; Line is under ৳${max.toLocaleString('en-IN')}. The lowest price is the Everyday Linen Shirt in Black, ৳1,890.`);
-      return bub(max >= 2200 ? `Both pieces are under ৳${max.toLocaleString('en-IN')}.` : `Under ৳${max.toLocaleString('en-IN')}: the Everyday Linen Shirt, from ৳1,890.`) + `<div class="cards">${shirtCard}${max >= 2200 ? kurtaCard : ''}</div>`;
+      const max = n ? +(n[1] || n[2] || n[3]) : 50;
+      if (max < 49) return bub(`Nothing at Loom &amp; Line is under $${max}. The lowest price is the Everyday Linen Shirt in Black, $49.`);
+      return bub(max >= 58 ? `Both pieces are under $${max}.` : `Under $${max}: the Everyday Linen Shirt, from $49.`) + `<div class="cards">${shirtCard}${max >= 58 ? kurtaCard : ''}</div>`;
     }
     const other = q.match(/\b(blue|white|red|green|grey|gray|navy|pink|yellow|brown|olive)\b/);
     if (other) return bub(`Not in ${other[1]}, sorry. The Everyday Linen Shirt comes in Black and Beige.`) + `<div class="cards">${shirtCard}</div>`;
@@ -851,9 +851,9 @@ section, header, footer { scroll-margin-top: 0; }
       const c = /beige/.test(q) ? 'Beige' : 'Black';
       return bub(`Yes. ${c} / ${s} is in stock.`) + sheet(c, s);
     }
-    if (/black|beige|colou?r/.test(q)) return bub('Yes. The Everyday Linen Shirt comes in Black and Beige, in sizes L, M and XL. Black is ৳1,890.') + `<div class="cards">${shirtCard}</div>`;
+    if (/black|beige|colou?r/.test(q)) return bub('Yes. The Everyday Linen Shirt comes in Black and Beige, in sizes L, M and XL. Black is $49.') + `<div class="cards">${shirtCard}</div>`;
     if (/shirt|linen|top|clothes|something/.test(q)) return bub('Here’s what I found.') + `<div class="cards">${shirtCard}${kurtaCard}</div>`;
-    if (/^(hi|hello|hey|salam|assalamu)/.test(q)) return bub('Hi! Looking for linen? Ask me about sizes, colours, prices or the store’s policies.');
+    if (/^(hi|hello|hey)/.test(q)) return bub('Hi! Looking for linen? Ask me about sizes, colours, prices or the store’s policies.');
     return bub('I couldn’t find that at Loom &amp; Line. Try a colour, a size or a price, or ask about delivery and returns.');
   };
 
@@ -886,8 +886,8 @@ section, header, footer { scroll-margin-top: 0; }
       const box = b.closest('.opts'); const c = $('.pill.is-on:not(.pill--size)', box).textContent.trim(); const s = $('.pill--size.is-on', box).textContent.trim();
       box.outerHTML = sheet(act.startsWith('c:') ? act.slice(2) : c, act.startsWith('s:') ? act.slice(2) : s);
     }
-    else if (act.startsWith('add:')) { const [, c, s] = act.split(':'); say(ai(added('Everyday Linen Shirt', `${c} / ${s} · Qty 1`, c === 'Black' ? '৳1,890' : '৳1,990', 'shirt.webp'))); hop(); }
-    else if (act === 'add-kurta') { say(ai(added('Breezy Linen Kurta', 'Qty 1', '৳2,200', 'kurta.webp'))); hop(); }
+    else if (act.startsWith('add:')) { const [, c, s] = act.split(':'); say(ai(added('Everyday Linen Shirt', `${c} / ${s} · Qty 1`, c === 'Black' ? '$49' : '$52', 'shirt.webp'))); hop(); }
+    else if (act === 'add-kurta') { say(ai(added('Breezy Linen Kurta', 'Qty 1', '$58', 'kurta.webp'))); hop(); }
     else if (act === 'person') { b.remove(); say('<div class="sys chat-in">Sara from Loom &amp; Line joined</div><div class="who chat-in">Sara · Loom &amp; Line team</div><div class="ai chat-in"><span class="staff">S</span><div class="bubble staff-bubble">Hi, I’m Sara from the store team! How can I help?</div></div>'); }
     else if (act === 'checkout') say(ai(bub('Taking you to the Loom &amp; Line checkout. Payment happens there, in WooCommerce.')));
     else if (act === 'more') say(ai(bub('Sure. Ask me for a colour, a size or a price.')));
